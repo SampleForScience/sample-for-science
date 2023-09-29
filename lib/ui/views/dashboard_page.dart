@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sample/controllers/dashboard_controller.dart';
 import 'package:sample/controllers/login_controller.dart';
+import 'package:sample/controllers/settings_controller.dart';
+import '../../routes/app_pages.dart';
 
 // Itens do popMenuButton
 enum MenuItem { itemOne }
@@ -89,7 +91,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     ),
                     onTap: () {
                       debugPrint("Dashboard clicked");
-                      Navigator.pop(context);
+                      Get.toNamed(Routes.DASHBOARD);
                     },
                   ),
                 ),
@@ -145,6 +147,8 @@ class _DashboardPageState extends State<DashboardPage> {
                   onTap: () {
                     debugPrint("Settings clicked");
                     Navigator.pop(context);
+                    Get.toNamed(Routes.SETTINGS);
+
                   },
                 ),
                 ListTile(
