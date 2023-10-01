@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,17 +7,22 @@ import 'package:sample/routes/app_pages.dart';
 
 class LoginController extends GetxController {
   final auth = FirebaseAuth.instance;
+  final db = FirebaseFirestore.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
   UserCredential? userCredential;
 
-  @override
-  void onReady() {
-    if (auth.currentUser != null) {
-      debugPrint("${auth.currentUser!.displayName}");
-      Get.offAndToNamed(Routes.DASHBOARD);
-    }
-
-    super.onReady();
+  Future<bool> userFound() async {
+    await db.collection("users")
+      .where("id", isEqualTo: "auth.currentUser!.uid")
+      .get()
+      .then((querySnapshot) {
+        if(querySnapshot.size > 0) {
+          return true;
+        }
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
+    return false;
   }
 
   Future<void> signInWithGoogle() async {
@@ -50,6 +56,26 @@ class LoginController extends GetxController {
       debugPrint('googleAuth: $googleAuth');
       userCredential = await auth.signInWithCredential(credential);
       update();
+
+      bool registered = await userFound();
+
+      if (registered) {
+        await db.collection("users").doc(auth.currentUser!.uid)
+        .set(
+          {
+            "id": auth.currentUser!.uid,
+            "name": auth.currentUser!.displayName,
+            "email": auth.currentUser!.email
+          }
+        ).then((_) {
+            debugPrint("User saved");
+            Get.offAndToNamed(Routes.DASHBOARD);
+          }
+        ).onError((e, _) {
+          debugPrint("Error saving user: $e");
+        });
+      }
+
       Get.offAndToNamed(Routes.DASHBOARD);
     }
     debugPrint('userCredential: $userCredential');
@@ -57,5 +83,9 @@ class LoginController extends GetxController {
     debugPrint('email: ${userCredential!.user!.email}');
 
     update();
+  }
+
+  Future<bool> checkUserLoggedIn() async {
+    return auth.currentUser != null;
   }
 }

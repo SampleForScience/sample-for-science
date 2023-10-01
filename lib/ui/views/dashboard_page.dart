@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sample/controllers/dashboard_controller.dart';
 import 'package:sample/controllers/login_controller.dart';
+import 'package:sample/routes/app_pages.dart';
 
 // Itens do popMenuButton
-enum MenuItem { itemOne }
+enum MenuItem { logIn }
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -31,13 +32,13 @@ class _DashboardPageState extends State<DashboardPage> {
                 builder: (loginController) {
                   return  PopupMenuButton<MenuItem>(
                     onSelected: (MenuItem item) {
-                      if (item == MenuItem.itemOne) {
+                      if (item == MenuItem.logIn) {
                         loginController.signInWithGoogle();
                       }
                     },
                     itemBuilder: (BuildContext context) => <PopupMenuEntry<MenuItem>>[
                       PopupMenuItem<MenuItem>(
-                        value: MenuItem.itemOne,
+                        value: MenuItem.logIn,
                         child: loginController.auth.currentUser != null
                           ? const Text("Sair")
                           : const Text("Entrar"),
@@ -143,8 +144,8 @@ class _DashboardPageState extends State<DashboardPage> {
                     ],
                   ),
                   onTap: () {
-                    debugPrint("Settings clicked");
-                    Navigator.pop(context);
+                    Get.toNamed(Routes.REGISTRATION);
+                    // Navigator.pop(context);
                   },
                 ),
                 ListTile(
