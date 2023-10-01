@@ -1,22 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sample/controllers/dashboard_controller.dart';
 import 'package:sample/controllers/login_controller.dart';
 import 'package:sample/controllers/settings_controller.dart';
-import 'package:sample/controllers/settings_edit_controller.dart';
 import '../../routes/app_pages.dart';
 
-// Itens do popMenuButton
 enum MenuItem { itemOne }
 
-class SettingsPage extends StatefulWidget {
-  const SettingsPage({Key? key}) : super(key: key);
+class SettingsEditPage extends StatefulWidget {
+  const SettingsEditPage({Key? key}) : super(key: key);
 
   @override
-  State<SettingsPage> createState() => _SettingsPageState();
+  State<SettingsEditPage> createState() => _SettingsEditPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
+class _SettingsEditPageState extends State<SettingsEditPage> {
   String selectedItem = "Settings";
 
   @override
@@ -26,7 +23,7 @@ class _SettingsPageState extends State<SettingsPage> {
         builder: (homeController) {
           return Scaffold(
             appBar: AppBar(
-              title: const Text('Settings'),
+              title: const Text('Settings(EDIT)'),
               centerTitle: true,
               actions: [
                 GetBuilder<LoginController>(
@@ -93,7 +90,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       onTap: () {
                         debugPrint("Dashboard clicked");
                         Navigator.pop(context);
-                        Get.toNamed(Routes.DASHBOARD);
+                        Get.toNamed(Routes.SETTINGS);
                       },
                     ),
                   ),
@@ -191,118 +188,118 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             body: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                  color: Color.fromARGB(100,180,232,199),
-                  width: double.infinity,
-                  child: Text("Registration",
-                  style: TextStyle(fontSize: 30, color: Colors.white))
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                          color: Color.fromARGB(100,180,232,199),
+                          width: double.infinity,
+                          child: Text("Registration",
+                              style: TextStyle(fontSize: 30, color: Colors.white))
 
-                ),
-                  Text("User"),
-                  Text("Country"),
-                  Text("Email"),
-                  Text("Institution",
-                  style:
-                      TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
-                  Text("institution"),
-                  Text("Departament",
-                      style:
-                      TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
-                  Text("departamento"),
-                  Text("Full Adress*",
-                      style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
-                  Text("Adress"),
-                  Text("Mobile",
-                      style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
-                  Text("mobile"),
-                  Container(
-                      color: Color.fromARGB(100,180,232,199),
-                      width: double.infinity,
-                      height: 16,
-
-                  ),
-                  Text("Personal webpage",
-                      style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
-                  Text("personal webpage"),
-                  Text("ORCID",
-                      style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
-                  Text("ORCID"),
-                  Center(
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Color.fromARGB(100,180,232,199), // Cor de fundo verde
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16.0), // Define o raio das bordas
-                        ),
                       ),
-                      onPressed: (){
-                        Navigator.of(context).pushNamed(Routes.SETTINGSEDIT);
+                      Text("User"),
+                      Text("Country"),
+                      Text("Email"),
+                      Text("Institution",
+                          style:
+                          TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
+                      Text("institution"),
+                      Text("Departament",
+                          style:
+                          TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
+                      Text("departamento"),
+                      Text("Full Adress*",
+                          style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
+                      Text("Adress"),
+                      Text("Mobile",
+                          style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
+                      Text("mobile"),
+                      Container(
+                        color: Color.fromARGB(100,180,232,199),
+                        width: double.infinity,
+                        height: 16,
 
-                      },
-                      child: const SizedBox(
-                        height: 20,
-                        width: 50,
-                        child:
-                        Center(
-                          child: Text("Edit",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
+                      ),
+                      Text("Personal webpage",
+                          style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
+                      Text("personal webpage"),
+                      Text("ORCID",
+                          style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
+                      Text("ORCID"),
+                      Center(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: Color.fromARGB(100,180,232,199), // Cor de fundo verde
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16.0), // Define o raio das bordas
+                            ),
+                          ),
+                          onPressed: (){
+                            Navigator.of(context).pushNamed(Routes.SETTINGS);
 
-                              )
+                          },
+                          child: const SizedBox(
+                            height: 20,
+                            width: 50,
+                            child:
+                            Center(
+                              child: Text("Edit",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+
+                                  )
+                              ),
+                            ),
+
+
                           ),
                         ),
-
-
                       ),
-                    ),
-                  ),
-                  Text("Google Scholar",
-                      style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
-                  Text("Google Scholar"),
+                      Text("Google Scholar",
+                          style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
+                      Text("Google Scholar"),
 
-                  Text("Other database",
-                      style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
-                  Text("Other database"),
-                  Center(
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Color.fromARGB(100,180,232,199), // Cor de fundo verde
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16.0), // Define o raio das bordas
-                        ),
-                      ),
-                      onPressed: (){
-                        Navigator.of(context).pushNamed(Routes.SETTINGSEDIT);
+                      Text("Other database",
+                          style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
+                      Text("Other database"),
+                      Center(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: Color.fromARGB(100,180,232,199), // Cor de fundo verde
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16.0), // Define o raio das bordas
+                            ),
+                          ),
+                          onPressed: (){
+                            Navigator.of(context).pushNamed(Routes.SETTINGS);
 
-                      },
-                      child: const SizedBox(
-                        height: 20,
-                        width: 50,
-                        child:
-                        Center(
-                          child: Text("Edit",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
+                          },
+                          child: const SizedBox(
+                            height: 20,
+                            width: 50,
+                            child:
+                            Center(
+                              child: Text("Edit",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
 
-                              )
+                                  )
+                              ),
+                            ),
+
+
                           ),
                         ),
-
-
-                      ),
-                    ),
-                  )
+                      )
 
 
 
 
-                ]
-              )
+                    ]
+                )
             ),
 
           );
