@@ -107,8 +107,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   PopupMenuItem<MenuItem>(
                     value: MenuItem.logIn,
                     child: loginController.auth.currentUser != null
-                        ? const Text("Sair")
-                        : const Text("Entrar"),
+                        ? const Text("Log out")
+                        : const Text("Log in"),
                   ),
                 ],
                 child: Padding(

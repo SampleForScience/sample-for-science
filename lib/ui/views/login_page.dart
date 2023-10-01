@@ -29,7 +29,10 @@ class _LoginPageState extends State<LoginPage> {
               } else if (snapshot.hasError) {
                 return Center(child: Text('Error: ${snapshot.error}'));
               } else if (snapshot.data == true) {
-                Get.offAndToNamed(Routes.DASHBOARD);
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  // vai pra deshboard page depois do widget carregar
+                  Get.offAndToNamed(Routes.DASHBOARD);
+                });
                 return Container();
               } else {
                 return

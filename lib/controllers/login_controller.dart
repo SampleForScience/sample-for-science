@@ -8,21 +8,25 @@ import 'package:sample/routes/app_pages.dart';
 class LoginController extends GetxController {
   final auth = FirebaseAuth.instance;
   final db = FirebaseFirestore.instance;
+  late bool registered;
   final GoogleSignIn googleSignIn = GoogleSignIn();
   UserCredential? userCredential;
 
   Future<bool> userFound() async {
+    late bool found;
     await db.collection("users")
-      .where("id", isEqualTo: "auth.currentUser!.uid")
+      .where("id", isEqualTo: auth.currentUser!.uid)
       .get()
       .then((querySnapshot) {
         if(querySnapshot.size > 0) {
-          return true;
+          found = true;
+        } else {
+          found = false;
         }
       },
-      onError: (e) => print("Error completing: $e"),
+      onError: (e) => debugPrint("Error completing: $e"),
     );
-    return false;
+    return found;
   }
 
   Future<void> signInWithGoogle() async {
@@ -57,9 +61,9 @@ class LoginController extends GetxController {
       userCredential = await auth.signInWithCredential(credential);
       update();
 
-      bool registered = await userFound();
+      registered = await userFound();
 
-      if (registered) {
+      if (!registered) {
         await db.collection("users").doc(auth.currentUser!.uid)
         .set(
           {
@@ -68,19 +72,17 @@ class LoginController extends GetxController {
             "email": auth.currentUser!.email
           }
         ).then((_) {
-            debugPrint("User saved");
+            debugPrint("New user saved");
             Get.offAndToNamed(Routes.DASHBOARD);
           }
         ).onError((e, _) {
           debugPrint("Error saving user: $e");
         });
+      } else {
+        debugPrint("User already registered");
+        Get.offAndToNamed(Routes.DASHBOARD);
       }
-
-      Get.offAndToNamed(Routes.DASHBOARD);
     }
-    debugPrint('userCredential: $userCredential');
-    debugPrint('auth: $auth');
-    debugPrint('email: ${userCredential!.user!.email}');
 
     update();
   }

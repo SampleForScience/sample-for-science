@@ -40,8 +40,8 @@ class _DashboardPageState extends State<DashboardPage> {
                       PopupMenuItem<MenuItem>(
                         value: MenuItem.logIn,
                         child: loginController.auth.currentUser != null
-                          ? const Text("Sair")
-                          : const Text("Entrar"),
+                          ? const Text("Log out")
+                          : const Text("log in"),
                       ),
                     ],
                     child: Padding(
@@ -144,8 +144,8 @@ class _DashboardPageState extends State<DashboardPage> {
                     ],
                   ),
                   onTap: () {
+                    Navigator.pop(context);
                     Get.toNamed(Routes.REGISTRATION);
-                    // Navigator.pop(context);
                   },
                 ),
                 ListTile(
