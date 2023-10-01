@@ -44,6 +44,8 @@ dependencies:
   font_awesome_flutter: ^10.5.0
   rename: ^2.1.1
   flutter_svg: any
+  country_picker: ^2.0.21
+  cloud_firestore: ^4.9.2
 
 flutter_launcher_icons:
   image_path: "assets/icon.png"
