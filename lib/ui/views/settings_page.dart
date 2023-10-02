@@ -26,6 +26,7 @@ class _SettingsPageState extends State<SettingsPage> {
         builder: (homeController) {
           return Scaffold(
             appBar: AppBar(
+
               title: const Text('Settings'),
               centerTitle: true,
               actions: [
@@ -149,6 +150,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     onTap: () {
                       debugPrint("Settings clicked");
                       Navigator.pop(context);
+                      Get.toNamed(Routes.SETTINGS);
 
                     },
                   ),
@@ -193,43 +195,122 @@ class _SettingsPageState extends State<SettingsPage> {
             body: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+
                 children: [
                   Container(
-                  color: Color.fromARGB(100,180,232,199),
-                  width: double.infinity,
-                  child: Text("Registration",
-                  style: TextStyle(fontSize: 30, color: Colors.white))
+                  color : Color.fromARGB(100,180,232,199),
+
+                  height: 75,
+                  child: Center(
+                      child: Container(
+                        decoration:BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: Colors.grey,
+                          width: 1,
+                        ),
+                      ) ,
+
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        child: const Text('Registration',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 24.0,
+
+                          ),),
+                      ))),
 
                 ),
-                  Text("User"),
-                  Text("Country"),
-                  Text("Email"),
-                  Text("Institution",
-                  style:
-                      TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
-                  Text("institution"),
-                  Text("Departament",
-                      style:
-                      TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
-                  Text("departamento"),
-                  Text("Full Adress*",
-                      style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
-                  Text("Adress"),
-                  Text("Mobile",
-                      style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
-                  Text("mobile"),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("User"),
+                        Text("Country"),
+                        Text("Email"),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Institution",
+                        style:
+                            TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
+                        Text("institution"),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Departament",
+                            style:
+                            TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
+                        Text("departamento"),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Full Adress*",
+                            style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
+                        Text("Adress"),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Mobile",
+                            style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
+                        Text("mobile"),
+                      ],
+                    ),
+                  ),
                   Container(
                       color: Color.fromARGB(100,180,232,199),
                       width: double.infinity,
                       height: 16,
 
                   ),
-                  Text("Personal webpage",
-                      style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
-                  Text("personal webpage"),
-                  Text("ORCID",
-                      style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
-                  Text("ORCID"),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Personal webpage",
+                            style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
+                        Text("personal webpage"),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("ORCID",
+                            style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
+                        Text("ORCID"),
+                      ],
+                    ),
+                  ),
                   Center(
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
@@ -260,13 +341,28 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                     ),
                   ),
-                  Text("Google Scholar",
-                      style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
-                  Text("Google Scholar"),
-
-                  Text("Other database",
-                      style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
-                  Text("Other database"),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Google Scholar",
+                            style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
+                        Text("Google Scholar"),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Other database",
+                            style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
+                        Text("Other database"),
+                      ],
+                    ),
+                  ),
                   Center(
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
@@ -297,10 +393,6 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                     ),
                   )
-
-
-
-
                 ]
               )
             ),

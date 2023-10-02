@@ -25,46 +25,47 @@ class _DashboardPageState extends State<DashboardPage> {
       builder: (homeController) {
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Dashboard'),
+
+            title: const Text('Settings'),
             centerTitle: true,
             actions: [
               GetBuilder<LoginController>(
-                init: Get.put(LoginController()),
-                builder: (loginController) {
-                  return  PopupMenuButton<MenuItem>(
-                    onSelected: (MenuItem item) {
-                      if (item == MenuItem.itemOne) {
-                        loginController.signInWithGoogle();
-                      }
-                    },
-                    itemBuilder: (BuildContext context) => <PopupMenuEntry<MenuItem>>[
-                      PopupMenuItem<MenuItem>(
-                        value: MenuItem.itemOne,
-                        child: loginController.auth.currentUser != null
-                          ? const Text("Sair")
-                          : const Text("Entrar"),
-                      ),
-                    ],
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                      child: loginController.auth.currentUser != null
-                        ? CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            loginController.auth.currentUser!.photoURL!,
+                  init: Get.put(LoginController()),
+                  builder: (loginController) {
+                    return  PopupMenuButton<MenuItem>(
+                        onSelected: (MenuItem item) {
+                          if (item == MenuItem.itemOne) {
+                            loginController.signInWithGoogle();
+                          }
+                        },
+                        itemBuilder: (BuildContext context) => <PopupMenuEntry<MenuItem>>[
+                          PopupMenuItem<MenuItem>(
+                            value: MenuItem.itemOne,
+                            child: loginController.auth.currentUser != null
+                                ? const Text("Sair")
+                                : const Text("Entrar"),
+                          ),
+                        ],
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                          child: loginController.auth.currentUser != null
+                              ? CircleAvatar(
+                            backgroundImage: NetworkImage(
+                              loginController.auth.currentUser!.photoURL!,
+                            ),
+                          )
+                              : IconButton(
+                            onPressed: null,
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0),),),
+                            ),
+                            icon: const Icon(
+                              Icons.person_rounded, color: Colors.white,),
                           ),
                         )
-                        : IconButton(
-                          onPressed: null,
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
-                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0),),),
-                          ),
-                          icon: const Icon(
-                            Icons.person_rounded, color: Colors.white,),
-                        ),
-                    )
-                  );
-                }
+                    );
+                  }
               ),
             ],
           ),
@@ -91,6 +92,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     ),
                     onTap: () {
                       debugPrint("Dashboard clicked");
+                      Navigator.pop(context);
                       Get.toNamed(Routes.DASHBOARD);
                     },
                   ),
@@ -164,28 +166,28 @@ class _DashboardPageState extends State<DashboardPage> {
                   },
                 ),
                 GetBuilder<LoginController>(
-                  init: Get.put(LoginController()),
-                  builder: (loginController) {
-                  return ListTile(
-                    title: Row(
-                      children: [
-                        SizedBox(
-                            width: 140,
-                            child: Text(loginController.auth.currentUser!.displayName!,
-                              style: const TextStyle(color: Colors.white70)
+                    init: Get.put(LoginController()),
+                    builder: (loginController) {
+                      return ListTile(
+                        title: Row(
+                          children: [
+                            SizedBox(
+                              width: 140,
+                              child: Text(loginController.auth.currentUser!.displayName!,
+                                  style: const TextStyle(color: Colors.white70)
+                              ),
                             ),
+                            const Icon(Icons.exit_to_app, color: Colors.white70),
+                          ],
                         ),
-                        const Icon(Icons.exit_to_app, color: Colors.white70),
-                      ],
-                    ),
-                    onTap: () {
-                      Navigator.pop(context);
-                      Future.delayed(const Duration(seconds: 1), () {
-                        loginController.signInWithGoogle();
-                      });
-                    },
-                  );
-                }),
+                        onTap: () {
+                          Navigator.pop(context);
+                          Future.delayed(const Duration(seconds: 1), () {
+                            loginController.signInWithGoogle();
+                          });
+                        },
+                      );
+                    }),
               ],
             ),
           ),
@@ -193,200 +195,520 @@ class _DashboardPageState extends State<DashboardPage> {
             child: Column(
               children: [
                 ExpansionTile(
-                  title: Text('My Samples'),
+
+                  title:SizedBox(
+                    height: 25,
+                    child: Container(color: const Color.fromARGB(100,251,241,219),
+                        child: Center(child: Container(
+                            decoration:BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: Colors.black,
+                                width: 1,
+                              ),
+                            ) ,
+
+                            child: const Text('My Samples',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                              ),)))
+                    ),
+                  ),
                   children: <Widget>[
-                    ListTile(
-                      title: const Row(
+                    SizedBox(
+                      width:500,
+                      height:200,
+                      child: Column(
                         children: [
-                          Icon(Icons.science),
-                          Text(" My samples test item 0"),
-                        ],
+
+                          SizedBox(
+                            height:150,
+                            child:Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              // Alinhamento vertical superior
+
+                              children: <Widget>[
+                                Text(
+                                  'Code ',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold, // Negrito
+                                  ),
+                                ),
+                                Text(
+                                  'code1',
+                                  style: TextStyle(
+                                    fontStyle: FontStyle.italic, // Itálico
+                                  ),
+                                ),
+                                Text(
+                                  'Chemical Formula ',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold, // Negrito
+                                  ),
+                                ),
+                                Text(
+                                  'formula1',
+                                  style: TextStyle(
+                                    fontStyle: FontStyle.italic, // Itálico
+                                  ),
+                                ),
+                                Text(
+                                  'Registration Date ',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold, // Negrito
+                                  ),
+                                ),
+                                Text(
+                                  'date1',
+                                  style: TextStyle(
+                                    fontStyle: FontStyle.italic, // Itálico
+                                  ),
+                                ),
+
+                              ],
+                            )
+                            ,
+                          ),
+
+
+                          SizedBox(
+                            height:50,
+
+                            child: Container(color: const Color.fromARGB(100,251,241,219),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Icon(Icons.delete),
+                                  Icon(Icons.remove_red_eye_outlined),
+                                  Icon(Icons.edit),
+                                ],
+                              ),),
+                          )],
                       ),
-                      onTap: () {
-                        debugPrint("My samples test item 0 clicked");
-                        // Navigator.pop(context);
-                      },
                     ),
-                    ListTile(
-                      title: const Row(
+
+                    SizedBox(
+                      width:500,
+                      height:200,
+                      child: Column(
                         children: [
-                          Icon(Icons.science),
-                          Text(" My samples test item 1"),
-                        ],
+
+                          SizedBox(
+                            height:150,
+                            child:Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              // Alinhamento vertical superior
+
+                              children: <Widget>[
+                                Text(
+                                  'Code ',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold, // Negrito
+                                  ),
+                                ),
+                                Text(
+                                  'code2',
+                                  style: TextStyle(
+                                    fontStyle: FontStyle.italic, // Itálico
+                                  ),
+                                ),
+                                Text(
+                                  'Chemical Formula ',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold, // Negrito
+                                  ),
+                                ),
+                                Text(
+                                  'formula2',
+                                  style: TextStyle(
+                                    fontStyle: FontStyle.italic, // Itálico
+                                  ),
+                                ),
+                                Text(
+                                  'Registration Date ',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold, // Negrito
+                                  ),
+                                ),
+                                Text(
+                                  'date2',
+                                  style: TextStyle(
+                                    fontStyle: FontStyle.italic, // Itálico
+                                  ),
+                                ),
+
+                              ],
+                            )
+                            ,
+                          ),
+
+
+                          SizedBox(
+                            height:50,
+
+                            child: Container(color: const Color.fromARGB(100,251,241,219),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Icon(Icons.delete),
+                                  Icon(Icons.remove_red_eye_outlined),
+                                  Icon(Icons.edit),
+                                ],
+                              ),),
+                          )],
                       ),
-                      onTap: () {
-                        debugPrint("My samples test item 1 clicked");
-                        // Navigator.pop(context);
-                      },
                     ),
-                    ListTile(
-                      title: const Row(
+
+                  ],
+                ),//My Sample
+                ExpansionTile(
+
+                  title:SizedBox(
+                    height: 35,
+                    child: Container(color: const Color.fromARGB(100,181,232,196),
+                        child: Center(child: Container(
+                            decoration:BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: Colors.black,
+                                width: 1,
+                              ),
+                            ) ,
+
+                            child: const Text('Favorite Sample',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                              ),)))
+                    ),
+                  ),
+                  children: <Widget>[
+                    SizedBox(
+                      width:500,
+                      height:200,
+                      child: Column(
                         children: [
-                          Icon(Icons.science),
-                          Text(" My samples test item 2"),
-                        ],
+
+                          SizedBox(
+                            height:150,
+                            child:Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              // Alinhamento vertical superior
+
+                              children: <Widget>[
+                                Text(
+                                  'Code ',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold, // Negrito
+                                  ),
+                                ),
+                                Text(
+                                  'code1',
+                                  style: TextStyle(
+                                    fontStyle: FontStyle.italic, // Itálico
+                                  ),
+                                ),
+                                Text(
+                                  'Chemical Formula ',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold, // Negrito
+                                  ),
+                                ),
+                                Text(
+                                  'formula1',
+                                  style: TextStyle(
+                                    fontStyle: FontStyle.italic, // Itálico
+                                  ),
+                                ),
+                                Text(
+                                  'Registration Date ',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold, // Negrito
+                                  ),
+                                ),
+                                Text(
+                                  'date1',
+                                  style: TextStyle(
+                                    fontStyle: FontStyle.italic, // Itálico
+                                  ),
+                                ),
+
+                              ],
+                            )
+                            ,
+                          ),
+
+
+                          SizedBox(
+                            height:50,
+
+                            child: Container(color: const Color.fromARGB(100,181,232,196),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Icon(Icons.delete),
+                                  Icon(Icons.remove_red_eye_outlined),
+                                  Icon(Icons.chat),
+                                ],
+                              ),),
+                          )],
                       ),
-                      onTap: () {
-                        debugPrint("My samples test item 2 clicked");
-                        // Navigator.pop(context);
-                      },
                     ),
-                    ListTile(
-                      title: const Row(
+
+                    SizedBox(
+                      width:500,
+                      height:200,
+                      child: Column(
                         children: [
-                          Icon(Icons.science),
-                          Text(" My samples test item 3"),
-                        ],
+
+                          SizedBox(
+                            height:150,
+                            child:Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              // Alinhamento vertical superior
+
+                              children: <Widget>[
+                                Text(
+                                  'Code ',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold, // Negrito
+                                  ),
+                                ),
+                                Text(
+                                  'code2',
+                                  style: TextStyle(
+                                    fontStyle: FontStyle.italic, // Itálico
+                                  ),
+                                ),
+                                Text(
+                                  'Chemical Formula ',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold, // Negrito
+                                  ),
+                                ),
+                                Text(
+                                  'formula2',
+                                  style: TextStyle(
+                                    fontStyle: FontStyle.italic, // Itálico
+                                  ),
+                                ),
+                                Text(
+                                  'Registration Date ',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold, // Negrito
+                                  ),
+                                ),
+                                Text(
+                                  'date2',
+                                  style: TextStyle(
+                                    fontStyle: FontStyle.italic, // Itálico
+                                  ),
+                                ),
+
+                              ],
+                            )
+                            ,
+                          ),
+
+
+                          SizedBox(
+                            height:50,
+
+                            child: Container(color: const Color.fromARGB(100,181,232,196),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Icon(Icons.delete),
+                                  Icon(Icons.remove_red_eye_outlined),
+                                  Icon(Icons.chat),
+                                ],
+                              ),),
+                          )],
                       ),
-                      onTap: () {
-                        debugPrint("My samples test item 3 clicked");
-                        // Navigator.pop(context);
-                      },
                     ),
-                    ListTile(
-                      title: const Row(
-                        children: [
-                          Icon(Icons.science),
-                          Text(" My samples test item 4"),
-                        ],
-                      ),
-                      onTap: () {
-                        debugPrint("My samples test item 4 clicked");
-                        // Navigator.pop(context);
-                      },
-                    ),
+
                   ],
                 ),
                 ExpansionTile(
-                  title: Text('Favorite Samples'),
+
+                  title:SizedBox(
+                    height: 25,
+                    child: Container(color: const Color.fromARGB(100,200,209,242),
+                        child: Center(child: Container(
+                            decoration:BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: Colors.black,
+                                width: 1,
+                              ),
+                            ) ,
+
+                            child: const Text('Favorite Provider',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                              ),)))
+                    ),
+                  ),
                   children: <Widget>[
-                    ListTile(
-                      title: const Row(
+                    SizedBox(
+                      width:500,
+                      height:200,
+                      child: Column(
                         children: [
-                          Icon(Icons.science),
-                          Text(" Favorite sample test item 0"),
-                        ],
+
+                          SizedBox(
+                            height:150,
+                            child:Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              // Alinhamento vertical superior
+
+                              children: <Widget>[
+                                Text(
+                                  'Code ',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold, // Negrito
+                                  ),
+                                ),
+                                Text(
+                                  'code1',
+                                  style: TextStyle(
+                                    fontStyle: FontStyle.italic, // Itálico
+                                  ),
+                                ),
+                                Text(
+                                  'Chemical Formula ',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold, // Negrito
+                                  ),
+                                ),
+                                Text(
+                                  'formula1',
+                                  style: TextStyle(
+                                    fontStyle: FontStyle.italic, // Itálico
+                                  ),
+                                ),
+                                Text(
+                                  'Registration Date ',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold, // Negrito
+                                  ),
+                                ),
+                                Text(
+                                  'date1',
+                                  style: TextStyle(
+                                    fontStyle: FontStyle.italic, // Itálico
+                                  ),
+                                ),
+
+                              ],
+                            )
+                            ,
+                          ),
+
+
+                          SizedBox(
+                            height:50,
+
+                            child: Container(color: const Color.fromARGB(100,200,209,242),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  IconButton(onPressed: () {
+                                    debugPrint("Deletar Amostra CLICADO");}, icon: Icon(Icons.delete))
+                                  ,
+                                  Icon(Icons.remove_red_eye_outlined),
+                                  Icon(Icons.chat),
+                                ],
+                              ),),
+                          )],
                       ),
-                      onTap: () {
-                        debugPrint("Favorite sample test item 0 clicked");
-                        // Navigator.pop(context);
-                      },
                     ),
-                    ListTile(
-                      title: const Row(
+
+                    SizedBox(
+                      width:500,
+                      height:200,
+                      child: Column(
                         children: [
-                          Icon(Icons.science),
-                          Text(" Favorite sample test item 1"),
-                        ],
+
+                          SizedBox(
+                            height:150,
+                            child:Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              // Alinhamento vertical superior
+
+                              children: <Widget>[
+                                Text(
+                                  'Code ',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold, // Negrito
+                                  ),
+                                ),
+                                Text(
+                                  'code2',
+                                  style: TextStyle(
+                                    fontStyle: FontStyle.italic, // Itálico
+                                  ),
+                                ),
+                                Text(
+                                  'Chemical Formula ',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold, // Negrito
+                                  ),
+                                ),
+                                Text(
+                                  'formula2',
+                                  style: TextStyle(
+                                    fontStyle: FontStyle.italic, // Itálico
+                                  ),
+                                ),
+                                Text(
+                                  'Registration Date ',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold, // Negrito
+                                  ),
+                                ),
+                                Text(
+                                  'date2',
+                                  style: TextStyle(
+                                    fontStyle: FontStyle.italic, // Itálico
+                                  ),
+                                ),
+
+                              ],
+                            )
+                            ,
+                          ),
+
+
+                          SizedBox(
+                            height:50,
+
+                            child: Container(color: const Color.fromARGB(100,200,209,242),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Icon(Icons.delete),
+                                  Icon(Icons.remove_red_eye_outlined),
+                                  Icon(Icons.chat),
+                                ],
+                              ),),
+                          )],
                       ),
-                      onTap: () {
-                        debugPrint("Favorite sample test item 1 clicked");
-                        // Navigator.pop(context);
-                      },
                     ),
-                    ListTile(
-                      title: const Row(
-                        children: [
-                          Icon(Icons.science),
-                          Text(" Favorite sample test item 2"),
-                        ],
-                      ),
-                      onTap: () {
-                        debugPrint("Favorite sample test item 2 clicked");
-                        // Navigator.pop(context);
-                      },
-                    ),
-                    ListTile(
-                      title: const Row(
-                        children: [
-                          Icon(Icons.science),
-                          Text(" Favorite sample test item 3"),
-                        ],
-                      ),
-                      onTap: () {
-                        debugPrint("Favorite sample test item 3 clicked");
-                        // Navigator.pop(context);
-                      },
-                    ),
-                    ListTile(
-                      title: const Row(
-                        children: [
-                          Icon(Icons.science),
-                          Text(" Favorite sample test item 4"),
-                        ],
-                      ),
-                      onTap: () {
-                        debugPrint("Favorite sample test item 4 clicked");
-                        // Navigator.pop(context);
-                      },
-                    ),
+
                   ],
-                ),
-                ExpansionTile(
-                  title: Text('Favorite Provider'),
-                  children: <Widget>[
-                    ListTile(
-                      title: const Row(
-                        children: [
-                          Icon(Icons.science),
-                          Text(" Favorite provider test item 0"),
-                        ],
-                      ),
-                      onTap: () {
-                        debugPrint("Favorite provider test item 0 clicked");
-                        // Navigator.pop(context);
-                      },
-                    ),
-                    ListTile(
-                      title: const Row(
-                        children: [
-                          Icon(Icons.science),
-                          Text(" Favorite provider test item 1"),
-                        ],
-                      ),
-                      onTap: () {
-                        debugPrint("Favorite provider test item 1 clicked");
-                        // Navigator.pop(context);
-                      },
-                    ),
-                    ListTile(
-                      title: const Row(
-                        children: [
-                          Icon(Icons.science),
-                          Text(" Favorite provider test item 2"),
-                        ],
-                      ),
-                      onTap: () {
-                        debugPrint("Favorite provider test item 2 clicked");
-                        // Navigator.pop(context);
-                      },
-                    ),
-                    ListTile(
-                      title: const Row(
-                        children: [
-                          Icon(Icons.science),
-                          Text(" Favorite provider test item 3"),
-                        ],
-                      ),
-                      onTap: () {
-                        debugPrint("Favorite provider test item 3 clicked");
-                        // Navigator.pop(context);
-                      },
-                    ),
-                    ListTile(
-                      title: const Row(
-                        children: [
-                          Icon(Icons.science),
-                          Text(" Favorite provider test item 4"),
-                        ],
-                      ),
-                      onTap: () {
-                        debugPrint("Favorite provider test item 4 clicked");
-                        // Navigator.pop(context);
-                      },
-                    ),
-                  ],
-                ),
+                ),//Favorite Sample
+
+
+
               ],
             ),
           ),

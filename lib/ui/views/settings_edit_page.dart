@@ -23,7 +23,8 @@ class _SettingsEditPageState extends State<SettingsEditPage> {
         builder: (homeController) {
           return Scaffold(
             appBar: AppBar(
-              title: const Text('Settings(EDIT)'),
+
+              title: const Text('Settings(edit)'),
               centerTitle: true,
               actions: [
                 GetBuilder<LoginController>(
@@ -90,7 +91,7 @@ class _SettingsEditPageState extends State<SettingsEditPage> {
                       onTap: () {
                         debugPrint("Dashboard clicked");
                         Navigator.pop(context);
-                        Get.toNamed(Routes.SETTINGS);
+                        Get.toNamed(Routes.DASHBOARD);
                       },
                     ),
                   ),
@@ -146,6 +147,7 @@ class _SettingsEditPageState extends State<SettingsEditPage> {
                     onTap: () {
                       debugPrint("Settings clicked");
                       Navigator.pop(context);
+                      Get.toNamed(Routes.SETTINGS);
 
                     },
                   ),
@@ -190,80 +192,217 @@ class _SettingsEditPageState extends State<SettingsEditPage> {
             body: SingleChildScrollView(
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+
                     children: [
                       Container(
-                          color: Color.fromARGB(100,180,232,199),
-                          width: double.infinity,
-                          child: Text("Registration",
-                              style: TextStyle(fontSize: 30, color: Colors.white))
+                        color : Color.fromARGB(100,180,232,199),
+
+                        height: 75,
+                        child: Center(
+                            child: Container(
+                                decoration:BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: Colors.grey,
+                                    width: 1,
+                                  ),
+                                ) ,
+
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                  child: const Text('Registration',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 24.0,
+
+                                    ),),
+                                ))),
 
                       ),
-                      Text("User"),
-                      Text("Country"),
-                      Text("Email"),
-                      Text("Institution",
-                          style:
-                          TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
-                      Text("institution"),
-                      Text("Departament",
-                          style:
-                          TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
-                      Text("departamento"),
-                      Text("Full Adress*",
-                          style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
-                      Text("Adress"),
-                      Text("Mobile",
-                          style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
-                      Text("mobile"),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("User"),
+                            Text("Country"),
+                            Text("Email"),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Institution",
+                                style:
+                                TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
+                            SizedBox(
+                              height:18,
+                              child: TextField(
+                                decoration: InputDecoration(
+                                hintText: 'Institution',
+
+                                ),
+
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Departament",
+                                style:
+                                TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
+                            SizedBox(
+                              height:18,
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  hintText: 'Departament',
+
+                                ),
+
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Full Adress*",
+                                style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
+                            SizedBox(
+                              height:18,
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  hintText: 'Full Adress*',
+
+                                ),
+
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Mobile",
+                                style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
+                            SizedBox(
+                              height:18,
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  hintText: 'Mobile',
+
+                                ),
+
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                       Container(
                         color: Color.fromARGB(100,180,232,199),
                         width: double.infinity,
                         height: 16,
 
                       ),
-                      Text("Personal webpage",
-                          style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
-                      Text("personal webpage"),
-                      Text("ORCID",
-                          style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
-                      Text("ORCID"),
-                      Center(
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: Color.fromARGB(100,180,232,199), // Cor de fundo verde
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16.0), // Define o raio das bordas
-                            ),
-                          ),
-                          onPressed: (){
-                            Navigator.of(context).pushNamed(Routes.SETTINGS);
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Personal webpage",
+                                style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
+                            SizedBox(
+                              height:18,
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  hintText: 'Personal webpage',
 
-                          },
-                          child: const SizedBox(
-                            height: 20,
-                            width: 50,
-                            child:
-                            Center(
-                              child: Text("Edit",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
+                                ),
 
-                                  )
                               ),
                             ),
-
-
-                          ),
+                          ],
                         ),
                       ),
-                      Text("Google Scholar",
-                          style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
-                      Text("Google Scholar"),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("ORCID",
+                                style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
+                            SizedBox(
+                              height:18,
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  hintText: 'ORCID',
 
-                      Text("Other database",
-                          style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
-                      Text("Other database"),
+                                ),
+
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Google Scholar",
+                                style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
+                            SizedBox(
+                              height:18,
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  hintText: 'Google Scholar',
+
+                                ),
+
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Other database",
+                                style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
+                            SizedBox(
+                              height:18,
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  hintText: 'Other database',
+
+                                ),
+
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                       Center(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
@@ -278,10 +417,10 @@ class _SettingsEditPageState extends State<SettingsEditPage> {
                           },
                           child: const SizedBox(
                             height: 20,
-                            width: 50,
+                            width: 60,
                             child:
                             Center(
-                              child: Text("Edit",
+                              child: Text("Update",
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,
@@ -294,10 +433,6 @@ class _SettingsEditPageState extends State<SettingsEditPage> {
                           ),
                         ),
                       )
-
-
-
-
                     ]
                 )
             ),
