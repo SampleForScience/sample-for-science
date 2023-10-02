@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sample/controllers/dashboard_controller.dart';
 import 'package:sample/controllers/login_controller.dart';
 import 'package:sample/controllers/settings_controller.dart';
-import 'package:sample/controllers/settings_edit_controller.dart';
 import '../../routes/app_pages.dart';
 
 // Itens do popMenuButton

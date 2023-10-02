@@ -237,12 +237,13 @@ class _SettingsEditPageState extends State<SettingsEditPage> {
 
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text("Institution",
                                 style:
                                 TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
                             SizedBox(
-                              height:18,
+                              height:36,
                               child: TextField(
                                 decoration: InputDecoration(
                                 hintText: 'Institution',
@@ -264,7 +265,7 @@ class _SettingsEditPageState extends State<SettingsEditPage> {
                                 style:
                                 TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
                             SizedBox(
-                              height:18,
+                              height:36,
                               child: TextField(
                                 decoration: InputDecoration(
                                   hintText: 'Departament',
@@ -284,7 +285,7 @@ class _SettingsEditPageState extends State<SettingsEditPage> {
                             Text("Full Adress*",
                                 style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
                             SizedBox(
-                              height:18,
+                              height:36,
                               child: TextField(
                                 decoration: InputDecoration(
                                   hintText: 'Full Adress*',
@@ -304,7 +305,7 @@ class _SettingsEditPageState extends State<SettingsEditPage> {
                             Text("Mobile",
                                 style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
                             SizedBox(
-                              height:18,
+                              height:36,
                               child: TextField(
                                 decoration: InputDecoration(
                                   hintText: 'Mobile',
@@ -330,7 +331,7 @@ class _SettingsEditPageState extends State<SettingsEditPage> {
                             Text("Personal webpage",
                                 style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
                             SizedBox(
-                              height:18,
+                              height:36,
                               child: TextField(
                                 decoration: InputDecoration(
                                   hintText: 'Personal webpage',
@@ -350,7 +351,7 @@ class _SettingsEditPageState extends State<SettingsEditPage> {
                             Text("ORCID",
                                 style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
                             SizedBox(
-                              height:18,
+                              height:36,
                               child: TextField(
                                 decoration: InputDecoration(
                                   hintText: 'ORCID',
@@ -371,7 +372,7 @@ class _SettingsEditPageState extends State<SettingsEditPage> {
                             Text("Google Scholar",
                                 style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
                             SizedBox(
-                              height:18,
+                              height:36,
                               child: TextField(
                                 decoration: InputDecoration(
                                   hintText: 'Google Scholar',
@@ -391,7 +392,7 @@ class _SettingsEditPageState extends State<SettingsEditPage> {
                             Text("Other database",
                                 style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 128))),
                             SizedBox(
-                              height:18,
+                              height:36,
                               child: TextField(
                                 decoration: InputDecoration(
                                   hintText: 'Other database',
