@@ -1,8 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:sample/firebase_options.dart';
-import 'package:sample/routes/app_pages.dart';
+import 'package:sample/ui/views/dashboard_page.dart';
+import 'package:sample/ui/views/login_page.dart';
+import 'package:sample/ui/views/registration_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,14 +19,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
+    return MaterialApp(
       title: 'Sample',
       debugShowCheckedModeBanner: true,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255,55,98,118)),
     ),
-      getPages: Pages.pages,
-      initialRoute: Routes.LOGIN,
+      home: const LoginPage(),
+      routes: {
+        '/login': (context) => const LoginPage(),
+        '/dashboard': (context) => const DashboardPage(),
+        '/registration': (context) => const RegistrationPage(),
+      },
     );
   }
 }
