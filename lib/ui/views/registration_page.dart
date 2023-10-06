@@ -2,8 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:sample/routes/app_pages.dart';
 import 'package:sample/ui/widgets/circular_avatar_button.dart';
 
 // Itens do popMenuButton
@@ -75,7 +73,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
     await db.collection("users").doc(fileName).set(user).then((_) {
       debugPrint("User saved");
-      Get.offAndToNamed(Routes.DASHBOARD);
+      Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
     }
     ).onError((e, _) {
       debugPrint("Error saving user: $e");

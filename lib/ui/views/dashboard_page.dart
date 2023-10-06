@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:sample/routes/app_pages.dart';
 import 'package:sample/ui/widgets/circular_avatar_button.dart';
 import 'package:sample/ui/widgets/drawer_logout_button.dart';
 
@@ -105,7 +103,7 @@ class _DashboardPageState extends State<DashboardPage> {
               ),
               onTap: () {
                 Navigator.pop(context);
-                Get.toNamed(Routes.REGISTRATION);
+                Navigator.pushNamed(context, '/registration');
               },
             ),
             ListTile(
