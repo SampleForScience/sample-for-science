@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sample/firebase_options.dart';
 import 'package:sample/ui/views/dashboard_page.dart';
 import 'package:sample/ui/views/login_page.dart';
+import 'package:sample/ui/views/new_sample_page.dart';
 import 'package:sample/ui/views/registration_page.dart';
 
 Future<void> main() async {
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const LoginPage(),
         '/dashboard': (context) => const DashboardPage(),
         '/registration': (context) => const RegistrationPage(),
+        '/new-sample': (context) => const NewSamplePage(),
       },
     );
   }

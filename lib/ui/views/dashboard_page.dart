@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sample/ui/widgets/circular_avatar_button.dart';
-import 'package:sample/ui/widgets/drawer_logout_button.dart';
+import 'package:sample/ui/widgets/buttons/circular_avatar_button.dart';
+import 'package:sample/ui/widgets/buttons/drawer_logout_button.dart';
 
 // Itens do popMenuButton
 enum MenuItem { logIn }
@@ -60,8 +60,8 @@ class _DashboardPageState extends State<DashboardPage> {
                 ],
               ),
               onTap: () {
-                debugPrint("Provide sample clicked");
                 Navigator.pop(context);
+                Navigator.pushNamed(context, '/new-sample');
               },
             ),
             ListTile(
