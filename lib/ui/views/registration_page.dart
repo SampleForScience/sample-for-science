@@ -201,7 +201,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
                         saveUser(user);
                       },
-                        child: const Text("Save")
+                      child: const Text("Save")
                     ),
                   ),
                 ]

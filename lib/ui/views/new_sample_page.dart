@@ -13,6 +13,7 @@ class NewSamplePage extends StatefulWidget {
 class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProviderStateMixin {
   final db = FirebaseFirestore.instance;
   final auth = FirebaseAuth.instance;
+  Map<String, dynamic> newSample = {};
 
   TextEditingController numberController = TextEditingController();
   TextEditingController codeController = TextEditingController();
@@ -43,6 +44,20 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
   void _handleTabSelection() {
     setState(() {
       _tabController.index;
+    });
+  }
+
+  saveNewSample(Map<String, dynamic> newSample) async {
+    String uid = auth.currentUser!.uid;
+    String timeStamp = DateTime.now().millisecondsSinceEpoch.toString();
+    String fileName = "$uid$timeStamp";
+
+    await db.collection("samples").doc(fileName).set(newSample).then((_) {
+      debugPrint("New sample saved");
+      Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
+    }
+    ).onError((e, _) {
+      debugPrint("Error saving user: $e");
     });
   }
 
@@ -173,7 +188,24 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
               child: const Text("Next"),
             ),
             if (_tabController.index == tabs.length - 1) ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                String uid = auth.currentUser!.uid;
+                String timeStamp = DateTime.now().millisecondsSinceEpoch.toString();
+                String sampleId = "$uid$timeStamp";
+
+                newSample = {
+                  "id": sampleId,
+                  "provider": uid,
+                  "number": numberController.text,
+                  "code": codeController.text,
+                  "formula": formulaController.text,
+                  "keywords": keywordsController.text,
+                  "type": selectedTypeOfSample,
+                  "morphology": selectedMorphology,
+                };
+
+                saveNewSample(newSample);
+              },
               child: const Text("Save"),
             )
           ],
