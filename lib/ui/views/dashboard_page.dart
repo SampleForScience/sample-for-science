@@ -30,39 +30,51 @@ class _DashboardPageState extends State<DashboardPage> {
               GetBuilder<LoginController>(
                 init: Get.put(LoginController()),
                 builder: (loginController) {
-                  return  PopupMenuButton<MenuItem>(
-                    onSelected: (MenuItem item) {
-                      if (item == MenuItem.logIn) {
+                  return  PopupMenuButton<String>(
+                    onSelected: (String item) {
+                      if (item == 'Log in') {
                         loginController.signInWithGoogle();
+                      } else if (item == 'Registration') {
+                        // Navegar para a página de registro
+                        Get.toNamed(Routes.REGISTRATION);
                       }
                     },
-                    itemBuilder: (BuildContext context) => <PopupMenuEntry<MenuItem>>[
-                      PopupMenuItem<MenuItem>(
-                        value: MenuItem.logIn,
+                    itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                      PopupMenuItem<String>(
+                        value: 'Log in',
                         child: loginController.auth.currentUser != null
-                          ? const Text("Log out")
-                          : const Text("log in"),
+                            ? const Text("Log out")
+                            : const Text("Log in"),
+                      ),
+                      PopupMenuItem<String>(
+                        value: 'Registration',
+                        child: const Text("Registration"),
                       ),
                     ],
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                       child: loginController.auth.currentUser != null
-                        ? CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            loginController.auth.currentUser!.photoURL!,
-                          ),
-                        )
-                        : IconButton(
-                          onPressed: null,
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
-                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0),),),
-                          ),
-                          icon: const Icon(
-                            Icons.person_rounded, color: Colors.white,),
+                          ? CircleAvatar(
+                        backgroundImage: NetworkImage(
+                          loginController.auth.currentUser!.photoURL!,
                         ),
-                    )
+                      )
+                          : IconButton(
+                        onPressed: null,
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(100.0),
+                            ),
+                          ),
+                        ),
+                        icon: const Icon(
+                          Icons.person_rounded, color: Colors.white,),
+                      ),
+                    ),
                   );
+
                 }
               ),
             ],
@@ -89,6 +101,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       ],
                     ),
                     onTap: () {
+                      Get.toNamed(Routes.DASHBOARD);
                       debugPrint("Dashboard clicked");
                       Navigator.pop(context);
                     },

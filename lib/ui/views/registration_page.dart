@@ -154,8 +154,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ],
                 ),
                 onTap: () {
+                  Get.toNamed(Routes.DASHBOARD);
                   debugPrint("Dashboard clicked");
-                  Navigator.pop(context);
+
                 },
               ),
             ListTile(
