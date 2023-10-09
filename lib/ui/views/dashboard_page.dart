@@ -130,33 +130,15 @@ class _DashboardPageState extends State<DashboardPage> {
                     Navigator.pop(context);
                   },
                 ),
-                Container(
-                  color: Colors.white,
-                  child: const SizedBox(
-                    height: 5,
-                  ),
-                ),
-                ListTile(
-                  title: const Row(
-                    children: [
-                      Icon(Icons.settings, color: Colors.white70),
-                      Text(" Settings", style: TextStyle(color: Colors.white70)),
-                    ],
-                  ),
-                  onTap: () {
-                    Navigator.pop(context);
-                    Get.toNamed(Routes.REGISTRATION);
-                  },
-                ),
                 ListTile(
                   title: const Row(
                     children: [
                       Icon(Icons.info, color: Colors.white70),
-                      Text(" Sample.io", style: TextStyle(color: Colors.white70)),
+                      Text(" About", style: TextStyle(color: Colors.white70)),
                     ],
                   ),
                   onTap: () {
-                    debugPrint("Sample.io clicked");
+                    debugPrint("About clicked");
                     Navigator.pop(context);
                   },
                 ),
