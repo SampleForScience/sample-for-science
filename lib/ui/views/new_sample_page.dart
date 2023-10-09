@@ -47,12 +47,8 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
     });
   }
 
-  saveNewSample(Map<String, dynamic> newSample) async {
-    String uid = auth.currentUser!.uid;
-    String timeStamp = DateTime.now().millisecondsSinceEpoch.toString();
-    String fileName = "$uid$timeStamp";
-
-    await db.collection("samples").doc(fileName).set(newSample).then((_) {
+  saveNewSample(Map<String, dynamic> newSample, String sampleId) async {
+    await db.collection("samples").doc(sampleId).set(newSample).then((_) {
       debugPrint("New sample saved");
       Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
     }
@@ -91,74 +87,208 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
       body: TabBarView(
         controller: _tabController,
         children: [
-          Column(
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(12.0),
+                  child: Text(
+                    "Basic Information",
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+                Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.info_outline),
+                      onPressed: () {
+                        showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                            content: const Text("You can provide a single sample or a pack.Type the total amount of samples."),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, 'OK'),
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                    Expanded(
+                      child: TextField(
+                        controller: numberController,
+                        decoration: const InputDecoration(
+                          label: Text("Number of samples"),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.info_outline),
+                      onPressed: () {
+                        showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                            content: const Text("Assign a code for your sample(s)."),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, 'OK'),
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                    Expanded(
+                      child: TextField(
+                        controller: codeController,
+                        decoration: const InputDecoration(
+                          label: Text("Assign a code"),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.info_outline),
+                      onPressed: () {
+                        showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                            content: const Text("Inform the chemical formula for your sample(s). If you are providing a pack of samples, you can simplify the chemical formula.\n\nUsers will find your samples based on this field."),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, 'OK'),
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                    Expanded(
+                      child: TextField(
+                        controller: formulaController,
+                        decoration: const InputDecoration(
+                          label: Text("Chemical formula"),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.info_outline),
+                      onPressed: () {
+                        showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                            content: const Text("Provide a maximum of five keywords for your samples.\n\nUsers will find your samples based on this field. "),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, 'OK'),
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                    Expanded(
+                      child: TextField(
+                        controller: keywordsController,
+                        decoration: const InputDecoration(
+                          label: Text("Keywords"),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    DropdownMenu<String>(
+                      width: MediaQuery.of(context).size.width,
+                      hintText: "Type of Sample",
+                      initialSelection: "",
+                      onSelected: (String? value) {
+                        setState(() {
+                          selectedTypeOfSample = value!;
+                        });
+                      },
+                      dropdownMenuEntries: typeOfsampleList.map<DropdownMenuEntry<String>>((String value) {
+                        return DropdownMenuEntry<String>(value: value, label: value);
+                      }).toList(),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    DropdownMenu<String>(
+                      width: MediaQuery.of(context).size.width,
+                      hintText: "Morphology",
+                      initialSelection: "",
+                      onSelected: (String? value) {
+                        setState(() {
+                          selectedMorphology = value!;
+                        });
+                      },
+                      dropdownMenuEntries: morphologyList.map<DropdownMenuEntry<String>>((String value) {
+                        return DropdownMenuEntry<String>(value: value, label: value);
+                      }).toList(),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+          const Column(
             children: [
-              const Text("Basic Information"),
-              TextField(
-                controller: numberController,
-                decoration: const InputDecoration(
-                  label: Text("Number of samples"),
+              Padding(
+                padding: EdgeInsets.all(12.0),
+                child: Text(
+                  "Previous results",
+                  style: TextStyle(
+                    fontSize: 20,
+                  ),
                 ),
-              ),
-              TextField(
-                controller: codeController,
-                decoration: const InputDecoration(
-                  label: Text("Assign a code"),
-                ),
-              ),
-              TextField(
-                controller: formulaController,
-                decoration: const InputDecoration(
-                  label: Text("Chemical formula"),
-                ),
-              ),
-              TextField(
-                controller: keywordsController,
-                decoration: const InputDecoration(
-                  label: Text("Keywords"),
-                ),
-              ),
-              DropdownMenu<String>(
-                width: MediaQuery.of(context).size.width,
-                hintText: "Type of Sample",
-                initialSelection: "",
-                onSelected: (String? value) {
-                  setState(() {
-                    selectedTypeOfSample = value!;
-                  });
-                },
-                dropdownMenuEntries: typeOfsampleList.map<DropdownMenuEntry<String>>((String value) {
-                  return DropdownMenuEntry<String>(value: value, label: value);
-                }).toList(),
-              ),
-              DropdownMenu<String>(
-                width: MediaQuery.of(context).size.width,
-                hintText: "Morphology",
-                initialSelection: "",
-                onSelected: (String? value) {
-                  setState(() {
-                    selectedMorphology = value!;
-                  });
-                },
-                dropdownMenuEntries: morphologyList.map<DropdownMenuEntry<String>>((String value) {
-                  return DropdownMenuEntry<String>(value: value, label: value);
-                }).toList(),
               )
             ],
           ),
           const Column(
             children: [
-              Text("data")
+              Padding(
+                padding: EdgeInsets.all(12.0),
+                child: Text(
+                  "Suggestions for new measurements",
+                  style: TextStyle(
+                    fontSize: 20,
+                  ),
+                ),
+              )
             ],
           ),
           const Column(
             children: [
-              Text("data")
-            ],
-          ),
-          const Column(
-            children: [
-              Text("data")
+              Padding(
+                padding: EdgeInsets.all(12.0),
+                child: Text(
+                  "Hazardousness and Ethics",
+                  style: TextStyle(
+                    fontSize: 20,
+                  ),
+                ),
+              )
             ],
           ),
         ]
@@ -204,9 +334,9 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                   "morphology": selectedMorphology,
                 };
 
-                saveNewSample(newSample);
+                saveNewSample(newSample, sampleId);
               },
-              child: const Text("Save"),
+              child: const Text("Add Sample!"),
             )
           ],
         ),
