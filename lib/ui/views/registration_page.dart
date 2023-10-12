@@ -2,9 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:sample/controllers/login_controller.dart';
-import 'package:sample/routes/app_pages.dart';
+import 'package:sample/ui/widgets/buttons/circular_avatar_button.dart';
 
 // Itens do popMenuButton
 enum MenuItem { logIn }
@@ -75,7 +73,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
     await db.collection("users").doc(fileName).set(user).then((_) {
       debugPrint("User saved");
-      Get.offAndToNamed(Routes.DASHBOARD);
+      Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
     }
     ).onError((e, _) {
       debugPrint("Error saving user: $e");
@@ -93,45 +91,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("User info"),
-        actions: [
-          GetBuilder<LoginController>(
-            init: Get.put(LoginController()),
-            builder: (loginController) {
-              return  PopupMenuButton<MenuItem>(
-                onSelected: (MenuItem item) {
-                  if (item == MenuItem.logIn) {
-                    loginController.signInWithGoogle();
-                  }
-                },
-                itemBuilder: (BuildContext context) => <PopupMenuEntry<MenuItem>>[
-                  PopupMenuItem<MenuItem>(
-                    value: MenuItem.logIn,
-                    child: loginController.auth.currentUser != null
-                        ? const Text("Log out")
-                        : const Text("Log in"),
-                  ),
-                ],
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                  child: loginController.auth.currentUser != null
-                      ? CircleAvatar(
-                    backgroundImage: NetworkImage(
-                      loginController.auth.currentUser!.photoURL!,
-                    ),
-                  )
-                      : IconButton(
-                    onPressed: null,
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0),),),
-                    ),
-                    icon: const Icon(
-                      Icons.person_rounded, color: Colors.white,),
-                  ),
-                )
-              );
-            }
-          ),
+        actions: const [
+          CircularAvatarButton(),
         ],
       ),
       body: Padding(
@@ -240,7 +201,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
                         saveUser(user);
                       },
-                        child: const Text("Save")
+                      child: const Text("Save")
                     ),
                   ),
                 ]

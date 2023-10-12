@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:sample/routes/app_pages.dart';
 
-class LoginController extends GetxController {
+class GoogleSignInHandler {
+  BuildContext context;
+  GoogleSignInHandler(this.context);
+
   final auth = FirebaseAuth.instance;
   final db = FirebaseFirestore.instance;
   late bool registered;
@@ -15,10 +16,10 @@ class LoginController extends GetxController {
   Future<bool> userFound() async {
     late bool found;
     await db.collection("users")
-      .where("id", isEqualTo: auth.currentUser!.uid)
+      .doc(auth.currentUser!.uid)
       .get()
-      .then((querySnapshot) {
-        if(querySnapshot.size > 0) {
+      .then((docSnapshot) {
+        if(docSnapshot.exists) {
           found = true;
         } else {
           found = false;
@@ -33,14 +34,9 @@ class LoginController extends GetxController {
     if (auth.currentUser != null) {
       try {
         await auth.signOut();
-        Get.snackbar(
-          "Desconectado",
-          "",
-          backgroundColor: Colors.white,
-        );
-        update();
-        Get.offAndToNamed(Routes.LOGIN);
         await googleSignIn.signOut();
+        Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+        debugPrint('Deslogado');
       } catch(e) {
         debugPrint("ERRO deslogando:\n$e");
       }
@@ -59,32 +55,29 @@ class LoginController extends GetxController {
       debugPrint('googleUser: $googleUser');
       debugPrint('googleAuth: $googleAuth');
       userCredential = await auth.signInWithCredential(credential);
-      update();
 
       registered = await userFound();
 
       if (!registered) {
         await db.collection("users").doc(auth.currentUser!.uid)
-        .set(
-          {
-            "id": auth.currentUser!.uid,
-            "name": auth.currentUser!.displayName,
-            "email": auth.currentUser!.email
-          }
+            .set(
+            {
+              "id": auth.currentUser!.uid,
+              "name": auth.currentUser!.displayName,
+              "email": auth.currentUser!.email
+            }
         ).then((_) {
-            debugPrint("New user saved");
-            Get.offAndToNamed(Routes.DASHBOARD);
-          }
+          debugPrint("New user saved");
+          Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
+        }
         ).onError((e, _) {
           debugPrint("Error saving user: $e");
         });
       } else {
         debugPrint("User already registered");
-        Get.offAndToNamed(Routes.DASHBOARD);
+        Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
       }
     }
-
-    update();
   }
 
   Future<bool> checkUserLoggedIn() async {
