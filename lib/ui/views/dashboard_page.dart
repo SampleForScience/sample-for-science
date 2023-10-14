@@ -26,6 +26,7 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Future<void>getMySamples() async {
+    mySamples = [];
     late Map<String, dynamic> sampleData;
     try{
       await db.collection("samples")
@@ -35,8 +36,14 @@ class _DashboardPageState extends State<DashboardPage> {
           final samples = querySnapshot.docs;
           for (var sample in samples) {
             sampleData = {
+              "id": sample.data()["id"],
+              "provider": sample.data()["provider"],
+              "number": sample.data()["number"],
               "code": sample.data()["code"],
               "formula": sample.data()["formula"],
+              "keywords": sample.data()["keywords"],
+              "type": sample.data()["type"],
+              "morphology": sample.data()["morphology"],
               "registration": formatDateWithUserTimezone(sample.data()["registration"].toDate()),
             };
             setState(() {
@@ -200,12 +207,59 @@ class _DashboardPageState extends State<DashboardPage> {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         Text(sampleData['registration']),
+                        Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text("Confirm Deletion"),
+                                      content: const Text("Are you sure you want to delete this sample?"),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop(); // Fecha o diálogo
+                                          },
+                                          child: const Text("Cancel"),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            db.collection("samples")
+                                              .doc(sampleData["id"])
+                                              .delete()
+                                              .then((doc) => debugPrint("Sample deleted"),
+                                              onError: (e) => debugPrint("Error updating document $e"),
+                                            );
+                                            getMySamples();
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text("Delete"),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              icon: const Icon(Icons.delete),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                Navigator.pushNamed(context, "/sample", arguments: sampleData,);
+                              },
+                              icon: const Icon(Icons.remove_red_eye),
+                            ),
+                            IconButton(
+                              onPressed: () {
+
+                              },
+                              icon: const Icon(Icons.edit),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
-                    onTap: () {
-                      debugPrint("item clicked:\n${sampleData["code"]}\n${sampleData['formula']}\n${sampleData['registration']}");
-                      // Navigator.pushNamed(context, "/sample-page", arguments: sampleData,);
-                    },
                   );
               }).toList()
             ),
