@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sample/ui/widgets/buttons/circular_avatar_button.dart';
 import 'package:sample/ui/widgets/buttons/drawer_logout_button.dart';
 
@@ -13,7 +16,46 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  String selectedItem = "Dashboard";
+  final db = FirebaseFirestore.instance;
+  final auth = FirebaseAuth.instance;
+  List<Map<String, dynamic>> mySamples = [];
+
+  String formatDateWithUserTimezone(DateTime dateTime) {
+    final formatter = DateFormat('MM/dd/yyyy HH:mm', Intl.getCurrentLocale());
+    return formatter.format(dateTime.toLocal());
+  }
+
+  Future<void>getMySamples() async {
+    late Map<String, dynamic> sampleData;
+    try{
+      await db.collection("samples")
+        .where("provider", isEqualTo: auth.currentUser!.uid)
+        .get()
+        .then((querySnapshot) async {
+          final samples = querySnapshot.docs;
+          for (var sample in samples) {
+            sampleData = {
+              "code": sample.data()["code"],
+              "formula": sample.data()["formula"],
+              "registration": formatDateWithUserTimezone(sample.data()["registration"].toDate()),
+            };
+            setState(() {
+              mySamples.add(sampleData);
+            });
+          }
+        }, onError: (e) {
+          debugPrint("Error completing: $e");
+        });
+    } catch(e) {
+      debugPrint('error in getMySample(): $e');
+    }
+  }
+
+  @override
+  void initState() {
+    getMySamples();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,68 +169,45 @@ class _DashboardPageState extends State<DashboardPage> {
           children: [
             ExpansionTile(
               title: const Text('My Samples'),
-              children: <Widget>[
-                ListTile(
-                  title: const Row(
-                    children: [
-                      Icon(Icons.science),
-                      Text(" My samples test item 0"),
-                    ],
-                  ),
+              children: mySamples.isEmpty
+                ? <ListTile>[ListTile(
+                  title: const Text("Your samples will be shown here."),
                   onTap: () {
-                    debugPrint("My samples test item 0 clicked");
+                    debugPrint("Favorite sample test item 0 clicked");
                     // Navigator.pop(context);
                   },
-                ),
-                ListTile(
-                  title: const Row(
-                    children: [
-                      Icon(Icons.science),
-                      Text(" My samples test item 1"),
-                    ],
-                  ),
-                  onTap: () {
-                    debugPrint("My samples test item 1 clicked");
-                    // Navigator.pop(context);
-                  },
-                ),
-                ListTile(
-                  title: const Row(
-                    children: [
-                      Icon(Icons.science),
-                      Text(" My samples test item 2"),
-                    ],
-                  ),
-                  onTap: () {
-                    debugPrint("My samples test item 2 clicked");
-                    // Navigator.pop(context);
-                  },
-                ),
-                ListTile(
-                  title: const Row(
-                    children: [
-                      Icon(Icons.science),
-                      Text(" My samples test item 3"),
-                    ],
-                  ),
-                  onTap: () {
-                    debugPrint("My samples test item 3 clicked");
-                    // Navigator.pop(context);
-                  },
-                ),
-                ListTile(
-                  title: const Row(
-                    children: [
-                      Icon(Icons.science),
-                      Text(" My samples test item 4"),
-                    ],
-                  ),
-                  onTap: () {
-                    debugPrint("My samples test item 4 clicked");
-                    // Navigator.pop(context);
-                  },
-                ),
-              ],
+                ),]
+                : mySamples.map((sampleData) {
+                  return ListTile(
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Divider(
+                          thickness: 1,
+                        ),
+                        const Text(
+                          "Code",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(sampleData['code']),
+                        const Text(
+                          "Chemical Formula",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(sampleData['formula']),
+                        const Text(
+                          "Registration date",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(sampleData['registration']),
+                      ],
+                    ),
+                    onTap: () {
+                      debugPrint("item clicked:\n${sampleData["code"]}\n${sampleData['formula']}\n${sampleData['registration']}");
+                      // Navigator.pushNamed(context, "/sample-page", arguments: sampleData,);
+                    },
+                  );
+              }).toList()
             ),
             ExpansionTile(
               title: const Text('Favorite Samples'),
@@ -256,7 +275,7 @@ class _DashboardPageState extends State<DashboardPage> {
               ],
             ),
             ExpansionTile(
-              title: const Text('Favorite Provider'),
+              title: const Text('Favorite Providers'),
               children: <Widget>[
                 ListTile(
                   title: const Row(

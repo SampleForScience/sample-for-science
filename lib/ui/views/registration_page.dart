@@ -68,7 +68,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 
   saveUser(Map<String, dynamic> user) async {
-    // String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     String fileName = auth.currentUser!.uid;
 
     await db.collection("users").doc(fileName).set(user).then((_) {

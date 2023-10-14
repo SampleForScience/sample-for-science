@@ -320,8 +320,9 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
             if (_tabController.index == tabs.length - 1) ElevatedButton(
               onPressed: () {
                 String uid = auth.currentUser!.uid;
-                String timeStamp = DateTime.now().millisecondsSinceEpoch.toString();
-                String sampleId = "$uid$timeStamp";
+                DateTime registrationDate = DateTime.now();
+                String milissecondsTimeStamp = registrationDate.millisecondsSinceEpoch.toString();
+                String sampleId = "$uid$milissecondsTimeStamp";
 
                 newSample = {
                   "id": sampleId,
@@ -332,6 +333,7 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                   "keywords": keywordsController.text,
                   "type": selectedTypeOfSample,
                   "morphology": selectedMorphology,
+                  "registration": registrationDate,
                 };
 
                 saveNewSample(newSample, sampleId);
