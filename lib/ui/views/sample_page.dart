@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class SamplePage extends StatelessWidget {
   const SamplePage({super.key});
@@ -6,6 +7,12 @@ class SamplePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Map<String, dynamic> sampleData = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+
+    String formatDateWithUserTimezone(DateTime dateTime) {
+      final formatter = DateFormat('MM/dd/yyyy HH:mm', Intl.getCurrentLocale());
+      return formatter.format(dateTime.toLocal());
+    }
+
     return Scaffold(
       appBar: AppBar(
         // title: const Text("Sample"),
@@ -99,7 +106,7 @@ class SamplePage extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               )
             ),
-            Text(sampleData["registration"],
+            Text(formatDateWithUserTimezone(sampleData["registration"].toDate()),
               style: const TextStyle(
                 fontSize: 16
               )

@@ -44,7 +44,7 @@ class _DashboardPageState extends State<DashboardPage> {
               "keywords": sample.data()["keywords"],
               "type": sample.data()["type"],
               "morphology": sample.data()["morphology"],
-              "registration": formatDateWithUserTimezone(sample.data()["registration"].toDate()),
+              "registration": sample.data()["registration"],
             };
             setState(() {
               mySamples.add(sampleData);
@@ -206,7 +206,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           "Registration date",
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        Text(sampleData['registration']),
+                        Text(formatDateWithUserTimezone(sampleData["registration"].toDate())),
                         Row(
                           children: [
                             IconButton(
@@ -252,7 +252,7 @@ class _DashboardPageState extends State<DashboardPage> {
                             ),
                             IconButton(
                               onPressed: () {
-
+                                Navigator.pushNamed(context, "/update-sample", arguments: sampleData,);
                               },
                               icon: const Icon(Icons.edit),
                             ),
