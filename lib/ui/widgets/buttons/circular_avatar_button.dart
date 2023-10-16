@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sample/services/google_sign_in.dart';
 
 // Itens do popMenuButton
-enum MenuItem { login }
+enum MenuItem { login,registration }
 
 class CircularAvatarButton extends StatefulWidget {
   const CircularAvatarButton({super.key});
@@ -45,6 +45,9 @@ class _CircularAvatarButtonState extends State<CircularAvatarButton> {
           } catch (e) {
             debugPrint("CircularAvatarButton error: $e");
           }
+        };
+        if (item == MenuItem.registration) {
+          Navigator.of(context).pushNamed('/registration');
         }
       },
       itemBuilder: (BuildContext context) => <PopupMenuEntry<MenuItem>>[
@@ -54,6 +57,12 @@ class _CircularAvatarButtonState extends State<CircularAvatarButton> {
             ? const Text("Log out")
             : const Text("Log In"),
         ),
+        PopupMenuItem<MenuItem>(
+          value: MenuItem.registration,
+          child: isLogged
+              ? const Text("Registration")
+              : const Text("Registration"),
+        )
       ],
       child: Padding(
         padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
