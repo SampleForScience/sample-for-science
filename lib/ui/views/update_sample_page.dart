@@ -3,17 +3,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sample/ui/widgets/buttons/circular_avatar_button.dart';
 
-class NewSamplePage extends StatefulWidget {
-  const NewSamplePage({super.key});
+class UpdateSamplePage extends StatefulWidget {
+  const UpdateSamplePage({super.key});
 
   @override
-  State<NewSamplePage> createState() => _NewSamplePageState();
+  State<UpdateSamplePage> createState() => _UpdateSamplePageState();
 }
 
-class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProviderStateMixin {
+class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerProviderStateMixin {
   final db = FirebaseFirestore.instance;
   final auth = FirebaseAuth.instance;
-  Map<String, dynamic> newSample = {};
+  Map<String, dynamic> sample = {};
+  late Map<String, dynamic> sampleData;
 
   TextEditingController numberController = TextEditingController();
   TextEditingController codeController = TextEditingController();
@@ -47,8 +48,8 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
     });
   }
 
-  saveNewSample(Map<String, dynamic> newSample, String sampleId) async {
-    await db.collection("samples").doc(sampleId).set(newSample).then((_) {
+  updateSample(Map<String, dynamic> sample, String sampleId) async {
+    await db.collection("samples").doc(sampleId).set(sample).then((_) {
       debugPrint("New sample saved");
       Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
     }
@@ -57,11 +58,26 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
     });
   }
 
+  Future<bool> loadUserData(sampleData) async {
+    setState(() {
+      numberController.text = sampleData["number"];
+      codeController.text = sampleData["code"];
+      formulaController.text = sampleData["formula"];
+      keywordsController.text = sampleData["keywords"];
+      selectedTypeOfSample = sampleData["type"];
+      selectedMorphology = sampleData["morphology"];
+    });
+    return true;
+  }
+
   @override
   void initState() {
-    super.initState();
     _tabController = TabController(vsync: this, length: tabs.length);
     _tabController.addListener(_handleTabSelection);
+    Future.delayed(Duration.zero, () {
+      loadUserData(sampleData);
+    });
+    super.initState();
   }
 
   @override
@@ -72,9 +88,11 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
+    sampleData = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text("New Sample"),
+        title: const Text("Update Sample"),
         centerTitle: true,
         actions: const [
           CircularAvatarButton()
@@ -220,7 +238,7 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                     DropdownMenu<String>(
                       width: MediaQuery.of(context).size.width,
                       hintText: "Type of Sample",
-                      initialSelection: "",
+                      initialSelection: sampleData["type"],
                       onSelected: (String? value) {
                         setState(() {
                           selectedTypeOfSample = value!;
@@ -237,7 +255,7 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                     DropdownMenu<String>(
                       width: MediaQuery.of(context).size.width,
                       hintText: "Morphology",
-                      initialSelection: "",
+                      initialSelection: sampleData["morphology"],
                       onSelected: (String? value) {
                         setState(() {
                           selectedMorphology = value!;
@@ -319,26 +337,23 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
             ),
             if (_tabController.index == tabs.length - 1) ElevatedButton(
               onPressed: () {
-                String uid = auth.currentUser!.uid;
-                DateTime registrationDate = DateTime.now();
-                String milissecondsTimeStamp = registrationDate.millisecondsSinceEpoch.toString();
-                String sampleId = "$uid$milissecondsTimeStamp";
+                String sampleId = sampleData["id"];
 
-                newSample = {
-                  "id": sampleId,
-                  "provider": uid,
+                sample = {
+                  "id": sampleData["id"],
+                  "provider": sampleData["provider"],
                   "number": numberController.text,
                   "code": codeController.text,
                   "formula": formulaController.text,
                   "keywords": keywordsController.text,
                   "type": selectedTypeOfSample,
                   "morphology": selectedMorphology,
-                  "registration": registrationDate,
+                  "registration": sampleData["registration"],
                 };
 
-                saveNewSample(newSample, sampleId);
+                updateSample(sample, sampleId);
               },
-              child: const Text("Add Sample!"),
+              child: const Text("Update Sample!"),
             )
           ],
         ),

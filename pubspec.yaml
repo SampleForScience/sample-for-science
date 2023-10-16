@@ -45,6 +45,7 @@ dependencies:
   flutter_svg: any
   country_picker: ^2.0.21
   cloud_firestore: ^4.9.2
+  intl: ^0.18.1
 
 flutter_launcher_icons:
   image_path: "assets/icon.png"
