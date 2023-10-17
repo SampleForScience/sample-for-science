@@ -97,7 +97,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 ),
                 onTap: () {
                   debugPrint("Dashboard clicked");
-                  Navigator.pop(context);
+
                 },
               ),
             ),
@@ -109,8 +109,8 @@ class _DashboardPageState extends State<DashboardPage> {
                 ],
               ),
               onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/new-sample');
+                debugPrint("Provide sample clicked");
+                Navigator.of(context).pushNamed('/new-sample');
               },
             ),
             ListTile(
@@ -123,6 +123,7 @@ class _DashboardPageState extends State<DashboardPage> {
               onTap: () {
                 debugPrint("Search clicked");
                 Navigator.pop(context);
+
               },
             ),
             ListTile(
@@ -137,33 +138,15 @@ class _DashboardPageState extends State<DashboardPage> {
                 Navigator.pop(context);
               },
             ),
-            Container(
-              color: Colors.white,
-              child: const SizedBox(
-                height: 5,
-              ),
-            ),
-            ListTile(
-              title: const Row(
-                children: [
-                  Icon(Icons.settings, color: Colors.white70),
-                  Text(" Settings", style: TextStyle(color: Colors.white70)),
-                ],
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/registration');
-              },
-            ),
             ListTile(
               title: const Row(
                 children: [
                   Icon(Icons.info, color: Colors.white70),
-                  Text(" Sample.io", style: TextStyle(color: Colors.white70)),
+                  Text(" About", style: TextStyle(color: Colors.white70)),
                 ],
               ),
               onTap: () {
-                debugPrint("Sample.io clicked");
+                debugPrint("About clicked");
                 Navigator.pop(context);
               },
             ),
@@ -171,6 +154,7 @@ class _DashboardPageState extends State<DashboardPage> {
           ],
         ),
       ),
+
       body: SingleChildScrollView(
         child: Column(
           children: [
