@@ -70,7 +70,7 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
       Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
     }
     ).onError((e, _) {
-      debugPrint("Error saving user: $e");
+      debugPrint("Error saving sample: $e");
     });
   }
 
@@ -474,7 +474,7 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                       child: TextField(
                         controller: prevOtherController ,
                         decoration: const InputDecoration(
-                          label: Text("Keywords"),
+                          label: Text("Other previous mesrurements"),
                         ),
                       ),
                     ),
@@ -702,17 +702,17 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                   "keywords": keywordsController.text,
                   "type": selectedTypeOfSample,
                   "morphology": selectedMorphology,
-                  "Previous Diffraction": prevDiffractionController,
-                  "Previous Thermal": prevThermalController,
-                  "Previous Optical": prevOpticalController,
-                  "Other Previous": prevOtherController,
-                  "DOI": doiController,
-                  "Suggestion Diffraction": sugDiffractionController,
-                  "Suggestion Thermal": sugThermalController,
-                  "Suggestion Optical": sugOpticalController,
-                  "Other Suggestions": sugOtherController,
-                  "Hazardous": hazardChecked,
-                  "Animals": animalChecked,
+                  "previousDiffraction": prevDiffractionController.text,
+                  "previousThermal": prevThermalController.text,
+                  "previousOptical": prevOpticalController.text,
+                  "otherPrevious": prevOtherController.text,
+                  "doi": doiController.text,
+                  "suggestionDiffraction": sugDiffractionController.text,
+                  "suggestionThermal": sugThermalController.text,
+                  "suggestionOptical": sugOpticalController.text,
+                  "otherSuggestions": sugOtherController.text,
+                  "hazardous": hazardChecked,
+                  "animals": animalChecked,
                 };
 
                 saveNewSample(newSample, sampleId);
