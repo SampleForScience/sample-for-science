@@ -20,6 +20,7 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
   TextEditingController codeController = TextEditingController();
   TextEditingController formulaController = TextEditingController();
   TextEditingController keywordsController = TextEditingController();
+
   List<String> typeOfsampleList = <String>[
     "Ceramics",
     "Metals",
