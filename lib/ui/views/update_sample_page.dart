@@ -20,6 +20,19 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
   TextEditingController codeController = TextEditingController();
   TextEditingController formulaController = TextEditingController();
   TextEditingController keywordsController = TextEditingController();
+  //Results variables//
+  TextEditingController prevDiffractionController = TextEditingController();
+  TextEditingController prevThermalController = TextEditingController();
+  TextEditingController prevOpticalController = TextEditingController();
+  TextEditingController prevOtherController = TextEditingController();
+  TextEditingController doiController = TextEditingController();
+  //Suggestions variables//
+  TextEditingController sugDiffractionController = TextEditingController();
+  TextEditingController sugThermalController = TextEditingController();
+  TextEditingController sugOpticalController = TextEditingController();
+  TextEditingController sugOtherController = TextEditingController();
+  bool hazardChecked = false;
+  bool animalChecked = false;
 
   List<String> typeOfsampleList = <String>[
     "Ceramics",
@@ -67,6 +80,18 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
       keywordsController.text = sampleData["keywords"];
       selectedTypeOfSample = sampleData["type"];
       selectedMorphology = sampleData["morphology"];
+      //Results variables//
+      prevDiffractionController.text = sampleData["previousDiffraction"];
+      prevThermalController.text = sampleData["previousThermal"];
+      prevOpticalController.text = sampleData["previousOptical"];
+      prevOtherController.text = sampleData["otherPrevious"];
+      doiController.text = sampleData["doi"];
+      //Suggestions variables//
+      sugDiffractionController.text = sampleData["suggestionDiffraction"];
+      sugThermalController.text = sampleData["suggestionThermal"];
+      sugOpticalController.text = sampleData["suggestionOptical"];
+      sugOtherController.text = sampleData["otherSuggestion"];
+
     });
     return true;
   }
@@ -120,23 +145,7 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
                 ),
                 Row(
                   children: [
-                    IconButton(
-                      icon: const Icon(Icons.info_outline),
-                      onPressed: () {
-                        showDialog<String>(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                            content: const Text("You can provide a single sample or a pack.Type the total amount of samples."),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, 'OK'),
-                                child: const Text('OK'),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
+
                     Expanded(
                       child: TextField(
                         controller: numberController,
@@ -149,23 +158,7 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
                 ),
                 Row(
                   children: [
-                    IconButton(
-                      icon: const Icon(Icons.info_outline),
-                      onPressed: () {
-                        showDialog<String>(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                            content: const Text("Assign a code for your sample(s)."),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, 'OK'),
-                                child: const Text('OK'),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
+
                     Expanded(
                       child: TextField(
                         controller: codeController,
@@ -178,23 +171,7 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
                 ),
                 Row(
                   children: [
-                    IconButton(
-                      icon: const Icon(Icons.info_outline),
-                      onPressed: () {
-                        showDialog<String>(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                            content: const Text("Inform the chemical formula for your sample(s). If you are providing a pack of samples, you can simplify the chemical formula.\n\nUsers will find your samples based on this field."),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, 'OK'),
-                                child: const Text('OK'),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
+
                     Expanded(
                       child: TextField(
                         controller: formulaController,
@@ -207,23 +184,7 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
                 ),
                 Row(
                   children: [
-                    IconButton(
-                      icon: const Icon(Icons.info_outline),
-                      onPressed: () {
-                        showDialog<String>(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                            content: const Text("Provide a maximum of five keywords for your samples.\n\nUsers will find your samples based on this field. "),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, 'OK'),
-                                child: const Text('OK'),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
+
                     Expanded(
                       child: TextField(
                         controller: keywordsController,
@@ -271,44 +232,189 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
               ],
             ),
           ),
-          const Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.all(12.0),
-                child: Text(
-                  "Previous results",
-                  style: TextStyle(
-                    fontSize: 20,
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(12.0),
+                  child: Text(
+                    "Previous results",
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
                   ),
                 ),
-              )
-            ],
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: prevDiffractionController,
+                        decoration: const InputDecoration(
+                          label: Text("Previous diffraction means..."),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+
+                    Expanded(
+                      child: TextField(
+                        controller: prevThermalController,
+                        decoration: const InputDecoration(
+                          label: Text("Previous thermal measurement"),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+
+                    Expanded(
+                      child: TextField(
+                        controller: prevOpticalController,
+                        decoration: const InputDecoration(
+                          label: Text("Previous optical measurements..."),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+
+                    Expanded(
+                      child: TextField(
+                        controller: prevOtherController ,
+                        decoration: const InputDecoration(
+                          label: Text("Other previous mesrurements"),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+
+                    Expanded(
+                      child: TextField(
+                        controller: doiController,
+                        decoration: const InputDecoration(
+                          label: Text("doi*..."),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-          const Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.all(12.0),
-                child: Text(
-                  "Suggestions for new measurements",
-                  style: TextStyle(
-                    fontSize: 20,
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(12.0),
+                  child: Text(
+                    "Suggestions for new measurements",
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
                   ),
                 ),
-              )
-            ],
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: sugDiffractionController,
+                        decoration: const InputDecoration(
+                          label: Text("Suggestion of diffraction measurements"),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: sugThermalController,
+                        decoration: const InputDecoration(
+                          label: Text("Suggestion of thermal measurements"),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: sugOpticalController,
+                        decoration: const InputDecoration(
+                          label: Text("Suggestion of optical measurements"),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: sugOtherController,
+                        decoration: const InputDecoration(
+                          label: Text("Other suggestion"),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-          const Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.all(12.0),
-                child: Text(
-                  "Hazardousness and Ethics",
-                  style: TextStyle(
-                    fontSize: 20,
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(12.0),
+                  child: Text(
+                    "Hazardousness and Ethics",
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
                   ),
                 ),
-              )
-            ],
+                Row(
+                  children: [
+
+                    Checkbox(
+                      value: hazardChecked,
+                      onChanged: (newBool){
+                        setState(() {
+                          hazardChecked = newBool!;
+                        });
+                      }, ),
+                    const Text('Hazardous?'),
+                  ],
+                ),
+                Row(
+                  children: [
+
+                    Checkbox(
+                      value: animalChecked,
+                      onChanged: (newBool){
+                        setState(() {
+                          animalChecked = newBool!;
+                        });
+                      },
+                    ),
+                    const Text('Animals?'),
+                  ],
+                ),
+              ],
+            ),
           ),
         ]
       ),
@@ -350,6 +456,18 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
                   "type": selectedTypeOfSample,
                   "morphology": selectedMorphology,
                   "registration": sampleData["registration"],
+                  "previousDiffraction": prevDiffractionController.text,
+                  "previousThermal": prevThermalController.text,
+                  "previousOptical": prevOpticalController.text,
+                  "otherPrevious": prevOtherController.text,
+                  "doi": doiController.text,
+                  "suggestionDiffraction": sugDiffractionController.text,
+                  "suggestionThermal": sugThermalController.text,
+                  "suggestionOptical": sugOpticalController.text,
+                  "otherSuggestions": sugOtherController.text,
+                  "hazardous": hazardChecked,
+                  "animals": animalChecked,
+
                 };
 
                 updateSample(sample, sampleId);

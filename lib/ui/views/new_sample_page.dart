@@ -385,7 +385,7 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                     ),
                     Expanded(
                       child: TextField(
-                        controller: sugDiffractionController,
+                        controller: prevDiffractionController,
                         decoration: const InputDecoration(
                           label: Text("Previous diffraction means..."),
                         ),
@@ -430,7 +430,7 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                         showDialog<String>(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
-                            content: const Text("Include otpical measurements you have done to characterize your sample(s)"),
+                            content: const Text("Include optical measurements you have done to characterize your sample(s)"),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () => Navigator.pop(context, 'OK'),
@@ -632,7 +632,7 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                         showDialog<String>(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
-                            content: const Text("If you have any previous thermal\nmeasurement,such as magnetization\nresistivity,specific heat, etc, comment here\n\nExample:\n-ZFC-FC for magnetization\n-Zero field specific heat"),
+                            content: const Text("If you have any previous thermal\nmeasurement, such as magnetization\nresistivity, specific heat, etc, comment here\n\nExample:\n-ZFC-FC for magnetization\n-Zero field specific heat"),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () => Navigator.pop(context, 'OK'),
