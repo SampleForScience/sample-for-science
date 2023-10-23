@@ -55,6 +55,7 @@ class _DashboardPageState extends State<DashboardPage> {
               "otherSuggestions": sample.data()["otherSuggestions"],
               "hazardous": sample.data()["hazardous"],
               "animals": sample.data()["animals"],
+              "image": sample.data()["image"],
               "registration": sample.data()["registration"],
             };
             setState(() {

@@ -1,6 +1,11 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:sample/ui/widgets/buttons/circular_avatar_button.dart';
 import 'package:sample/ui/widgets/buttons/drawer_logout_button.dart';
 
@@ -13,8 +18,11 @@ class NewSamplePage extends StatefulWidget {
 
 class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProviderStateMixin {
   final db = FirebaseFirestore.instance;
+  final storage = FirebaseStorage.instance;
   final auth = FirebaseAuth.instance;
   Map<String, dynamic> newSample = {};
+  File? imagePath;
+  Uint8List? imageBytes;
 
   //Basics variables//
   TextEditingController numberController = TextEditingController();
@@ -64,7 +72,7 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
     });
   }
 
-  saveNewSample(Map<String, dynamic> newSample, String sampleId) async {
+  void saveNewSample(Map<String, dynamic> newSample, String sampleId) async {
     await db.collection("samples").doc(sampleId).set(newSample).then((_) {
       debugPrint("New sample saved");
       Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
@@ -74,8 +82,27 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
     });
   }
 
-  @override
+  Future<void> saveImage(String fileName) async {
+    final ref = storage.ref().child(fileName);
+    if (imagePath != null) {
+      await ref.putFile(imagePath!);
+    }
+  }
 
+  void imagePicker() async {
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      Uint8List imageBytes = await pickedFile.readAsBytes();
+      setState(() {
+        this.imageBytes = imageBytes;
+      });
+      imagePath = File(pickedFile.path);
+      debugPrint("Image path: $imagePath");
+    }
+  }
+
+  @override
   void initState() {
     super.initState();
     _tabController = TabController(vsync: this, length: tabs.length);
@@ -654,6 +681,30 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                     const Text('Animals?'),
                   ],
                 ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      imageBytes != null
+                        ? InkWell(
+                          onTap: imagePicker,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                              image: DecorationImage(
+                                image: MemoryImage(imageBytes!),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            width: 100,
+                            height: 100,
+                          ),
+                        )
+                      : ElevatedButton(onPressed: imagePicker, child: const Text("Add Image")),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
@@ -710,10 +761,12 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                   "otherSuggestions": sugOtherController.text,
                   "hazardous": hazardChecked,
                   "animals": animalChecked,
+                  "image": imagePath != null ? sampleId : "",
                   "registration": registrationDate,
                 };
 
                 saveNewSample(newSample, sampleId);
+                saveImage(sampleId);
               },
               child: const Text("Add Sample!"),
             )
