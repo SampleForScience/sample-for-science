@@ -44,6 +44,17 @@ class _DashboardPageState extends State<DashboardPage> {
               "keywords": sample.data()["keywords"],
               "type": sample.data()["type"],
               "morphology": sample.data()["morphology"],
+              "previousDiffraction": sample.data()["previousDiffraction"],
+              "previousThermal": sample.data()["previousThermal"],
+              "previousOptical": sample.data()["previousOptical"],
+              "otherPrevious": sample.data()["otherPrevious"],
+              "doi": sample.data()["doi"],
+              "suggestionDiffraction": sample.data()["suggestionDiffraction"],
+              "suggestionThermal": sample.data()["suggestionThermal"],
+              "suggestionOptical": sample.data()["suggestionOptical"],
+              "otherSuggestions": sample.data()["otherSuggestions"],
+              "hazardous": sample.data()["hazardous"],
+              "animals": sample.data()["animals"],
               "registration": sample.data()["registration"],
             };
             setState(() {

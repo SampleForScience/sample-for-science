@@ -90,8 +90,9 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
       sugDiffractionController.text = sampleData["suggestionDiffraction"];
       sugThermalController.text = sampleData["suggestionThermal"];
       sugOpticalController.text = sampleData["suggestionOptical"];
-      sugOtherController.text = sampleData["otherSuggestion"];
-
+      sugOtherController.text = sampleData["otherSuggestions"];
+      animalChecked = sampleData["animals"];
+      hazardChecked = sampleData["hazardous"];
     });
     return true;
   }
@@ -467,7 +468,6 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
                   "otherSuggestions": sugOtherController.text,
                   "hazardous": hazardChecked,
                   "animals": animalChecked,
-
                 };
 
                 updateSample(sample, sampleId);
