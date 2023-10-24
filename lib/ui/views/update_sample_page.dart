@@ -81,7 +81,7 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
     });
   }
 
-  Future<bool> loadUserData(sampleData) async {
+  Future<bool> loadSampleData(sampleData) async {
     setState(() {
       numberController.text = sampleData["number"];
       codeController.text = sampleData["code"];
@@ -135,7 +135,7 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
     _tabController = TabController(vsync: this, length: tabs.length);
     _tabController.addListener(_handleTabSelection);
     Future.delayed(Duration.zero, () {
-      loadUserData(sampleData);
+      loadSampleData(sampleData);
     });
     super.initState();
   }
