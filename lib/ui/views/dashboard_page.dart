@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sample/ui/widgets/buttons/about_button.dart';
 import 'package:sample/ui/widgets/buttons/circular_avatar_button.dart';
 import 'package:sample/ui/widgets/buttons/drawer_logout_button.dart';
 
@@ -55,6 +56,7 @@ class _DashboardPageState extends State<DashboardPage> {
               "otherSuggestions": sample.data()["otherSuggestions"],
               "hazardous": sample.data()["hazardous"],
               "animals": sample.data()["animals"],
+              "image": sample.data()["image"],
               "registration": sample.data()["registration"],
             };
             setState(() {
@@ -149,18 +151,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 Navigator.pop(context);
               },
             ),
-            ListTile(
-              title: const Row(
-                children: [
-                  Icon(Icons.info, color: Colors.white70),
-                  Text(" About", style: TextStyle(color: Colors.white70)),
-                ],
-              ),
-              onTap: () {
-                debugPrint("About clicked");
-                Navigator.pop(context);
-              },
-            ),
+            const AboutButton(),
             const DrawerLogoutButton(),
           ],
         ),

@@ -1,6 +1,11 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:sample/ui/widgets/buttons/circular_avatar_button.dart';
 
 class UpdateSamplePage extends StatefulWidget {
@@ -12,9 +17,13 @@ class UpdateSamplePage extends StatefulWidget {
 
 class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerProviderStateMixin {
   final db = FirebaseFirestore.instance;
+  final storage = FirebaseStorage.instance;
   final auth = FirebaseAuth.instance;
   Map<String, dynamic> sample = {};
   late Map<String, dynamic> sampleData;
+  late String imageName;
+  File? imagePath;
+  Uint8List? imageBytes;
 
   TextEditingController numberController = TextEditingController();
   TextEditingController codeController = TextEditingController();
@@ -64,7 +73,7 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
 
   updateSample(Map<String, dynamic> sample, String sampleId) async {
     await db.collection("samples").doc(sampleId).set(sample).then((_) {
-      debugPrint("New sample saved");
+      debugPrint("Sample saved");
       Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
     }
     ).onError((e, _) {
@@ -72,7 +81,7 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
     });
   }
 
-  Future<bool> loadUserData(sampleData) async {
+  Future<bool> loadSampleData(sampleData) async {
     setState(() {
       numberController.text = sampleData["number"];
       codeController.text = sampleData["code"];
@@ -93,8 +102,32 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
       sugOtherController.text = sampleData["otherSuggestions"];
       animalChecked = sampleData["animals"];
       hazardChecked = sampleData["hazardous"];
+      imageName = sampleData["image"];
     });
+    if(imageName != "") {
+      imageBytes = await storage.ref().child(imageName).getData();
+    }
     return true;
+  }
+
+  void imagePicker() async {
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      Uint8List imageBytes = await pickedFile.readAsBytes();
+      setState(() {
+        this.imageBytes = imageBytes;
+      });
+      imagePath = File(pickedFile.path);
+      debugPrint("Image path: $imagePath");
+    }
+  }
+
+  Future<void> saveImage(String fileName) async {
+    final ref = storage.ref().child(fileName);
+    if (imagePath != null) {
+      await ref.putFile(imagePath!);
+    }
   }
 
   @override
@@ -102,7 +135,7 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
     _tabController = TabController(vsync: this, length: tabs.length);
     _tabController.addListener(_handleTabSelection);
     Future.delayed(Duration.zero, () {
-      loadUserData(sampleData);
+      loadSampleData(sampleData);
     });
     super.initState();
   }
@@ -402,7 +435,6 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
                 ),
                 Row(
                   children: [
-
                     Checkbox(
                       value: animalChecked,
                       onChanged: (newBool){
@@ -413,6 +445,30 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
                     ),
                     const Text('Animals?'),
                   ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      imageBytes != null
+                        ? InkWell(
+                          onTap: imagePicker,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                              image: DecorationImage(
+                                image: MemoryImage(imageBytes!),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            width: 100,
+                            height: 100,
+                          ),
+                        )
+                        : ElevatedButton(onPressed: imagePicker, child: const Text("Add Image")),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -468,9 +524,11 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
                   "otherSuggestions": sugOtherController.text,
                   "hazardous": hazardChecked,
                   "animals": animalChecked,
+                  "image": imagePath != null ? sampleId : "",
                 };
 
                 updateSample(sample, sampleId);
+                saveImage(sampleId);
               },
               child: const Text("Update Sample!"),
             )

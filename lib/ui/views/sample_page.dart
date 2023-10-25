@@ -1,18 +1,48 @@
+import 'dart:typed_data';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class SamplePage extends StatelessWidget {
+class SamplePage extends StatefulWidget {
   const SamplePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final Map<String, dynamic> sampleData = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+  State<SamplePage> createState() => _SamplePageState();
+}
 
-    String formatDateWithUserTimezone(DateTime dateTime) {
-      final formatter = DateFormat('MM/dd/yyyy HH:mm', Intl.getCurrentLocale());
-      return formatter.format(dateTime.toLocal());
+class _SamplePageState extends State<SamplePage> {
+  final storage = FirebaseStorage.instance;
+  late Map<String, dynamic> sampleData;
+  Uint8List? imageBytes;
+
+  Future<void> loadSampleImage(String imageName) async {
+    if(imageName != "") {
+      imageBytes = await storage.ref().child(imageName).getData();
     }
+    setState(() {
+      imageBytes;
+    });
+  }
 
+  String formatDateWithUserTimezone(DateTime dateTime) {
+    final formatter = DateFormat('MM/dd/yyyy HH:mm', Intl.getCurrentLocale());
+    return formatter.format(dateTime.toLocal());
+  }
+
+  @override
+  void initState() {
+    Future.delayed(Duration.zero, () {
+      setState(() {
+        sampleData = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      });
+      loadSampleImage(sampleData["image"]);
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         // title: const Text("Sample"),
@@ -112,6 +142,17 @@ class SamplePage extends StatelessWidget {
               )
             ),
             const Divider(),
+            if (imageBytes != null) Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0),
+                image: DecorationImage(
+                  image: MemoryImage(imageBytes!),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              width: 100,
+              height: 100,
+            )
           ],
         ),
       ),
