@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:sample/ui/widgets/buttons/about_button.dart';
 import 'package:sample/ui/widgets/buttons/circular_avatar_button.dart';
 import 'package:sample/ui/widgets/buttons/drawer_logout_button.dart';
 
@@ -162,18 +163,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   Navigator.pop(context);
                 },
               ),
-              ListTile(
-                title: const Row(
-                  children: [
-                    Icon(Icons.info, color: Colors.white70),
-                    Text(" About", style: TextStyle(color: Colors.white70)),
-                  ],
-                ),
-                onTap: () {
-                  debugPrint("About clicked");
-                  Navigator.pop(context);
-                },
-              ),
+              const AboutButton(),
               const DrawerLogoutButton(),
             ],
           ),

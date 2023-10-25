@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:sample/ui/widgets/buttons/about_button.dart';
 import 'package:sample/ui/widgets/buttons/circular_avatar_button.dart';
 import 'package:sample/ui/widgets/buttons/drawer_logout_button.dart';
 
@@ -195,18 +196,7 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                 Navigator.pop(context);
               },
             ),
-            ListTile(
-              title: const Row(
-                children: [
-                  Icon(Icons.info, color: Colors.white70),
-                  Text(" About", style: TextStyle(color: Colors.white70)),
-                ],
-              ),
-              onTap: () {
-                debugPrint("About clicked");
-                Navigator.pop(context);
-              },
-            ),
+            const AboutButton(),
             const DrawerLogoutButton(),
           ],
         ),
