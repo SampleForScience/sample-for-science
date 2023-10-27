@@ -29,7 +29,8 @@ class CustomDrawer extends StatelessWidget {
               ),
               onTap: () {
                 debugPrint("Dashboard clicked");
-
+                Navigator.pop(context);
+                Navigator.of(context).pushNamedAndRemoveUntil("/dashboard", (route) => false);
               },
             ),
           ),
@@ -42,6 +43,7 @@ class CustomDrawer extends StatelessWidget {
             ),
             onTap: () {
               debugPrint("Provide sample clicked");
+              Navigator.pop(context);
               Navigator.of(context).pushNamed('/new-sample');
             },
           ),
@@ -55,7 +57,7 @@ class CustomDrawer extends StatelessWidget {
             onTap: () {
               debugPrint("Search clicked");
               Navigator.pop(context);
-
+              Navigator.of(context).pushNamed('/search');
             },
           ),
           ListTile(
