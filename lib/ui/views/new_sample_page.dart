@@ -6,8 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:sample/ui/widgets/buttons/circular_avatar_button.dart';
-import 'package:sample/ui/widgets/buttons/drawer_logout_button.dart';
+import 'package:sample/ui/buttons/circular_avatar_button.dart';
 import 'package:sample/ui/widgets/custom_drawer.dart';
 
 class NewSamplePage extends StatefulWidget {

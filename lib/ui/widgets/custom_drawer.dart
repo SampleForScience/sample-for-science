@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sample/ui/widgets/buttons/drawer_logout_button.dart';
+import 'package:sample/ui/buttons/drawer_logout_button.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});
