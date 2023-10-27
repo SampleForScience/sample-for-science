@@ -525,6 +525,20 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
                   "hazardous": hazardChecked,
                   "animals": animalChecked,
                   "image": imagePath != null ? sampleId : "",
+                  "search": (codeController.text +
+                      formulaController.text +
+                      keywordsController.text +
+                      selectedTypeOfSample +
+                      selectedMorphology +
+                      prevDiffractionController.text +
+                      prevThermalController.text +
+                      prevThermalController.text +
+                      prevOpticalController.text +
+                      prevOtherController.text +
+                      sugDiffractionController.text +
+                      sugThermalController.text +
+                      sugOpticalController.text +
+                      sugOtherController.text).toLowerCase()
                 };
 
                 updateSample(sample, sampleId);

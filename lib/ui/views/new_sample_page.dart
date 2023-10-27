@@ -763,6 +763,20 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                   "animals": animalChecked,
                   "image": imagePath != null ? sampleId : "",
                   "registration": registrationDate,
+                  "search": (codeController.text +
+                      formulaController.text +
+                      keywordsController.text +
+                      selectedTypeOfSample +
+                      selectedMorphology +
+                      prevDiffractionController.text +
+                      prevThermalController.text +
+                      prevThermalController.text +
+                      prevOpticalController.text +
+                      prevOtherController.text +
+                      sugDiffractionController.text +
+                      sugThermalController.text +
+                      sugOpticalController.text +
+                      sugOtherController.text).toLowerCase()
                 };
 
                 saveNewSample(newSample, sampleId);
