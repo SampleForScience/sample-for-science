@@ -6,6 +6,7 @@ import 'package:sample/ui/views/login_page.dart';
 import 'package:sample/ui/views/new_sample_page.dart';
 import 'package:sample/ui/views/registration_page.dart';
 import 'package:sample/ui/views/sample_page.dart';
+import 'package:sample/ui/views/search_page.dart';
 import 'package:sample/ui/views/update_sample_page.dart';
 
 Future<void> main() async {
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
         '/sample': (context) => const SamplePage(),
         '/new-sample': (context) => const NewSamplePage(),
         '/update-sample': (context) => const UpdateSamplePage(),
+        '/search': (context) => const SearchPage(),
       },
     );
   }
