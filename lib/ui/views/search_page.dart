@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sample/ui/widgets/custom_drawer.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -78,6 +79,7 @@ class _SearchPageState extends State<SearchPage> {
         title: const Text("Search"),
         centerTitle: true,
       ),
+      drawer: const CustomDrawer(highlight: Highlight.search),
       body: Column(
         children: [
           SizedBox(

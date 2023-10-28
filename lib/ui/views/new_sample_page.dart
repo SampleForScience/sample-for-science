@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -129,7 +128,7 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
           tabs: tabs,
         ),
       ),
-      drawer: const CustomDrawer(),
+      drawer: const CustomDrawer(highlight: Highlight.provide),
       body: TabBarView(
         controller: _tabController,
         children: [

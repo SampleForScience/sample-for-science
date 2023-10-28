@@ -86,7 +86,7 @@ class _DashboardPageState extends State<DashboardPage> {
           CircularAvatarButton(),
         ],
       ),
-      drawer: const CustomDrawer(),
+      drawer: const CustomDrawer(highlight: Highlight.dashboard),
 
       body: SingleChildScrollView(
         child: Column(

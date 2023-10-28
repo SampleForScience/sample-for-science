@@ -97,7 +97,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             CircularAvatarButton(),
           ],
         ),
-      drawer: const CustomDrawer(),
+      drawer: const CustomDrawer(highlight: Highlight.other,),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(

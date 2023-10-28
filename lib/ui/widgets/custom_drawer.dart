@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:sample/ui/buttons/drawer_logout_button.dart';
 
-class CustomDrawer extends StatelessWidget {
-  const CustomDrawer({super.key});
+enum Highlight { dashboard, provide, search, messages, other }
 
+class CustomDrawer extends StatefulWidget {
+  final Highlight highlight;
+  const CustomDrawer({super.key, required this.highlight});
+
+  @override
+  State<CustomDrawer> createState() => _CustomDrawerState();
+}
+
+class _CustomDrawerState extends State<CustomDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -19,12 +27,26 @@ class CustomDrawer extends StatelessWidget {
             child: Image(image: AssetImage("assets/logo.png")),
           ),
           Container(
-            color: const Color.fromARGB(255, 245, 252, 255),
+            color: widget.highlight == Highlight.dashboard
+              ? const Color.fromARGB(255, 245, 252, 255)
+              : const Color.fromARGB(255, 55, 98, 118),
             child: ListTile(
-              title: const Row(
+              title: Row(
                 children: [
-                  Icon(Icons.apps),
-                  Text(" Dashboard"),
+                  Icon(
+                    Icons.apps,
+                    color: widget.highlight == Highlight.dashboard
+                      ? Colors.black87
+                      : Colors.white70,
+                  ),
+                  Text(
+                    " Dashboard",
+                    style: TextStyle(
+                      color: widget.highlight == Highlight.dashboard
+                          ? Colors.black87
+                          : Colors.white70,
+                    )
+                  ),
                 ],
               ),
               onTap: () {
@@ -34,43 +56,94 @@ class CustomDrawer extends StatelessWidget {
               },
             ),
           ),
-          ListTile(
-            title: const Row(
-              children: [
-                Icon(Icons.add, color: Colors.white70),
-                Text(" Provide sample", style: TextStyle(color: Colors.white70)),
-              ],
+          Container(
+            color: widget.highlight == Highlight.provide
+              ? const Color.fromARGB(255, 245, 252, 255)
+              : const Color.fromARGB(255, 55, 98, 118),
+            child: ListTile(
+              title: Row(
+                children: [
+                  Icon(
+                    Icons.add,
+                    color: widget.highlight == Highlight.provide
+                      ? Colors.black87
+                      : Colors.white70,
+                  ),
+                  Text(
+                    " Provide sample",
+                    style: TextStyle(
+                      color: widget.highlight == Highlight.provide
+                        ? Colors.black87
+                        : Colors.white70,
+                    )
+                  ),
+                ],
+              ),
+              onTap: () {
+                debugPrint("Provide sample clicked");
+                Navigator.pop(context);
+                Navigator.of(context).pushNamed('/new-sample');
+              },
             ),
-            onTap: () {
-              debugPrint("Provide sample clicked");
-              Navigator.pop(context);
-              Navigator.of(context).pushNamed('/new-sample');
-            },
           ),
-          ListTile(
-            title: const Row(
-              children: [
-                Icon(Icons.search, color: Colors.white70),
-                Text(" Search", style: TextStyle(color: Colors.white70)),
-              ],
+          Container(
+            color: widget.highlight == Highlight.search
+              ? const Color.fromARGB(255, 245, 252, 255)
+              : const Color.fromARGB(255, 55, 98, 118),
+            child: ListTile(
+              title: Row(
+                children: [
+                  Icon(
+                    Icons.search,
+                    color: widget.highlight == Highlight.search
+                      ? Colors.black87
+                      : Colors.white70,
+                  ),
+                  Text(
+                    " Search",
+                    style: TextStyle(
+                      color: widget.highlight == Highlight.search
+                        ? Colors.black87
+                        : Colors.white70,
+                    )
+                  )
+                ],
+              ),
+              onTap: () {
+                debugPrint("Search clicked");
+                Navigator.pop(context);
+                Navigator.of(context).pushNamed('/search');
+              },
             ),
-            onTap: () {
-              debugPrint("Search clicked");
-              Navigator.pop(context);
-              Navigator.of(context).pushNamed('/search');
-            },
           ),
-          ListTile(
-            title: const Row(
-              children: [
-                Icon(Icons.messenger_outline_sharp, color: Colors.white70),
-                Text(" Messages", style: TextStyle(color: Colors.white70)),
-              ],
+          Container(
+            color: widget.highlight == Highlight.messages
+              ? const Color.fromARGB(255, 245, 252, 255)
+              : const Color.fromARGB(255, 55, 98, 118),
+            child: ListTile(
+              title: Row(
+                children: [
+                  Icon(
+                    Icons.messenger_outline_sharp,
+                    color: widget.highlight == Highlight.messages
+                      ? Colors.black87
+                      : Colors.white70,
+                  ),
+                  Text(
+                    " Messages",
+                    style: TextStyle(
+                      color: widget.highlight == Highlight.messages
+                        ? Colors.black87
+                        : Colors.white70,
+                    )
+                  ),
+                ],
+              ),
+              onTap: () {
+                debugPrint("Messages clicked");
+                Navigator.pop(context);
+              },
             ),
-            onTap: () {
-              debugPrint("Messages clicked");
-              Navigator.pop(context);
-            },
           ),
           ListTile(
             title: const Row(
