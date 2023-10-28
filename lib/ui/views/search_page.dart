@@ -98,16 +98,10 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                   IconButton(
                     onPressed: () async {
-                      searchSamples(searchController.text);
+                      if (searchController.text != "") {
+                        searchSamples(searchController.text);
+                      }
                     },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(0.0),
-                        ),
-                      ),
-                    ),
                     icon: const Icon(
                       Icons.search_rounded,
                       color: Colors.black,
@@ -145,6 +139,17 @@ class _SearchPageState extends State<SearchPage> {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         Text(formatDateWithUserTimezone(foundSamples[index]["registration"].toDate())),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                Navigator.pushNamed(context, "/sample", arguments: foundSamples[index],);
+                              },
+                              icon: const Icon(Icons.remove_red_eye),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   );

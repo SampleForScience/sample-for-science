@@ -125,6 +125,7 @@ class _DashboardPageState extends State<DashboardPage> {
                         ),
                         Text(formatDateWithUserTimezone(sampleData["registration"].toDate())),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             IconButton(
                               onPressed: () {
