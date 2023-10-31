@@ -87,7 +87,6 @@ class _DashboardPageState extends State<DashboardPage> {
         ],
       ),
       drawer: const CustomDrawer(highlight: Highlight.dashboard),
-
       body: SingleChildScrollView(
         child: Column(
           children: [
