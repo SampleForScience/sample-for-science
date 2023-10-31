@@ -112,80 +112,49 @@ class _SearchPageState extends State<SearchPage> {
               ),
             ),
           ),
-          if (foundSamples.isNotEmpty)
-            Expanded(
-              child: ListView.builder(
-                itemCount: foundSamples.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Divider(
-                          thickness: 1,
-                        ),
-                        const Text(
-                          "Code",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Text(foundSamples[index]['code']),
-                        const Text(
-                          "Chemical Formula",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Text(foundSamples[index]['formula']),
-                        const Text(
-                          "Registration date",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Text(formatDateWithUserTimezone(foundSamples[index]["registration"].toDate())),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                Navigator.pushNamed(context, "/sample", arguments: foundSamples[index],);
-                              },
-                              icon: const Icon(Icons.remove_red_eye),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
+          if (foundSamples.isNotEmpty) Expanded(
+            child: ListView.builder(
+              itemCount: foundSamples.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Divider(
+                        thickness: 1,
+                      ),
+                      const Text(
+                        "Code",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(foundSamples[index]['code']),
+                      const Text(
+                        "Chemical Formula",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(foundSamples[index]['formula']),
+                      const Text(
+                        "Registration date",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(formatDateWithUserTimezone(foundSamples[index]["registration"].toDate())),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, "/sample", arguments: foundSamples[index],);
+                            },
+                            icon: const Icon(Icons.remove_red_eye),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
-
-          //   Expanded(
-          //     child: ListView(children: foundSamples.map((sampleData) {
-          //       return ListTile(
-          //       title: Column(
-          //         crossAxisAlignment: CrossAxisAlignment.start,
-          //         children: [
-          //           const Divider(
-          //             thickness: 1,
-          //           ),
-          //           const Text(
-          //             "Code",
-          //             style: TextStyle(fontWeight: FontWeight.bold),
-          //           ),
-          //           Text(sampleData['code']),
-          //           const Text(
-          //             "Chemical Formula",
-          //             style: TextStyle(fontWeight: FontWeight.bold),
-          //           ),
-          //           Text(sampleData['formula']),
-          //           const Text(
-          //             "Registration date",
-          //             style: TextStyle(fontWeight: FontWeight.bold),
-          //           ),
-          //           Text(formatDateWithUserTimezone(sampleData["registration"].toDate())),
-          //         ],
-          //       ),
-          //     );
-          // }).toList()),
-          //   ),
+          ),
         ],
       ),
     );
