@@ -239,7 +239,7 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                         showDialog<String>(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
-                            content: const Text("Provide a maximum of five keywords for your samples.\n\nUsers will find your samples based on this field. "),
+                            content: const Text("Provide a maximum of five keywords for your samples separated by comma.\n\nUsers will find your samples based on this field."),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () => Navigator.pop(context, 'OK'),
