@@ -43,7 +43,7 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
   bool animalChecked = false;
 
 
-  List<String> typeOfsampleList = <String>[
+  List<String> typeOfSampleList = <String>[
     "Ceramics",
     "Metals",
     "Metal-organic",
@@ -271,7 +271,7 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                           selectedTypeOfSample = value!;
                         });
                       },
-                      dropdownMenuEntries: typeOfsampleList.map<DropdownMenuEntry<String>>((String value) {
+                      dropdownMenuEntries: typeOfSampleList.map<DropdownMenuEntry<String>>((String value) {
                         return DropdownMenuEntry<String>(value: value, label: value);
                       }).toList(),
                     ),
@@ -404,7 +404,7 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                         showDialog<String>(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
-                            content: const Text("If you have made any other\ncharacterization, please, comment here.\n\nExamples:\n-Optical or eletronical microscopies(SEM,TEM,...)\n-Mechanical characterization\n-etc"),
+                            content: const Text("If you have made any other characterization, please, comment here.\n\nExamples:\n-Optical or eletronical microscopes(SEM,TEM,...)\n-Mechanical characterization\n-etc"),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () => Navigator.pop(context, 'OK'),
@@ -419,7 +419,7 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                       child: TextField(
                         controller: prevOtherController ,
                         decoration: const InputDecoration(
-                          label: Text("Other previous mesrurements"),
+                          label: Text("Other previous measurements"),
                         ),
                       ),
                     ),
@@ -433,7 +433,7 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                         showDialog<String>(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
-                            content: const Text("This field is mandatory.\n\nProvide the reference where your sample were published"),
+                            content: const Text("This field is mandatory.\n\nProvide the reference where your sample were published."),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () => Navigator.pop(context, 'OK'),
@@ -661,8 +661,8 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
               onPressed: () {
                 String uid = auth.currentUser!.uid;
                 DateTime registrationDate = DateTime.now();
-                String milissecondsTimeStamp = registrationDate.millisecondsSinceEpoch.toString();
-                String sampleId = "$uid$milissecondsTimeStamp";
+                String millisecondsTimeStamp = registrationDate.millisecondsSinceEpoch.toString();
+                String sampleId = "$uid$millisecondsTimeStamp";
 
                 newSample = {
                   "id": sampleId,
