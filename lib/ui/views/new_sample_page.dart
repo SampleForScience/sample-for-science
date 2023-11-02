@@ -433,9 +433,7 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                         showDialog<String>(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
-                            content: const Text("This field is mandatory.\n\nProvide the reference(s) where your sample(s) were published"
-                                " You only need to include the DOI - if more than one, separated by space"
-                            ),
+                            content: const Text("This field is mandatory.\n\nProvide the reference where your sample were published"),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () => Navigator.pop(context, 'OK'),
