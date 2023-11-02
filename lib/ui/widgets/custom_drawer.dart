@@ -83,7 +83,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
               onTap: () {
                 debugPrint("Provide sample clicked");
                 Navigator.pop(context);
-                Navigator.of(context).pushNamed('/new-sample');
+                Navigator.of(context).popAndPushNamed('/new-sample');
               },
             ),
           ),
@@ -113,7 +113,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
               onTap: () {
                 debugPrint("Search clicked");
                 Navigator.pop(context);
-                Navigator.of(context).pushNamed('/search');
+                Navigator.of(context).popAndPushNamed('/search');
               },
             ),
           ),
