@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sample/ui/buttons/about_button.dart';
 import 'package:sample/ui/buttons/drawer_logout_button.dart';
 
 enum Highlight { dashboard, provide, search, messages, other }
@@ -82,7 +83,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
               onTap: () {
                 debugPrint("Provide sample clicked");
                 Navigator.pop(context);
-                Navigator.of(context).pushNamed('/new-sample');
+                Navigator.of(context).popAndPushNamed('/new-sample');
               },
             ),
           ),
@@ -112,7 +113,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
               onTap: () {
                 debugPrint("Search clicked");
                 Navigator.pop(context);
-                Navigator.of(context).pushNamed('/search');
+                Navigator.of(context).popAndPushNamed('/search');
               },
             ),
           ),
@@ -145,18 +146,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
               },
             ),
           ),
-          ListTile(
-            title: const Row(
-              children: [
-                Icon(Icons.info, color: Colors.white70),
-                Text(" About", style: TextStyle(color: Colors.white70)),
-              ],
-            ),
-            onTap: () {
-              debugPrint("About clicked");
-              Navigator.pop(context);
-            },
-          ),
+          const AboutButton(),
           const DrawerLogoutButton(),
         ],
       ),

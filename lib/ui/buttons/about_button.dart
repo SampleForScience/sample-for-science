@@ -1,7 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
-class AboutButton extends StatelessWidget {
+class AboutButton extends StatefulWidget {
   const AboutButton({super.key});
+
+  @override
+  State<AboutButton> createState() => _AboutButtonState();
+}
+
+class _AboutButtonState extends State<AboutButton> {
+  late String packageVersion;
+  Future<void> getPackageVersion() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    setState(() {
+      packageVersion = packageInfo.version;
+    });
+  }
+
+  @override
+  void initState() {
+    getPackageVersion();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,16 +34,13 @@ class AboutButton extends StatelessWidget {
       ),
       onTap: () {
         Navigator.pop(context);
-        showDialog<String>(
+        showAboutDialog(
           context: context,
-          builder: (BuildContext context) => AlertDialog(
-            title: const Text("About"),
-            content: const Text("Version: 0.1.5"),
-            actions: <Widget>[
-              ElevatedButton(onPressed: (){
-                Navigator.pop(context);
-              }, child: const Text("Ok")),
-            ],
+          applicationName: "Sample For Science",
+          applicationVersion: packageVersion,
+          applicationIcon: const SizedBox(
+            height: 100,
+            child: Image(image: AssetImage("assets/logo.png"))
           ),
         );
       },

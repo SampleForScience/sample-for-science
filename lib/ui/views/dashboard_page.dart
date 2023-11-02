@@ -26,7 +26,9 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Future<void>getMySamples() async {
-    mySamples = [];
+    setState(() {
+      mySamples = [];
+    });
     late Map<String, dynamic> sampleData;
     try{
       await db.collection("samples")
