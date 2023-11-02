@@ -3,7 +3,6 @@ import 'package:country_picker/country_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sample/ui/buttons/circular_avatar_button.dart';
-import 'package:sample/ui/widgets/custom_drawer.dart';
 
 // Itens do popMenuButton
 enum MenuItem { logIn }
@@ -96,7 +95,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
             CircularAvatarButton(),
           ],
         ),
-      drawer: const CustomDrawer(highlight: Highlight.other,),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(
@@ -204,6 +202,15 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         saveUser(user);
                       },
                       child: const Text("Save")
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text("Cancel")
                     ),
                   ),
                 ]
