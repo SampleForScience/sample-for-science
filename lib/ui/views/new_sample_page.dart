@@ -456,6 +456,37 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                     ),
                   ],
                 ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      imageBytes != null
+                          ? Column(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              debugPrint("Image clicked");
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.0),
+                                image: DecorationImage(
+                                  image: MemoryImage(imageBytes!),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              width: 100,
+                              height: 100,
+                            ),
+                          ),
+                          ElevatedButton(onPressed: imagePicker, child: const Text("Change Image")),
+                        ],
+                      )
+                          : ElevatedButton(onPressed: imagePicker, child: const Text("Add Image")),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
@@ -598,30 +629,6 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                     ),
                     const Text('Animals?'),
                   ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      imageBytes != null
-                        ? InkWell(
-                          onTap: imagePicker,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
-                              image: DecorationImage(
-                                image: MemoryImage(imageBytes!),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            width: 100,
-                            height: 100,
-                          ),
-                        )
-                      : ElevatedButton(onPressed: imagePicker, child: const Text("Add Image")),
-                    ],
-                  ),
                 ),
               ],
             ),
