@@ -452,19 +452,26 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       imageBytes != null
-                        ? InkWell(
-                          onTap: imagePicker,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
-                              image: DecorationImage(
-                                image: MemoryImage(imageBytes!),
-                                fit: BoxFit.cover,
+                        ? Column(
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                debugPrint("Image Clicked");
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  image: DecorationImage(
+                                    image: MemoryImage(imageBytes!),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                width: 100,
+                                height: 100,
                               ),
                             ),
-                            width: 100,
-                            height: 100,
-                          ),
+                            ElevatedButton(onPressed: imagePicker, child: const Text("Change Image")),
+                          ],
                         )
                         : ElevatedButton(onPressed: imagePicker, child: const Text("Add Image")),
                     ],
