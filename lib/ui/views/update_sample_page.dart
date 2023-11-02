@@ -29,6 +29,8 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
   TextEditingController codeController = TextEditingController();
   TextEditingController formulaController = TextEditingController();
   TextEditingController keywordsController = TextEditingController();
+  TextEditingController otherTypeController = TextEditingController();
+  TextEditingController otherMorphologyController = TextEditingController();
   //Results variables//
   TextEditingController prevDiffractionController = TextEditingController();
   TextEditingController prevThermalController = TextEditingController();
@@ -47,13 +49,17 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
     "Ceramics",
     "Metals",
     "Metal-organic",
-    "Polymer / Plastic"];
+    "Polymer / Plastic",
+    "Other"
+  ];
   String selectedTypeOfSample = "";
+
   List<String> morphologyList = <String>[
     "Composite",
     "Nano(particle, wire, ...)",
     "Film(thin, thick, ...)",
-    "Bulk"
+    "Bulk",
+    "Other"
   ];
   String selectedMorphology = "";
 
@@ -88,7 +94,14 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
       formulaController.text = sampleData["formula"];
       keywordsController.text = sampleData["keywords"];
       selectedTypeOfSample = sampleData["type"];
+      if(sampleData["type"] == "Other") {
+        otherTypeController.text = sampleData["otherType"];
+      }
       selectedMorphology = sampleData["morphology"];
+      if(sampleData["morphology"] == "Other") {
+        otherMorphologyController.text = sampleData["otherMorphology"];
+      }
+      otherMorphologyController = sampleData["otherMorphology"];
       //Results variables//
       prevDiffractionController.text = sampleData["previousDiffraction"];
       prevThermalController.text = sampleData["previousThermal"];
@@ -246,6 +259,12 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
                     ),
                   ],
                 ),
+                if (selectedTypeOfSample == "Other") TextField(
+                  controller: otherTypeController,
+                  decoration: const InputDecoration(
+                    label: Text("Type of sample"),
+                  ),
+                ),
                 Row(
                   children: [
                     DropdownMenu<String>(
@@ -262,6 +281,12 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
                       }).toList(),
                     ),
                   ],
+                ),
+                if (selectedMorphology == "Other") TextField(
+                  controller: otherMorphologyController,
+                  decoration: const InputDecoration(
+                    label: Text("Morphology"),
+                  ),
                 )
               ],
             ),
@@ -517,7 +542,9 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
                   "formula": formulaController.text,
                   "keywords": keywordsController.text,
                   "type": selectedTypeOfSample,
+                  "otherType": selectedTypeOfSample == "Other" ? otherTypeController.text : "",
                   "morphology": selectedMorphology,
+                  "otherMorfology": selectedMorphology == "Other" ? otherMorphologyController.text : "",
                   "registration": sampleData["registration"],
                   "previousDiffraction": prevDiffractionController.text,
                   "previousThermal": prevThermalController.text,
@@ -535,7 +562,9 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
                       formulaController.text +
                       keywordsController.text +
                       selectedTypeOfSample +
+                      otherTypeController.text +
                       selectedMorphology +
+                      otherMorphologyController.text +
                       prevDiffractionController.text +
                       prevThermalController.text +
                       prevThermalController.text +
