@@ -571,12 +571,7 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                         showDialog<String>(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
-                            content: const Text("Check this box if your sample:\n\n"
-                                "-emits ionizing radiation:\n\n"
-                                "or, if your sample is:\n\n"
-                                "-toxic:\n-explosive:\n-flammable:\n-corrosive.\n\n"
-                                "In other words, could adversely affect the\n"
-                                "health and safety of the public or the workers or harm the environment."
+                            content: const Text("Check this box if your sample emits ionizing radiation or if your sample is:\n- toxic\n- explosive\n- flammable\n- corrosive\n\nIn other words, could adversely affect the health and safety of the public or the workers or harm the environment."
                             ),
                             actions: <Widget>[
                               TextButton(
@@ -606,7 +601,7 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                         showDialog<String>(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
-                            content: const Text("If you have any previous thermal\nmeasurement, such as magnetization\nresistivity, specific heat, etc, comment here\n\nExample:\n-ZFC-FC for magnetization\n-Zero field specific heat"),
+                            content: const Text("Check this box if your samples depend on animals (or animals-related products) to be synthesized."),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () => Navigator.pop(context, 'OK'),
