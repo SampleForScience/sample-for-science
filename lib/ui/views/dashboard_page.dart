@@ -5,9 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:sample/ui/buttons/circular_avatar_button.dart';
 import 'package:sample/ui/widgets/custom_drawer.dart';
 
-// Itens do popMenuButton
-enum MenuItem { logIn }
-
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
 
