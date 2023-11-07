@@ -143,6 +143,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
               onTap: () {
                 debugPrint("Messages clicked");
                 Navigator.pop(context);
+                Navigator.of(context).pushNamed('/messages');
               },
             ),
           ),

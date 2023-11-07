@@ -8,6 +8,7 @@ import 'package:sample/ui/views/registration_page.dart';
 import 'package:sample/ui/views/sample_page.dart';
 import 'package:sample/ui/views/search_page.dart';
 import 'package:sample/ui/views/update_sample_page.dart';
+import 'package:sample/ui/views/users_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
         '/new-sample': (context) => const NewSamplePage(),
         '/update-sample': (context) => const UpdateSamplePage(),
         '/search': (context) => const SearchPage(),
+        '/messages': (context) => const UsersPage(),
       },
     );
   }
