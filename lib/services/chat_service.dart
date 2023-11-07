@@ -24,7 +24,7 @@ class ChatService extends ChangeNotifier {
     ids.sort();
     String chatRoomId = ids.join("_");
 
-    // debugPrint(newMessage.toMap().toString());
+    debugPrint(">>>$chatRoomId<<<");
 
     await db.collection("chat_rooms")
       .doc(chatRoomId)
@@ -35,7 +35,7 @@ class ChatService extends ChangeNotifier {
   Stream<QuerySnapshot> getMessages(String userId, String otherUserId) {
     List<String> ids = [userId, otherUserId];
     ids.sort();
-    String chatRoomId = ids.join("");
+    String chatRoomId = ids.join("_");
 
     return db.collection("chat_rooms")
       .doc(chatRoomId)

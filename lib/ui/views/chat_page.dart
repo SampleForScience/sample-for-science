@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sample/services/chat_service.dart';
 
 class ChatPage extends StatefulWidget {
@@ -16,7 +17,7 @@ class _ChatPageState extends State<ChatPage> {
   final FirebaseAuth auth = FirebaseAuth.instance;
   final TextEditingController messageContrtoller = TextEditingController();
   final ChatService chatService = ChatService();
-  
+
   void sendMessage() async {
     if (messageContrtoller.text.isNotEmpty) {
       await chatService.sendMessage(widget.receiverUserId, messageContrtoller.text);
@@ -29,6 +30,18 @@ class _ChatPageState extends State<ChatPage> {
       children: [
         Expanded(
           child: TextField(
+            decoration: const InputDecoration(
+              floatingLabelBehavior: FloatingLabelBehavior.never,
+              contentPadding: EdgeInsets.only(left: 12),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black38),
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black38),
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+              ),
+            ),
             controller: messageContrtoller,
           ),
         ),
@@ -56,19 +69,43 @@ class _ChatPageState extends State<ChatPage> {
 
   Widget messageItem(DocumentSnapshot document) {
     Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-    debugPrint("===== testando =====");
-    debugPrint(data.toString());
+    DateTime timestamp = (data["timestamp"] as Timestamp).toDate();
+    // TODO: formatar de acordo com a localização
+    String formattedTimestamp = DateFormat('dd/MM/yyyy HH:mm:ss').format(timestamp);
 
     Alignment alignment = (data["senderId"] == auth.currentUser!.uid)
       ? Alignment.centerRight
-      : Alignment.bottomCenter;
+      : Alignment.centerLeft;
+
+    CrossAxisAlignment crossAxisAlignment = (data["senderId"] == auth.currentUser!.uid)
+        ? CrossAxisAlignment.end
+        : CrossAxisAlignment.start;
 
     return Container(
+      padding: const EdgeInsets.all(8.0),
       alignment: alignment,
       child: Column(
+        crossAxisAlignment: crossAxisAlignment,
         children: [
-          Text(data["email"]),
-          Text(data["message"]),
+          Text(
+            formattedTimestamp,
+            style: const TextStyle(color: Colors.black54, fontSize: 12),
+          ),
+          Container(
+            padding: const EdgeInsets.all(8.0),
+            width: 200,
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            child: Text(
+              data["message"],
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16
+              ),
+            )
+          ),
         ],
       )
     );
