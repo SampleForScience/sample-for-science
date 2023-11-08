@@ -47,15 +47,21 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
     "Ceramics",
     "Metals",
     "Metal-organic",
-    "Polymer / Plastic"];
+    "Polymer / Plastic",
+    "Other"
+  ];
   String selectedTypeOfSample = "";
+  TextEditingController otherTypeController = TextEditingController();
+
   List<String> morphologyList = <String>[
     "Composite",
     "Nano(particle, wire, ...)",
     "Film(thin, thick, ...)",
-    "Bulk"
+    "Bulk",
+    "Other"
   ];
   String selectedMorphology = "";
+  TextEditingController otherMorphologyController = TextEditingController();
 
   List<Tab> tabs = <Tab>[
     const Tab(text: "Basics",),
@@ -277,6 +283,12 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                     ),
                   ],
                 ),
+                if (selectedTypeOfSample == "Other") TextField(
+                  controller: otherTypeController,
+                  decoration: const InputDecoration(
+                    label: Text("Type of sample"),
+                  ),
+                ),
                 Row(
                   children: [
                     DropdownMenu<String>(
@@ -293,6 +305,12 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                       }).toList(),
                     ),
                   ],
+                ),
+                if (selectedMorphology == "Other") TextField(
+                  controller: otherMorphologyController,
+                  decoration: const InputDecoration(
+                    label: Text("Morphology"),
+                  ),
                 )
               ],
             ),
@@ -667,7 +685,9 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                   "formula": formulaController.text,
                   "keywords": keywordsController.text,
                   "type": selectedTypeOfSample,
+                  "otherType": selectedTypeOfSample == "Other" ? otherTypeController.text : "",
                   "morphology": selectedMorphology,
+                  "otherMorfology": selectedMorphology == "Other" ? otherMorphologyController.text : "",
                   "previousDiffraction": prevDiffractionController.text,
                   "previousThermal": prevThermalController.text,
                   "previousOptical": prevOpticalController.text,
@@ -685,7 +705,9 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                       formulaController.text +
                       keywordsController.text +
                       selectedTypeOfSample +
+                      otherTypeController.text +
                       selectedMorphology +
+                      otherMorphologyController.text +
                       prevDiffractionController.text +
                       prevThermalController.text +
                       prevThermalController.text +
