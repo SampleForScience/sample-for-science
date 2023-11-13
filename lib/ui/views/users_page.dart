@@ -44,6 +44,7 @@ class _UsersPageState extends State<UsersPage> {
               builder: (context) => ChatPage(
                 receiverUserEmail: data["email"],
                 receiverUserId: data["id"],
+                receiverUserName: data["name"],
               )
             )
           );
