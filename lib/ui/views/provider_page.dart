@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sample/ui/buttons/circular_avatar_button.dart';
+import 'package:sample/ui/views/chat_page.dart';
 
 class ProviderPage extends StatefulWidget {
   const ProviderPage({super.key});
@@ -236,7 +237,15 @@ class _ProviderPageState extends State<ProviderPage> {
                         children: [
                           ElevatedButton(
                             onPressed: () {
-                              debugPrint("Send message");
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ChatPage(
+                                    receiverUserEmail: providerData["email"],
+                                    receiverUserId: providerData["id"],
+                                  )
+                                )
+                              );
                             },
                             child: const Row(
                               children: [
