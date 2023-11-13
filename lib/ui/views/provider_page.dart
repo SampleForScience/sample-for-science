@@ -11,18 +11,50 @@ class ProviderPage extends StatefulWidget {
 
 class _ProviderPageState extends State<ProviderPage> {
   final db = FirebaseFirestore.instance;
+  late Map<String, dynamic> providerId;
   late Map<String, dynamic> providerData;
 
   Future<void> waitingProviderData() async{
     await Future.delayed(const Duration(milliseconds: 1000), () {});
   }
 
+  Future<void> getProvider(String provider) async {
+    try{
+      await db.collection("users").where("id", isEqualTo: provider).get().then((querySnapshot) async {
+        final users = querySnapshot.docs;
+        for (var user in users) {
+          setState(() {
+            providerData = {
+              "id": user.data()["id"],
+              "name": user.data()["name"],
+              "email": user.data()["email"],
+              "address": user.data()["address"],
+              "country": user.data()["country"],
+              "department": user.data()["department"],
+              "google_scholar": user.data()["google_scholar"],
+              "institution": user.data()["institution"],
+              "mobile": user.data()["mobile"],
+              "orcid": user.data()["orcid"],
+              "other": user.data()["other"],
+              "webpage": user.data()["webpage"],
+            };
+          });
+        }
+      }, onError: (e) {
+        debugPrint("Error completing: $e");
+      });
+    } catch(e) {
+      debugPrint('Error in getUser(): $e');
+    }
+  }
+
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
       setState(() {
-        providerData = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+        providerId = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
       });
+      getProvider(providerId["id"]);
     });
     super.initState();
   }
@@ -31,7 +63,7 @@ class _ProviderPageState extends State<ProviderPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sample'),
+        title: const Text('Sample provider'),
         centerTitle: true,
         actions: const [
           CircularAvatarButton(),
