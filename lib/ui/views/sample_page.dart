@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -15,6 +16,7 @@ class SamplePage extends StatefulWidget {
 class _SamplePageState extends State<SamplePage> {
   final db = FirebaseFirestore.instance;
   final storage = FirebaseStorage.instance;
+  final auth = FirebaseAuth.instance;
   late Map<String, dynamic> providerData;
   late Map<String, dynamic> sampleData;
   Uint8List? imageBytes;
@@ -228,7 +230,7 @@ class _SamplePageState extends State<SamplePage> {
                           fontSize: 16
                         )
                       ),
-                      Row(
+                      if (auth.currentUser!.uid != providerData["id"])Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           ElevatedButton(
