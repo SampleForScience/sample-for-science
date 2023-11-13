@@ -20,7 +20,7 @@ class _SamplePageState extends State<SamplePage> {
   Uint8List? imageBytes;
 
   Future<void> waitingSampleData() async{
-    await Future.delayed(const Duration(milliseconds: 500), () {});
+    await Future.delayed(const Duration(milliseconds: 1000), () {});
   }
 
   Future<void> loadSampleImage(String imageName) async {
@@ -233,30 +233,9 @@ class _SamplePageState extends State<SamplePage> {
                         children: [
                           ElevatedButton(
                             onPressed: () {
-                              debugPrint("Send message");
+                              Navigator.pushNamed(context, "/provider", arguments: providerData,);
                             },
-                            child: const Row(
-                              children: [
-                                Text("Contact provider "),
-                                Icon(Icons.send_sharp)
-                              ],
-                            )
-                          )
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              debugPrint("Favorite provider");
-                            },
-                            child: const Row(
-                              children: [
-                                Text("Favorite provider "),
-                                Icon(Icons.star)
-                              ],
-                            )
+                            child: const Text("SeeProvider")
                           )
                         ],
                       ),
