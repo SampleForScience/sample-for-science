@@ -52,7 +52,7 @@ class _ProviderPageState extends State<ProviderPage> {
     }
   }
 
-  void newFavoriteProvider(Map<String, dynamic> newFavoriteProvider) async {
+  void addRemoveFavoriteProvider(Map<String, dynamic> newFavoriteProvider) async {
     favoriteProviders = [];
     try{
       await db.collection("users")
@@ -61,15 +61,18 @@ class _ProviderPageState extends State<ProviderPage> {
         .then((querySnapshot) async {
           final users = querySnapshot.docs;
           for (var user in users) {
-            if (user["favoriteProviders"].any((_) => _["id"] == newFavoriteProvider["id"])) {
-              debugPrint("Já é favorito");
-              favoriteProviders = [...user["favoriteProviders"]];
-              // TODO: remover favorito
-              return;
+            if (user["favoriteProviders"].any((list) => list["id"] == newFavoriteProvider["id"])) {
+              setState(() {
+                favoriteProviders.removeWhere((list) => list["id"] == newFavoriteProvider["id"]);
+                Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
+
+              });
+            } else {
+              setState(() {
+                favoriteProviders = [...user["favoriteProviders"], newFavoriteProvider];
+                Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
+              });
             }
-            setState(() {
-              favoriteProviders = [...user["favoriteProviders"], newFavoriteProvider];
-            });
           }
         }, onError: (e) {
           debugPrint("Error completing: $e");
@@ -300,7 +303,7 @@ class _ProviderPageState extends State<ProviderPage> {
                         children: [
                           ElevatedButton(
                             onPressed: () {
-                              newFavoriteProvider({
+                              addRemoveFavoriteProvider({
                                 "id": providerData["id"],
                                 "name": providerData["name"],
                                 "email": providerData["email"],
