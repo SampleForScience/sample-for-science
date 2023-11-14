@@ -36,7 +36,18 @@ class _UsersPageState extends State<UsersPage> {
 
     if (data.isNotEmpty && auth.currentUser!.email != data["email"]) {
       return ListTile(
-        title: Text(data["email"]),
+        title: Row(
+          children: [
+            CircleAvatar(),
+            const SizedBox(width: 8),
+          Flexible(
+            child:
+            Text('${data["name"]}\n(${data["email"]})',
+              overflow: TextOverflow.ellipsis,),
+
+            )
+          ],
+        ),
         onTap: () {
           Navigator.push(
             context,
