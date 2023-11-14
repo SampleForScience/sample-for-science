@@ -23,8 +23,8 @@ class AboutButton extends StatelessWidget {
           applicationIcon: SizedBox(
             height: 100,
             child: SvgPicture.asset("assets/logo.svg",
-              height: 100, // Defina a altura desejada
-              width: 100, // Defina a largura desejada
+              height: 100,
+              width: 100, y
             ),
           ),
           applicationLegalese: "© 2023 Sample. All rights reserved",
@@ -40,8 +40,7 @@ class AboutButton extends StatelessWidget {
           ),
 
           GestureDetector(
-          onTap: () {
-          launchUrl('https://www.sampleforscience.org' as Uri);
+          onTap: () {launch("https://www.sampleforscience.org");
           },
           child: const Text(
           'Sample For Science',
