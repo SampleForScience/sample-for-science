@@ -24,7 +24,7 @@ class AboutButton extends StatelessWidget {
             height: 100,
             child: SvgPicture.asset("assets/logo.svg",
               height: 100,
-              width: 100, y
+              width: 100,
             ),
           ),
           applicationLegalese: "© 2023 Sample. All rights reserved",
