@@ -16,6 +16,7 @@ class _DashboardPageState extends State<DashboardPage> {
   final db = FirebaseFirestore.instance;
   final auth = FirebaseAuth.instance;
   List<Map<String, dynamic>> mySamples = [];
+  List<Map<String, dynamic>>favoriteProviders = [];
 
   String formatDateWithUserTimezone(DateTime dateTime) {
     final formatter = DateFormat('MM/dd/yyyy HH:mm', Intl.getCurrentLocale());
@@ -71,9 +72,33 @@ class _DashboardPageState extends State<DashboardPage> {
     }
   }
 
+  Future<void>getFavoriteProviders() async {
+    setState(() {
+      favoriteProviders = [];
+    });
+    try{
+      await db.collection("users")
+        .where("id", isEqualTo: auth.currentUser!.uid)
+        .get()
+        .then((querySnapshot) async {
+          final users = querySnapshot.docs;
+          for (var user in users) {
+            setState(() {
+              favoriteProviders = [...user["favoriteProviders"]];
+            });
+          }
+        }, onError: (e) {
+          debugPrint("Error completing: $e");
+        });
+    } catch(e) {
+      debugPrint('error in getFavoriteProviders(): $e');
+    }
+  }
+
   @override
   void initState() {
     getMySamples();
+    getFavoriteProviders();
     super.initState();
   }
 
@@ -248,68 +273,42 @@ class _DashboardPageState extends State<DashboardPage> {
             ),
             ExpansionTile(
               title: const Text('Favorite Providers'),
-              children: <Widget>[
-                ListTile(
-                  title: const Row(
+              children: favoriteProviders.isEmpty
+                ? <ListTile>[const ListTile(
+                  title: Text("Your favorite providers will be shown here."),
+                ),]
+                : favoriteProviders.map((providerData) {
+                return ListTile(
+                  title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(Icons.science),
-                      Text(" Favorite provider test item 0"),
+                      const Text(
+                        "Provider",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        )
+                      ),
+                      Text("Name: ${providerData['name']}\nEmail: ${providerData['email']}",
+                        style: const TextStyle(
+                          fontSize: 16
+                        )
+                      ),
+                      if (auth.currentUser!.uid != providerData["id"])Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, "/provider", arguments: providerData,);
+                            },
+                            icon: const Icon(Icons.remove_red_eye),
+                          )
+                        ],
+                      ),
                     ],
                   ),
-                  onTap: () {
-                    debugPrint("Favorite provider test item 0 clicked");
-                    // Navigator.pop(context);
-                  },
-                ),
-                ListTile(
-                  title: const Row(
-                    children: [
-                      Icon(Icons.science),
-                      Text(" Favorite provider test item 1"),
-                    ],
-                  ),
-                  onTap: () {
-                    debugPrint("Favorite provider test item 1 clicked");
-                    // Navigator.pop(context);
-                  },
-                ),
-                ListTile(
-                  title: const Row(
-                    children: [
-                      Icon(Icons.science),
-                      Text(" Favorite provider test item 2"),
-                    ],
-                  ),
-                  onTap: () {
-                    debugPrint("Favorite provider test item 2 clicked");
-                    // Navigator.pop(context);
-                  },
-                ),
-                ListTile(
-                  title: const Row(
-                    children: [
-                      Icon(Icons.science),
-                      Text(" Favorite provider test item 3"),
-                    ],
-                  ),
-                  onTap: () {
-                    debugPrint("Favorite provider test item 3 clicked");
-                    // Navigator.pop(context);
-                  },
-                ),
-                ListTile(
-                  title: const Row(
-                    children: [
-                      Icon(Icons.science),
-                      Text(" Favorite provider test item 4"),
-                    ],
-                  ),
-                  onTap: () {
-                    debugPrint("Favorite provider test item 4 clicked");
-                    // Navigator.pop(context);
-                  },
-                ),
-              ],
+                );
+              }).toList()
             ),
           ],
         ),
