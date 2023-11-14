@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sample/providers/favorite_provider.dart';
 import 'package:sample/ui/buttons/circular_avatar_button.dart';
 import 'package:sample/ui/views/chat_page.dart';
 
@@ -16,7 +18,6 @@ class _ProviderPageState extends State<ProviderPage> {
   final auth = FirebaseAuth.instance;
   late Map<String, dynamic> providerId;
   late Map<String, dynamic> providerData;
-  late List<Map<String, dynamic>>favoriteProviders;
 
   Future<void> waitingProviderData() async{
     await Future.delayed(const Duration(milliseconds: 1000), () {});
@@ -49,45 +50,6 @@ class _ProviderPageState extends State<ProviderPage> {
       });
     } catch(e) {
       debugPrint('Error in getUser(): $e');
-    }
-  }
-
-  void addRemoveFavoriteProvider(Map<String, dynamic> newFavoriteProvider) async {
-    favoriteProviders = [];
-    try{
-      await db.collection("users")
-        .where("id", isEqualTo: auth.currentUser!.uid)
-        .get()
-        .then((querySnapshot) async {
-          final users = querySnapshot.docs;
-          for (var user in users) {
-            if (user["favoriteProviders"].any((list) => list["id"] == newFavoriteProvider["id"])) {
-              setState(() {
-                favoriteProviders.removeWhere((list) => list["id"] == newFavoriteProvider["id"]);
-                Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
-
-              });
-            } else {
-              setState(() {
-                favoriteProviders = [...user["favoriteProviders"], newFavoriteProvider];
-                Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
-              });
-            }
-          }
-        }, onError: (e) {
-          debugPrint("Error completing: $e");
-        });
-
-      await db.collection("users")
-        .doc(auth.currentUser!.uid)
-        .update({"favoriteProviders": favoriteProviders})
-        .then((_) {
-          debugPrint("New favorite saved");
-        }).onError((e, _) {
-          debugPrint("Error saving sample: $e");
-        });
-    } catch(e) {
-      debugPrint('error in getFavoriteProviders(): $e');
     }
   }
 
@@ -301,20 +263,29 @@ class _ProviderPageState extends State<ProviderPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              addRemoveFavoriteProvider({
-                                "id": providerData["id"],
-                                "name": providerData["name"],
-                                "email": providerData["email"],
-                              });
+                          Consumer<FavoriteProvider>(
+                            builder: (context, provider, child) {
+                              return ElevatedButton(
+                                onPressed: () {
+                                  provider.addRemoveFavoriteProvider({
+                                    "id": providerData["id"],
+                                    "name": providerData["name"],
+                                    "email": providerData["email"],
+                                  }, context);
+                                  debugPrint({
+                                    "id": providerData["id"],
+                                    "name": providerData["name"],
+                                    "email": providerData["email"],
+                                  }.toString());
+                                },
+                                child: const Row(
+                                  children: [
+                                    Text("Favorite provider "),
+                                    Icon(Icons.star)
+                                  ],
+                                )
+                              );
                             },
-                            child: const Row(
-                              children: [
-                                Text("Favorite provider "),
-                                Icon(Icons.star)
-                              ],
-                            )
                           )
                         ],
                       ),

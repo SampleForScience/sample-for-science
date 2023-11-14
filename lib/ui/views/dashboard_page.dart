@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:sample/providers/favorite_provider.dart';
 import 'package:sample/ui/buttons/circular_avatar_button.dart';
 import 'package:sample/ui/widgets/custom_drawer.dart';
 
@@ -16,7 +18,6 @@ class _DashboardPageState extends State<DashboardPage> {
   final db = FirebaseFirestore.instance;
   final auth = FirebaseAuth.instance;
   List<Map<String, dynamic>> mySamples = [];
-  List<Map<String, dynamic>>favoriteProviders = [];
 
   String formatDateWithUserTimezone(DateTime dateTime) {
     final formatter = DateFormat('MM/dd/yyyy HH:mm', Intl.getCurrentLocale());
@@ -72,33 +73,12 @@ class _DashboardPageState extends State<DashboardPage> {
     }
   }
 
-  Future<void>getFavoriteProviders() async {
-    setState(() {
-      favoriteProviders = [];
-    });
-    try{
-      await db.collection("users")
-        .where("id", isEqualTo: auth.currentUser!.uid)
-        .get()
-        .then((querySnapshot) async {
-          final users = querySnapshot.docs;
-          for (var user in users) {
-            setState(() {
-              favoriteProviders = [...user["favoriteProviders"]];
-            });
-          }
-        }, onError: (e) {
-          debugPrint("Error completing: $e");
-        });
-    } catch(e) {
-      debugPrint('error in getFavoriteProviders(): $e');
-    }
-  }
-
   @override
   void initState() {
-    getMySamples();
-    getFavoriteProviders();
+    Future.delayed(Duration.zero, () {
+      getMySamples();
+      Provider.of<FavoriteProvider>(context, listen: false).getFavoriteProviders();
+    });
     super.initState();
   }
 
@@ -271,45 +251,49 @@ class _DashboardPageState extends State<DashboardPage> {
                 ),
               ],
             ),
-            ExpansionTile(
-              title: const Text('Favorite Providers'),
-              children: favoriteProviders.isEmpty
-                ? <ListTile>[const ListTile(
-                  title: Text("Your favorite providers will be shown here."),
-                ),]
-                : favoriteProviders.map((providerData) {
-                return ListTile(
-                  title: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Provider",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        )
-                      ),
-                      Text("Name: ${providerData['name']}\nEmail: ${providerData['email']}",
-                        style: const TextStyle(
-                          fontSize: 16
-                        )
-                      ),
-                      if (auth.currentUser!.uid != providerData["id"])Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              Navigator.pushNamed(context, "/provider", arguments: providerData,);
-                            },
-                            icon: const Icon(Icons.remove_red_eye),
+            Consumer<FavoriteProvider>(
+              builder: (context, provider, child) {
+              return ExpansionTile(
+                title: const Text('Favorite Providers'),
+                children: provider.favoriteProviders.isEmpty
+                  ? <ListTile>[const ListTile(
+                    title: Text("Your favorite providers will be shown here."),
+                  ),]
+                  : provider.favoriteProviders.map((providerData) {
+                  return ListTile(
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Provider",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
                           )
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              }).toList()
-            ),
+                        ),
+                        Text("Name: ${providerData['name']}\nEmail: ${providerData['email']}",
+                          style: const TextStyle(
+                            fontSize: 16
+                          )
+                        ),
+                        if (auth.currentUser!.uid != providerData["id"])Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                Navigator.pushNamed(context, "/provider", arguments: providerData,);
+                              },
+                              icon: const Icon(Icons.remove_red_eye),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList()
+              );
+            },
+          ),
           ],
         ),
       ),
