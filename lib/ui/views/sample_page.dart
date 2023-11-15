@@ -1,4 +1,6 @@
 import 'dart:typed_data';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -12,12 +14,15 @@ class SamplePage extends StatefulWidget {
 }
 
 class _SamplePageState extends State<SamplePage> {
+  final db = FirebaseFirestore.instance;
   final storage = FirebaseStorage.instance;
+  final auth = FirebaseAuth.instance;
+  late Map<String, dynamic> providerData;
   late Map<String, dynamic> sampleData;
   Uint8List? imageBytes;
 
   Future<void> waitingSampleData() async{
-    await Future.delayed(const Duration(milliseconds: 500), () {});
+    await Future.delayed(const Duration(milliseconds: 1000), () {});
   }
 
   Future<void> loadSampleImage(String imageName) async {
@@ -27,6 +32,36 @@ class _SamplePageState extends State<SamplePage> {
     setState(() {
       imageBytes;
     });
+  }
+
+  Future<void> getProvider(String provider) async {
+    try{
+      await db.collection("users").where("id", isEqualTo: provider).get().then((querySnapshot) async {
+        final users = querySnapshot.docs;
+        for (var user in users) {
+          setState(() {
+            providerData = {
+              "id": user.data()["id"],
+              "name": user.data()["name"],
+              "email": user.data()["email"],
+              "address": user.data()["address"],
+              "country": user.data()["country"],
+              "department": user.data()["department"],
+              "google_scholar": user.data()["google_scholar"],
+              "institution": user.data()["institution"],
+              "mobile": user.data()["mobile"],
+              "orcid": user.data()["orcid"],
+              "other": user.data()["other"],
+              "webpage": user.data()["webpage"],
+            };
+          });
+        }
+      }, onError: (e) {
+        debugPrint("Error completing: $e");
+      });
+    } catch(e) {
+      debugPrint('Error in getUser(): $e');
+    }
   }
 
   String formatDateWithUserTimezone(DateTime dateTime) {
@@ -41,6 +76,7 @@ class _SamplePageState extends State<SamplePage> {
         sampleData = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
       });
       loadSampleImage(sampleData["image"]);
+      getProvider(sampleData["provider"]);
     });
     super.initState();
   }
@@ -166,7 +202,7 @@ class _SamplePageState extends State<SamplePage> {
                       ),
                       Text(formatDateWithUserTimezone(sampleData["registration"].toDate()),
                         style: const TextStyle(
-                            fontSize: 16
+                          fontSize: 16
                         )
                       ),
                       const Divider(),
@@ -180,7 +216,31 @@ class _SamplePageState extends State<SamplePage> {
                         ),
                         width: 100,
                         height: 100,
-                      )
+                      ),
+                      const Divider(),
+                      const Text(
+                        "Provider",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        )
+                      ),
+                      Text("Name: ${providerData['name']}\nEmail: ${providerData['email']}",
+                        style: const TextStyle(
+                          fontSize: 16
+                        )
+                      ),
+                      if (auth.currentUser!.uid != providerData["id"])Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, "/provider", arguments: providerData,);
+                            },
+                            child: const Text("SeeProvider")
+                          )
+                        ],
+                      ),
                     ],
                   ),
                 ),
