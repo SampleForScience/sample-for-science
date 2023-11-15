@@ -9,40 +9,45 @@ class FavoriteProvider extends ChangeNotifier {
   List<Map<String, dynamic>>favoriteProviders = [];
 
   void addRemoveFavoriteProvider(Map<String, dynamic> newFavoriteProvider, BuildContext context) async {
-    favoriteProviders = [];
-    try{
+    try {
       await db.collection("users")
           .where("id", isEqualTo: auth.currentUser!.uid)
           .get()
           .then((querySnapshot) async {
         final users = querySnapshot.docs;
         for (var user in users) {
-          if (user["favoriteProviders"].any((list) => list["id"] == newFavoriteProvider["id"])) {
-            favoriteProviders.removeWhere((list) => list["id"] == newFavoriteProvider["id"]);
-            notifyListeners();
-            Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
+          var favoriteProviders = List.from(user["favoriteProviders"]);
+
+          var index = favoriteProviders.indexWhere((list) => list["id"] == newFavoriteProvider["id"]);
+
+          if (index != -1) {
+            favoriteProviders.removeAt(index);
           } else {
-            favoriteProviders = [...user["favoriteProviders"], newFavoriteProvider];
-            notifyListeners();
-            Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
+            favoriteProviders.add(newFavoriteProvider);
           }
+
+          await db.collection("users")
+              .doc(auth.currentUser!.uid)
+              .update({"favoriteProviders": favoriteProviders})
+              .then((_) {
+            debugPrint("Favorite updated");
+          }).onError((e, _) {
+            debugPrint("Error updating favorite: $e");
+          });
+
+          notifyListeners();
+          Future.delayed(Duration.zero, (){
+            Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
+          });
         }
       }, onError: (e) {
-        debugPrint("Error completing: $e");
+        debugPrint("Error querying database: $e");
       });
-
-      await db.collection("users")
-          .doc(auth.currentUser!.uid)
-          .update({"favoriteProviders": favoriteProviders})
-          .then((_) {
-        debugPrint("New favorite saved");
-      }).onError((e, _) {
-        debugPrint("Error saving sample: $e");
-      });
-    } catch(e) {
-      debugPrint('error in getFavoriteProviders(): $e');
+    } catch (e) {
+      debugPrint('Error in addRemoveFavoriteProvider(): $e');
     }
   }
+
 
   Future<void>getFavoriteProviders() async {
     favoriteProviders = [];
