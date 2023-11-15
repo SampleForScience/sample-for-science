@@ -247,7 +247,8 @@ class _ProviderPageState extends State<ProviderPage> {
                                   builder: (context) => ChatPage(
                                     receiverUserEmail: providerData["email"],
                                     receiverUserId: providerData["id"],
-                                  )
+                                    receiverUserName: providerData["name"],
+                                  ),
                                 )
                               );
                             },
