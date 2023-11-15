@@ -7,7 +7,8 @@ import 'package:sample/services/chat_service.dart';
 class ChatPage extends StatefulWidget {
   final String receiverUserEmail;
   final String receiverUserId;
-  const ChatPage({super.key, required this.receiverUserEmail, required this.receiverUserId});
+  final String receiverUserName;
+  const ChatPage({super.key, required this.receiverUserEmail, required this.receiverUserId, required this.receiverUserName});
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -115,7 +116,18 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.receiverUserEmail),
+        title: Row(
+          children: [
+            CircleAvatar(),
+            SizedBox(width: 8),
+            Flexible(
+              child: Text(
+                '${widget.receiverUserName} (${widget.receiverUserEmail})',
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
         centerTitle: true,
       ),
       body: Column(
@@ -126,4 +138,6 @@ class _ChatPageState extends State<ChatPage> {
       ),
     );
   }
+
 }
+
