@@ -1,13 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:sample/models/message_model.dart';
 
 class FavoriteProvider extends ChangeNotifier {
   final db = FirebaseFirestore.instance;
   final FirebaseAuth auth = FirebaseAuth.instance;
 
-  late List<Map<String, dynamic>>favoriteProviders;
+  List<Map<String, dynamic>>favoriteProviders = [];
 
   void addRemoveFavoriteProvider(Map<String, dynamic> newFavoriteProvider, BuildContext context) async {
     favoriteProviders = [];
