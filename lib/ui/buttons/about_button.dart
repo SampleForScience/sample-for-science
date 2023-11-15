@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AboutButton extends StatefulWidget {
   const AboutButton({super.key});
@@ -38,11 +40,44 @@ class _AboutButtonState extends State<AboutButton> {
           context: context,
           applicationName: "Sample For Science",
           applicationVersion: packageVersion,
-          applicationIcon: const SizedBox(
+          applicationIcon: SizedBox(
             height: 100,
-            child: Image(image: AssetImage("assets/logo.png"))
+            child: SvgPicture.asset("assets/logo.svg",
+              height: 100,
+              width: 100,
+            ),
           ),
+          applicationLegalese: "© 2023 Sample. All rights reserved",
+          children: [
+            const SizedBox(height: 16),
+        SizedBox(
+          child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center, // Ajusta o alinhamento para a esquerda
+          children: [
+          Text(
+            'For more information, visit: ',
+            style: DefaultTextStyle.of(context).style,
+          ),
+          GestureDetector(
+            onTap: () {
+              launchUrl(Uri.parse("https://www.sampleforscience.org"));
+            },
+            child: const Text(
+              'Sample For Science',
+              style: TextStyle(
+                color: Colors.blue,
+                fontSize: 18,
+                decoration: TextDecoration.underline,
+              ),
+            ),
+          ),
+                      ],
+          ),
+        ),
+
+          ],
         );
+        ;
       },
     );
   }
