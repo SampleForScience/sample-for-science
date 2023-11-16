@@ -32,7 +32,6 @@ class _LoginButtonState extends State<DrawerLogoutButton> {
         ],
       ),
       onTap: () {
-        Navigator.pop(context);
         Future.delayed(const Duration(milliseconds: 200), () {
           _googleSignInHandler.signInWithGoogle();
         });

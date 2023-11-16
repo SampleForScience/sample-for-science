@@ -1,20 +1,29 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sample/firebase_options.dart';
+import 'package:sample/providers/favorite_provider.dart';
 import 'package:sample/ui/views/dashboard_page.dart';
 import 'package:sample/ui/views/login_page.dart';
 import 'package:sample/ui/views/new_sample_page.dart';
+import 'package:sample/ui/views/provider_page.dart';
 import 'package:sample/ui/views/registration_page.dart';
 import 'package:sample/ui/views/sample_page.dart';
+import 'package:sample/ui/views/search_page.dart';
 import 'package:sample/ui/views/update_sample_page.dart';
+import 'package:sample/ui/views/users_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => FavoriteProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -36,6 +45,9 @@ class MyApp extends StatelessWidget {
         '/sample': (context) => const SamplePage(),
         '/new-sample': (context) => const NewSamplePage(),
         '/update-sample': (context) => const UpdateSamplePage(),
+        '/search': (context) => const SearchPage(),
+        '/messages': (context) => const UsersPage(),
+        '/provider': (context) => const ProviderPage(),
       },
     );
   }

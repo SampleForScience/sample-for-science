@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:sample/ui/widgets/buttons/circular_avatar_button.dart';
+import 'package:sample/ui/buttons/circular_avatar_button.dart';
 
 class UpdateSamplePage extends StatefulWidget {
   const UpdateSamplePage({super.key});
@@ -29,6 +29,8 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
   TextEditingController codeController = TextEditingController();
   TextEditingController formulaController = TextEditingController();
   TextEditingController keywordsController = TextEditingController();
+  TextEditingController otherTypeController = TextEditingController();
+  TextEditingController otherMorphologyController = TextEditingController();
   //Results variables//
   TextEditingController prevDiffractionController = TextEditingController();
   TextEditingController prevThermalController = TextEditingController();
@@ -47,13 +49,17 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
     "Ceramics",
     "Metals",
     "Metal-organic",
-    "Polymer / Plastic"];
+    "Polymer / Plastic",
+    "Other"
+  ];
   String selectedTypeOfSample = "";
+
   List<String> morphologyList = <String>[
     "Composite",
     "Nano(particle, wire, ...)",
     "Film(thin, thick, ...)",
-    "Bulk"
+    "Bulk",
+    "Other"
   ];
   String selectedMorphology = "";
 
@@ -88,8 +94,9 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
       formulaController.text = sampleData["formula"];
       keywordsController.text = sampleData["keywords"];
       selectedTypeOfSample = sampleData["type"];
+      otherTypeController.text = sampleData["otherType"];
       selectedMorphology = sampleData["morphology"];
-      //Results variables//
+      otherMorphologyController.text = sampleData["otherMorphology"];
       prevDiffractionController.text = sampleData["previousDiffraction"];
       prevThermalController.text = sampleData["previousThermal"];
       prevOpticalController.text = sampleData["previousOptical"];
@@ -246,6 +253,12 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
                     ),
                   ],
                 ),
+                if (selectedTypeOfSample == "Other") TextField(
+                  controller: otherTypeController,
+                  decoration: const InputDecoration(
+                    label: Text("Type of sample"),
+                  ),
+                ),
                 Row(
                   children: [
                     DropdownMenu<String>(
@@ -262,6 +275,12 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
                       }).toList(),
                     ),
                   ],
+                ),
+                if (selectedMorphology == "Other") TextField(
+                  controller: otherMorphologyController,
+                  decoration: const InputDecoration(
+                    label: Text("Morphology"),
+                  ),
                 )
               ],
             ),
@@ -331,7 +350,6 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
                 ),
                 Row(
                   children: [
-
                     Expanded(
                       child: TextField(
                         controller: doiController,
@@ -341,6 +359,37 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
                       ),
                     ),
                   ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      imageBytes != null
+                      ? Column(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              debugPrint("Image Clicked");
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.0),
+                                image: DecorationImage(
+                                  image: MemoryImage(imageBytes!),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              width: 100,
+                              height: 100,
+                            ),
+                          ),
+                          ElevatedButton(onPressed: imagePicker, child: const Text("Change Image")),
+                        ],
+                      )
+                      : ElevatedButton(onPressed: imagePicker, child: const Text("Add Image")),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -446,30 +495,6 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
                     const Text('Animals?'),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      imageBytes != null
-                        ? InkWell(
-                          onTap: imagePicker,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
-                              image: DecorationImage(
-                                image: MemoryImage(imageBytes!),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            width: 100,
-                            height: 100,
-                          ),
-                        )
-                        : ElevatedButton(onPressed: imagePicker, child: const Text("Add Image")),
-                    ],
-                  ),
-                ),
               ],
             ),
           ),
@@ -511,7 +536,9 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
                   "formula": formulaController.text,
                   "keywords": keywordsController.text,
                   "type": selectedTypeOfSample,
+                  "otherType": selectedTypeOfSample == "Other" ? otherTypeController.text : "",
                   "morphology": selectedMorphology,
+                  "otherMorphology": selectedMorphology == "Other" ? otherMorphologyController.text : "",
                   "registration": sampleData["registration"],
                   "previousDiffraction": prevDiffractionController.text,
                   "previousThermal": prevThermalController.text,
@@ -525,6 +552,22 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
                   "hazardous": hazardChecked,
                   "animals": animalChecked,
                   "image": imagePath != null ? sampleId : "",
+                  "search": (codeController.text +
+                      formulaController.text +
+                      keywordsController.text +
+                      selectedTypeOfSample +
+                      otherTypeController.text +
+                      selectedMorphology +
+                      otherMorphologyController.text +
+                      prevDiffractionController.text +
+                      prevThermalController.text +
+                      prevThermalController.text +
+                      prevOpticalController.text +
+                      prevOtherController.text +
+                      sugDiffractionController.text +
+                      sugThermalController.text +
+                      sugOpticalController.text +
+                      sugOtherController.text).toLowerCase()
                 };
 
                 updateSample(sample, sampleId);

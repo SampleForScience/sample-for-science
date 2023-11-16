@@ -2,10 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:sample/ui/widgets/buttons/about_button.dart';
-import 'package:sample/ui/widgets/buttons/circular_avatar_button.dart';
-import 'package:sample/ui/widgets/buttons/drawer_logout_button.dart';
-
+import 'package:sample/ui/buttons/circular_avatar_button.dart';
 
 // Itens do popMenuButton
 enum MenuItem { logIn }
@@ -97,76 +94,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
           actions: const [
             CircularAvatarButton(),
           ],
-        ),
-      drawer: Drawer(
-          width: 200,
-          backgroundColor: const Color.fromARGB(255, 55, 98, 118),
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              const DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 245, 252, 255),
-                ),
-                child: Image(image: AssetImage("assets/logo.png")),
-              ),
-              Container(
-
-                child: ListTile(
-                  title: const Row(
-                    children: [
-                      Icon(Icons.apps,color:Colors.white70),
-                      Text("Dashboard",style: TextStyle(color: Colors.white70)),
-                    ],
-                  ),
-                  onTap: () {
-                    debugPrint("Dashboard clicked");
-                    Navigator.of(context).pushNamed('/dashboard');
-
-                  },
-                ),
-              ),
-              ListTile(
-                title: const Row(
-                  children: [
-                    Icon(Icons.add, color: Colors.white70),
-                    Text(" Provide sample", style: TextStyle(color: Colors.white70)),
-                  ],
-                ),
-                onTap: () {
-                  debugPrint("Provide sample clicked");
-                  Navigator.of(context).pushNamed('/new-sample');
-                },
-              ),
-              ListTile(
-                title: const Row(
-                  children: [
-                    Icon(Icons.search, color: Colors.white70),
-                    Text(" Search", style: TextStyle(color: Colors.white70)),
-                  ],
-                ),
-                onTap: () {
-                  debugPrint("Search clicked");
-                  Navigator.pop(context);
-
-                },
-              ),
-              ListTile(
-                title: const Row(
-                  children: [
-                    Icon(Icons.messenger_outline_sharp, color: Colors.white70),
-                    Text(" Messages", style: TextStyle(color: Colors.white70)),
-                  ],
-                ),
-                onTap: () {
-                  debugPrint("Messages clicked");
-                  Navigator.pop(context);
-                },
-              ),
-              const AboutButton(),
-              const DrawerLogoutButton(),
-            ],
-          ),
         ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -275,6 +202,15 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         saveUser(user);
                       },
                       child: const Text("Save")
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text("Cancel")
                     ),
                   ),
                 ]

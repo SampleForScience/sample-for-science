@@ -1,14 +1,12 @@
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:sample/ui/widgets/buttons/about_button.dart';
-import 'package:sample/ui/widgets/buttons/circular_avatar_button.dart';
-import 'package:sample/ui/widgets/buttons/drawer_logout_button.dart';
+import 'package:sample/ui/buttons/circular_avatar_button.dart';
+import 'package:sample/ui/widgets/custom_drawer.dart';
 
 class NewSamplePage extends StatefulWidget {
   const NewSamplePage({super.key});
@@ -45,19 +43,25 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
   bool animalChecked = false;
 
 
-  List<String> typeOfsampleList = <String>[
+  List<String> typeOfSampleList = <String>[
     "Ceramics",
     "Metals",
     "Metal-organic",
-    "Polymer / Plastic"];
+    "Polymer / Plastic",
+    "Other"
+  ];
   String selectedTypeOfSample = "";
+  TextEditingController otherTypeController = TextEditingController();
+
   List<String> morphologyList = <String>[
     "Composite",
     "Nano(particle, wire, ...)",
     "Film(thin, thick, ...)",
-    "Bulk"
+    "Bulk",
+    "Other"
   ];
   String selectedMorphology = "";
+  TextEditingController otherMorphologyController = TextEditingController();
 
   List<Tab> tabs = <Tab>[
     const Tab(text: "Basics",),
@@ -130,77 +134,7 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
           tabs: tabs,
         ),
       ),
-      drawer: Drawer(
-        width: 200,
-        backgroundColor: const Color.fromARGB(255, 55, 98, 118),
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 245, 252, 255),
-              ),
-              child: Image(image: AssetImage("assets/logo.png")),
-            ),
-            ListTile(
-                title: const Row(
-                  children: [
-                    Icon(Icons.apps,color: Colors.white),
-                    Text(" Dashboard",style: TextStyle(color: Colors.white70)),
-                  ],
-                ),
-                onTap: () {
-                  debugPrint("Dashboard clicked");
-                  Navigator.of(context).pushNamed('/dashboard');
-
-                },
-              ),
-
-            Container(
-              color: const Color.fromARGB(255, 245, 252, 255),
-              child: ListTile(
-                title: const Row(
-                  children: [
-                    Icon(Icons.add),
-                    Text(" Provide sample"),
-                  ],
-                ),
-                onTap: () {
-                  debugPrint("Provide sample clicked");
-                  Navigator.of(context).pushNamed('/new-sample');
-                },
-              ),
-            ),
-            ListTile(
-              title: const Row(
-                children: [
-                  Icon(Icons.search, color: Colors.white70),
-                  Text(" Search", style: TextStyle(color: Colors.white70)),
-                ],
-              ),
-              onTap: () {
-                debugPrint("Search clicked");
-                Navigator.pop(context);
-
-              },
-            ),
-            ListTile(
-              title: const Row(
-                children: [
-                  Icon(Icons.messenger_outline_sharp, color: Colors.white70),
-                  Text(" Messages", style: TextStyle(color: Colors.white70)),
-                ],
-              ),
-              onTap: () {
-                debugPrint("Messages clicked");
-                Navigator.pop(context);
-              },
-            ),
-            const AboutButton(),
-            const DrawerLogoutButton(),
-          ],
-        ),
-      ),
+      drawer: const CustomDrawer(highlight: Highlight.provide),
       body: TabBarView(
         controller: _tabController,
         children: [
@@ -311,7 +245,7 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                         showDialog<String>(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
-                            content: const Text("Provide a maximum of five keywords for your samples.\n\nUsers will find your samples based on this field. "),
+                            content: const Text("Provide a maximum of five keywords for your samples separated by comma.\n\nUsers will find your samples based on this field."),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () => Navigator.pop(context, 'OK'),
@@ -343,11 +277,17 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                           selectedTypeOfSample = value!;
                         });
                       },
-                      dropdownMenuEntries: typeOfsampleList.map<DropdownMenuEntry<String>>((String value) {
+                      dropdownMenuEntries: typeOfSampleList.map<DropdownMenuEntry<String>>((String value) {
                         return DropdownMenuEntry<String>(value: value, label: value);
                       }).toList(),
                     ),
                   ],
+                ),
+                if (selectedTypeOfSample == "Other") TextField(
+                  controller: otherTypeController,
+                  decoration: const InputDecoration(
+                    label: Text("Type of sample"),
+                  ),
                 ),
                 Row(
                   children: [
@@ -365,6 +305,12 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                       }).toList(),
                     ),
                   ],
+                ),
+                if (selectedMorphology == "Other") TextField(
+                  controller: otherMorphologyController,
+                  decoration: const InputDecoration(
+                    label: Text("Morphology"),
+                  ),
                 )
               ],
             ),
@@ -476,7 +422,7 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                         showDialog<String>(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
-                            content: const Text("If you have made any other\ncharacterization, please, comment here.\n\nExamples:\n-Optical or eletronical microscopies(SEM,TEM,...)\n-Mechanical characterization\n-etc"),
+                            content: const Text("If you have made any other characterization, please, comment here.\n\nExamples:\n-Optical or eletronical microscopes(SEM,TEM,...)\n-Mechanical characterization\n-etc"),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () => Navigator.pop(context, 'OK'),
@@ -491,7 +437,7 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                       child: TextField(
                         controller: prevOtherController ,
                         decoration: const InputDecoration(
-                          label: Text("Other previous mesrurements"),
+                          label: Text("Other previous measurements"),
                         ),
                       ),
                     ),
@@ -505,9 +451,7 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                         showDialog<String>(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
-                            content: const Text("This field is mandatory.\n\nProvide the reference(s) where your sample(s) were published"
-                                " You only need to include the DOI - if more than one, separated by space"
-                            ),
+                            content: const Text("This field is mandatory.\n\nProvide the reference where your sample were published."),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () => Navigator.pop(context, 'OK'),
@@ -527,6 +471,37 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                       ),
                     ),
                   ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      imageBytes != null
+                          ? Column(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              debugPrint("Image clicked");
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.0),
+                                image: DecorationImage(
+                                  image: MemoryImage(imageBytes!),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              width: 100,
+                              height: 100,
+                            ),
+                          ),
+                          ElevatedButton(onPressed: imagePicker, child: const Text("Change Image")),
+                        ],
+                      )
+                          : ElevatedButton(onPressed: imagePicker, child: const Text("Add Image")),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -614,12 +589,7 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                         showDialog<String>(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
-                            content: const Text("Check this box if your sample:\n\n"
-                                "-emits ionizing radiation:\n\n"
-                                "or, if your sample is:\n\n"
-                                "-toxic:\n-explosive:\n-flammable:\n-corrosive.\n\n"
-                                "In other words, could adversely affect the\n"
-                                "health and safety of the public or the workers or harm the environment."
+                            content: const Text("Check this box if your sample emits ionizing radiation or if your sample is:\n- toxic\n- explosive\n- flammable\n- corrosive\n\nIn other words, could adversely affect the health and safety of the public or the workers or harm the environment."
                             ),
                             actions: <Widget>[
                               TextButton(
@@ -649,7 +619,7 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                         showDialog<String>(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
-                            content: const Text("If you have any previous thermal\nmeasurement, such as magnetization\nresistivity, specific heat, etc, comment here\n\nExample:\n-ZFC-FC for magnetization\n-Zero field specific heat"),
+                            content: const Text("Check this box if your samples depend on animals (or animals-related products) to be synthesized."),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () => Navigator.pop(context, 'OK'),
@@ -670,30 +640,6 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                     ),
                     const Text('Animals?'),
                   ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      imageBytes != null
-                        ? InkWell(
-                          onTap: imagePicker,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
-                              image: DecorationImage(
-                                image: MemoryImage(imageBytes!),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            width: 100,
-                            height: 100,
-                          ),
-                        )
-                      : ElevatedButton(onPressed: imagePicker, child: const Text("Add Image")),
-                    ],
-                  ),
                 ),
               ],
             ),
@@ -728,8 +674,8 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
               onPressed: () {
                 String uid = auth.currentUser!.uid;
                 DateTime registrationDate = DateTime.now();
-                String milissecondsTimeStamp = registrationDate.millisecondsSinceEpoch.toString();
-                String sampleId = "$uid$milissecondsTimeStamp";
+                String millisecondsTimeStamp = registrationDate.millisecondsSinceEpoch.toString();
+                String sampleId = "$uid$millisecondsTimeStamp";
 
                 newSample = {
                   "id": sampleId,
@@ -739,7 +685,9 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                   "formula": formulaController.text,
                   "keywords": keywordsController.text,
                   "type": selectedTypeOfSample,
+                  "otherType": selectedTypeOfSample == "Other" ? otherTypeController.text : "",
                   "morphology": selectedMorphology,
+                  "otherMorfology": selectedMorphology == "Other" ? otherMorphologyController.text : "",
                   "previousDiffraction": prevDiffractionController.text,
                   "previousThermal": prevThermalController.text,
                   "previousOptical": prevOpticalController.text,
@@ -753,6 +701,22 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                   "animals": animalChecked,
                   "image": imagePath != null ? sampleId : "",
                   "registration": registrationDate,
+                  "search": (codeController.text +
+                      formulaController.text +
+                      keywordsController.text +
+                      selectedTypeOfSample +
+                      otherTypeController.text +
+                      selectedMorphology +
+                      otherMorphologyController.text +
+                      prevDiffractionController.text +
+                      prevThermalController.text +
+                      prevThermalController.text +
+                      prevOpticalController.text +
+                      prevOtherController.text +
+                      sugDiffractionController.text +
+                      sugThermalController.text +
+                      sugOpticalController.text +
+                      sugOtherController.text).toLowerCase()
                 };
 
                 saveNewSample(newSample, sampleId);
