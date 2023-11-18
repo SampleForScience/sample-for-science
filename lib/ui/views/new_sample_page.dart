@@ -716,7 +716,7 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                       sugDiffractionController.text +
                       sugThermalController.text +
                       sugOpticalController.text +
-                      sugOtherController.text).toLowerCase()
+                      sugOtherController.text).toLowerCase().replaceAll(" ", "")
                 };
 
                 saveNewSample(newSample, sampleId);

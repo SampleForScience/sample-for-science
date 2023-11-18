@@ -567,7 +567,7 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
                       sugDiffractionController.text +
                       sugThermalController.text +
                       sugOpticalController.text +
-                      sugOtherController.text).toLowerCase()
+                      sugOtherController.text).toLowerCase().replaceAll(" ", "")
                 };
 
                 updateSample(sample, sampleId);

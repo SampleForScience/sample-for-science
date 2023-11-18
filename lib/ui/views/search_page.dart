@@ -24,7 +24,6 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Future<void>searchSamples(String toSearch) async {
-    debugPrint("searching: $toSearch");
     setState(() {
       foundSamples = [];
     });
@@ -33,7 +32,7 @@ class _SearchPageState extends State<SearchPage> {
       await db.collection("samples").get().then((querySnapshot) async {
         final samples = querySnapshot.docs;
         for (var sample in samples) {
-          if (sample.data()["search"].toString().contains(toSearch.toLowerCase())) {
+          if (sample.data()["search"].toString().contains(toSearch.toLowerCase().replaceAll(" ", ""))) {
             sampleData = {
               "id": sample.data()["id"],
               "provider": sample.data()["provider"],
@@ -91,6 +90,11 @@ class _SearchPageState extends State<SearchPage> {
                   Expanded(
                     child: TextField(
                       controller: searchController,
+                      onSubmitted: (value) {
+                        if (value.isNotEmpty) {
+                          searchSamples(value);
+                        }
+                      },
                       decoration: const InputDecoration(
                         hintText: 'Type here...',
                       ),
@@ -98,7 +102,7 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                   IconButton(
                     onPressed: () async {
-                      if (searchController.text != "") {
+                      if (searchController.text.isNotEmpty) {
                         searchSamples(searchController.text);
                       }
                     },
