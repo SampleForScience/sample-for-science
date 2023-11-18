@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +16,7 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   final db = FirebaseFirestore.instance;
   final auth = FirebaseAuth.instance;
+  bool searching = false;
   List<Map<String, dynamic>> foundSamples = [];
 
   TextEditingController searchController = TextEditingController();
@@ -101,9 +104,14 @@ class _SearchPageState extends State<SearchPage> {
                     ),
                   ),
                   IconButton(
-                    onPressed: () async {
+                    onPressed: () {
                       if (searchController.text.isNotEmpty) {
                         searchSamples(searchController.text);
+                        Timer.periodic(const Duration(milliseconds: 500), (timer) {
+                          setState(() {
+                            searching = true;
+                          });
+                        });
                       }
                     },
                     icon: const Icon(
@@ -115,6 +123,19 @@ class _SearchPageState extends State<SearchPage> {
                 ],
               ),
             ),
+          ),
+          if (searching) Text(
+            "${foundSamples.length} ${foundSamples.isNotEmpty && foundSamples.length > 1 ? 'samples' : 'sample'} found"
+          ),
+          if (foundSamples.isNotEmpty) TextButton(
+            onPressed: () {
+              setState(() {
+                searching = false;
+                searchController.text = "";
+                foundSamples.clear();
+              });
+            },
+            child: const Text("Clear Search"),
           ),
           if (foundSamples.isNotEmpty) Expanded(
             child: ListView.builder(
