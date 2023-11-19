@@ -20,7 +20,7 @@ class _ProviderPageState extends State<ProviderPage> {
   late Map<String, dynamic> providerData;
 
   Future<void> waitingProviderData() async{
-    await Future.delayed(const Duration(milliseconds: 1000), () {});
+    await Future.delayed(const Duration(milliseconds: 500), () {});
   }
 
   Future<void> getProvider(String provider) async {
