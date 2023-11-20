@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sample/ui/buttons/favorite_provider_button.dart';
+import 'package:sample/ui/buttons/favorite_sample_button.dart';
 import 'package:sample/ui/widgets/custom_drawer.dart';
 
 class SearchPage extends StatefulWidget {
@@ -194,6 +195,7 @@ class _SearchPageState extends State<SearchPage> {
                         children: [
                           if (foundSamples[index]["provider"] != auth.currentUser!.uid)
                             FavoriteProviderButton(providerData: foundSamples[index]["providerData"]),
+                          FavoriteSampleButton(providerData: foundSamples[index]),
                           IconButton(
                             onPressed: () {
                               Navigator.pushNamed(context, "/sample", arguments: foundSamples[index],);
