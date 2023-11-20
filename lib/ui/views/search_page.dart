@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sample/ui/buttons/favorite_provider_button.dart';
 import 'package:sample/ui/widgets/custom_drawer.dart';
 
 class SearchPage extends StatefulWidget {
@@ -36,6 +37,30 @@ class _SearchPageState extends State<SearchPage> {
         final samples = querySnapshot.docs;
         for (var sample in samples) {
           if (sample.data()["search"].toString().contains(toSearch.toLowerCase().replaceAll(" ", ""))) {
+            Map<String, dynamic> providerData = {};
+            await db.collection("users").where("id", isEqualTo: sample.data()["provider"]).get().then((querySnapshot) async {
+              final users = querySnapshot.docs;
+              for (var user in users) {
+                setState(() {
+                  providerData = {
+                    "id": user.data()["id"],
+                    "name": user.data()["name"],
+                    "email": user.data()["email"],
+                    "address": user.data()["address"],
+                    "country": user.data()["country"],
+                    "department": user.data()["department"],
+                    "google_scholar": user.data()["google_scholar"],
+                    "institution": user.data()["institution"],
+                    "mobile": user.data()["mobile"],
+                    "orcid": user.data()["orcid"],
+                    "other": user.data()["other"],
+                    "webpage": user.data()["webpage"],
+                  };
+                });
+              }
+            }, onError: (e) {
+              debugPrint("Error completing: $e");
+            });
             sampleData = {
               "id": sample.data()["id"],
               "provider": sample.data()["provider"],
@@ -59,6 +84,7 @@ class _SearchPageState extends State<SearchPage> {
               "image": sample.data()["image"],
               "search": sample.data()["search"],
               "registration": sample.data()["registration"],
+              "providerData": providerData,
             };
             setState(() {
               foundSamples.add(sampleData);
@@ -166,6 +192,8 @@ class _SearchPageState extends State<SearchPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
+                          if (foundSamples[index]["provider"] != auth.currentUser!.uid)
+                            FavoriteProviderButton(providerData: foundSamples[index]["providerData"]),
                           IconButton(
                             onPressed: () {
                               Navigator.pushNamed(context, "/sample", arguments: foundSamples[index],);

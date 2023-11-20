@@ -268,11 +268,7 @@ class _ProviderPageState extends State<ProviderPage> {
                             builder: (context, provider, child) {
                               return ElevatedButton(
                                 onPressed: () {
-                                  provider.addRemoveFavoriteProvider({
-                                    "id": providerData["id"],
-                                    "name": providerData["name"],
-                                    "email": providerData["email"],
-                                  }, context);
+                                  provider.addRemoveFavoriteProvider(providerData, context);
                                   debugPrint({
                                     "id": providerData["id"],
                                     "name": providerData["name"],
