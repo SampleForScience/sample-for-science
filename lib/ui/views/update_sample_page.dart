@@ -94,9 +94,13 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
       formulaController.text = sampleData["formula"];
       keywordsController.text = sampleData["keywords"];
       selectedTypeOfSample = sampleData["type"];
-      otherTypeController.text = sampleData["otherType"];
+      if(sampleData["type"]== "Other"){
+        otherTypeController.text = sampleData["otherType"];
+      }
       selectedMorphology = sampleData["morphology"];
-      otherMorphologyController.text = sampleData["otherMorphology"];
+      if(sampleData["morphology"]=="Other"){
+        otherMorphologyController.text = sampleData["otherMorphology"];
+      }
       prevDiffractionController.text = sampleData["previousDiffraction"];
       prevThermalController.text = sampleData["previousThermal"];
       prevOpticalController.text = sampleData["previousOptical"];
