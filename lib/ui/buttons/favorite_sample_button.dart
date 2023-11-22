@@ -16,15 +16,22 @@ class _FavoriteSampleButtonState extends State<FavoriteSampleButton> {
   Widget build(BuildContext context) {
     return Consumer<FavoriteProvider>(
       builder: (context, provider, child) {
-        return ElevatedButton(
-            onPressed: () {
-              provider.addRemoveFavoriteSample(widget.sampleData, context);
-            },
-            child: const Row(
+        return TextButton(
+          onPressed: () {
+            provider.addRemoveFavoriteSample(widget.sampleData, context);
+          },
+          child: SizedBox(
+            // width: 50,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Fav. sample"),
+                const Icon(Icons.science),
+                provider.favSamplesIds.contains(widget.sampleData["id"])
+                  ? const Icon(Icons.star)
+                  : const Icon(Icons.star_border),
               ],
-            )
+            ),
+          )
         );
       },
     );

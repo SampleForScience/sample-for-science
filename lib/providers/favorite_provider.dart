@@ -9,7 +9,6 @@ class FavoriteProvider extends ChangeNotifier {
   List<Map<String, dynamic>>favoriteProviders = [];
   List<String> favProvidersIds = [];
   List<Map<String, dynamic>>favoriteSamples = [];
-  // implementar comparação comos id também nas amostras
   List<String> favSamplesIds = [];
 
   void addRemoveFavoriteProvider(Map<String, dynamic> newFavoriteProvider, BuildContext context) async {
@@ -45,11 +44,7 @@ class FavoriteProvider extends ChangeNotifier {
           }).onError((e, _) {
             debugPrint("Error updating favorite: $e");
           });
-          // TODO: atualizar favoritos sem mudar de página
           notifyListeners();
-          // Future.delayed(Duration.zero, (){
-          //   Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
-          // });
         }
       }, onError: (e) {
         debugPrint("Error querying database: $e");
@@ -61,6 +56,7 @@ class FavoriteProvider extends ChangeNotifier {
 
   Future<void>getFavoriteProviders() async {
     favoriteProviders = [];
+    favProvidersIds = [];
     notifyListeners();
     try{
       await db.collection("users")
@@ -72,7 +68,6 @@ class FavoriteProvider extends ChangeNotifier {
           favoriteProviders = [...user["favoriteProviders"]];
           for (var id in user["favoriteProviders"]) {
             favProvidersIds.add(id["id"]);
-            debugPrint(favProvidersIds.toString());
           }
           notifyListeners();
         }
@@ -94,12 +89,15 @@ class FavoriteProvider extends ChangeNotifier {
         for (var user in users) {
           var favoriteSamples = List.from(user["favoriteSamples"]);
 
-          var index = favoriteSamples.indexWhere((list) => list["id"] == newFavoriteSample["id"]);
+          int index = favoriteSamples.indexWhere((list) => list["id"] == newFavoriteSample["id"]);
+          int idIndex = favoriteSamples.indexWhere((list) => list == newFavoriteSample["id"]);
 
           if (index != -1) {
             favoriteSamples.removeAt(index);
+            favSamplesIds.removeAt(idIndex);
           } else {
             favoriteSamples.add(newFavoriteSample);
+            favSamplesIds.add(newFavoriteSample["id"]);
           }
 
           await db.collection("users")
@@ -110,11 +108,7 @@ class FavoriteProvider extends ChangeNotifier {
           }).onError((e, _) {
             debugPrint("Error updating favorite samples: $e");
           });
-          // TODO: atualizar favoritos sem mudar de página
           notifyListeners();
-          // Future.delayed(Duration.zero, (){
-          //   Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
-          // });
         }
       }, onError: (e) {
         debugPrint("Error querying database: $e");
@@ -126,6 +120,7 @@ class FavoriteProvider extends ChangeNotifier {
 
   Future<void>getFavoriteSamples() async {
     favoriteSamples = [];
+    favSamplesIds = [];
     notifyListeners();
     try{
       await db.collection("users")
@@ -135,6 +130,9 @@ class FavoriteProvider extends ChangeNotifier {
         final users = querySnapshot.docs;
         for (var user in users) {
           favoriteSamples = [...user["favoriteSamples"]];
+          for (var id in user["favoriteSamples"]) {
+            favSamplesIds.add(id["id"]);
+          }
           notifyListeners();
         }
       }, onError: (e) {

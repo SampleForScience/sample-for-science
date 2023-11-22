@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sample/providers/favorite_provider.dart';
@@ -19,9 +18,6 @@ class _FavoriteProviderButtonState extends State<FavoriteProviderButton> {
       builder: (context, provider, child) {
         return TextButton(
           onPressed: () {
-            debugPrint("=====================================================");
-            debugPrint(widget.providerData.toString());
-            debugPrint("=====================================================");
             provider.addRemoveFavoriteProvider(widget.providerData, context);
           },
           child: SizedBox(
