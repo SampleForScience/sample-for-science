@@ -29,9 +29,11 @@ class FavoriteProvider extends ChangeNotifier {
           if (index != -1) {
             favoriteProviders.removeAt(index);
             favProvidersIds.removeAt(idIndex);
+            notifyListeners();
           } else {
             favoriteProviders.add(newFavoriteProvider);
             favProvidersIds.add(newFavoriteProvider["id"]);
+            notifyListeners();
           }
 
           debugPrint(favProvidersIds.toString());
@@ -44,7 +46,6 @@ class FavoriteProvider extends ChangeNotifier {
           }).onError((e, _) {
             debugPrint("Error updating favorite: $e");
           });
-          notifyListeners();
         }
       }, onError: (e) {
         debugPrint("Error querying database: $e");
@@ -90,14 +91,16 @@ class FavoriteProvider extends ChangeNotifier {
           var favoriteSamples = List.from(user["favoriteSamples"]);
 
           int index = favoriteSamples.indexWhere((list) => list["id"] == newFavoriteSample["id"]);
-          int idIndex = favoriteSamples.indexWhere((list) => list == newFavoriteSample["id"]);
+          int idIndex = favSamplesIds.indexWhere((list) => list == newFavoriteSample["id"]);
 
           if (index != -1) {
             favoriteSamples.removeAt(index);
             favSamplesIds.removeAt(idIndex);
+            notifyListeners();
           } else {
             favoriteSamples.add(newFavoriteSample);
             favSamplesIds.add(newFavoriteSample["id"]);
+            notifyListeners();
           }
 
           await db.collection("users")
@@ -108,7 +111,6 @@ class FavoriteProvider extends ChangeNotifier {
           }).onError((e, _) {
             debugPrint("Error updating favorite samples: $e");
           });
-          notifyListeners();
         }
       }, onError: (e) {
         debugPrint("Error querying database: $e");
