@@ -90,7 +90,7 @@ class _SearchPageState extends State<SearchPage> {
             setState(() {
               foundSamples.add(sampleData);
             });
-            debugPrint(sampleData.toString());
+            // debugPrint(sampleData.toString());
           }
         }
       }, onError: (e) {
@@ -195,7 +195,7 @@ class _SearchPageState extends State<SearchPage> {
                         children: [
                           if (foundSamples[index]["provider"] != auth.currentUser!.uid)
                             FavoriteProviderButton(providerData: foundSamples[index]["providerData"]),
-                          FavoriteSampleButton(providerData: foundSamples[index]),
+                          FavoriteSampleButton(sampleData: foundSamples[index]),
                           IconButton(
                             onPressed: () {
                               Navigator.pushNamed(context, "/sample", arguments: foundSamples[index],);

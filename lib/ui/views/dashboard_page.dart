@@ -62,6 +62,7 @@ class _DashboardPageState extends State<DashboardPage> {
               "animals": sample.data()["animals"],
               "image": sample.data()["image"],
               "registration": sample.data()["registration"],
+              "ProviderData": sample.data()["providerData"],
             };
             setState(() {
               mySamples.add(sampleData);
@@ -271,7 +272,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 children: [
                                   if (sampleData["provider"] != auth.currentUser!.uid)
                                     FavoriteProviderButton(providerData: sampleData["providerData"]),
-                                  FavoriteSampleButton(providerData: sampleData),
+                                  FavoriteSampleButton(sampleData: sampleData),
                                   IconButton(
                                     onPressed: () {
                                       Navigator.pushNamed(context, "/sample", arguments: sampleData,);

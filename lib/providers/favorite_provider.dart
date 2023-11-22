@@ -7,7 +7,10 @@ class FavoriteProvider extends ChangeNotifier {
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   List<Map<String, dynamic>>favoriteProviders = [];
+  List<String> favProvidersIds = [];
   List<Map<String, dynamic>>favoriteSamples = [];
+  // implementar comparação comos id também nas amostras
+  List<String> favSamplesIds = [];
 
   void addRemoveFavoriteProvider(Map<String, dynamic> newFavoriteProvider, BuildContext context) async {
     try {
@@ -19,13 +22,20 @@ class FavoriteProvider extends ChangeNotifier {
         for (var user in users) {
           var favoriteProviders = List.from(user["favoriteProviders"]);
 
-          var index = favoriteProviders.indexWhere((list) => list["id"] == newFavoriteProvider["id"]);
+          int index = favoriteProviders.indexWhere((list) => list["id"] == newFavoriteProvider["id"]);
+          int idIndex = favProvidersIds.indexWhere((list) => list == newFavoriteProvider["id"]);
+
+          debugPrint(favProvidersIds.toString());
 
           if (index != -1) {
             favoriteProviders.removeAt(index);
+            favProvidersIds.removeAt(idIndex);
           } else {
             favoriteProviders.add(newFavoriteProvider);
+            favProvidersIds.add(newFavoriteProvider["id"]);
           }
+
+          debugPrint(favProvidersIds.toString());
 
           await db.collection("users")
               .doc(auth.currentUser!.uid)
@@ -37,9 +47,9 @@ class FavoriteProvider extends ChangeNotifier {
           });
           // TODO: atualizar favoritos sem mudar de página
           notifyListeners();
-          Future.delayed(Duration.zero, (){
-            Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
-          });
+          // Future.delayed(Duration.zero, (){
+          //   Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
+          // });
         }
       }, onError: (e) {
         debugPrint("Error querying database: $e");
@@ -60,6 +70,10 @@ class FavoriteProvider extends ChangeNotifier {
         final users = querySnapshot.docs;
         for (var user in users) {
           favoriteProviders = [...user["favoriteProviders"]];
+          for (var id in user["favoriteProviders"]) {
+            favProvidersIds.add(id["id"]);
+            debugPrint(favProvidersIds.toString());
+          }
           notifyListeners();
         }
       }, onError: (e) {
@@ -98,9 +112,9 @@ class FavoriteProvider extends ChangeNotifier {
           });
           // TODO: atualizar favoritos sem mudar de página
           notifyListeners();
-          Future.delayed(Duration.zero, (){
-            Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
-          });
+          // Future.delayed(Duration.zero, (){
+          //   Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
+          // });
         }
       }, onError: (e) {
         debugPrint("Error querying database: $e");

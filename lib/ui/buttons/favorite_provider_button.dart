@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sample/providers/favorite_provider.dart';
@@ -16,14 +17,24 @@ class _FavoriteProviderButtonState extends State<FavoriteProviderButton> {
   Widget build(BuildContext context) {
     return Consumer<FavoriteProvider>(
       builder: (context, provider, child) {
-        return ElevatedButton(
+        return TextButton(
           onPressed: () {
+            debugPrint("=====================================================");
+            debugPrint(widget.providerData.toString());
+            debugPrint("=====================================================");
             provider.addRemoveFavoriteProvider(widget.providerData, context);
           },
-          child: const Row(
-            children: [
-              Text("Fav. prov."),
-            ],
+          child: SizedBox(
+            // width: 50,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Icon(Icons.person),
+                provider.favProvidersIds.contains(widget.providerData["id"])
+                  ? const Icon(Icons.star)
+                  : const Icon(Icons.star_border),
+              ],
+            ),
           )
         );
       },

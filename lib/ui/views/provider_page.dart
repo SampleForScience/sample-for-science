@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sample/providers/favorite_provider.dart';
 import 'package:sample/ui/buttons/circular_avatar_button.dart';
+import 'package:sample/ui/buttons/favorite_provider_button.dart';
 import 'package:sample/ui/views/chat_page.dart';
 
 class ProviderPage extends StatefulWidget {
@@ -264,28 +265,9 @@ class _ProviderPageState extends State<ProviderPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Consumer<FavoriteProvider>(
-                            builder: (context, provider, child) {
-                              return ElevatedButton(
-                                onPressed: () {
-                                  provider.addRemoveFavoriteProvider(providerData, context);
-                                  debugPrint({
-                                    "id": providerData["id"],
-                                    "name": providerData["name"],
-                                    "email": providerData["email"],
-                                  }.toString());
-                                },
-                                child: const Row(
-                                  children: [
-                                    Text("Favorite provider "),
-                                    Icon(Icons.star)
-                                  ],
-                                )
-                              );
-                            },
-                          )
+                          FavoriteProviderButton(providerData: providerData),
                         ],
-                      ),
+                      )
                     ],
                   ),
                 ),
