@@ -24,7 +24,7 @@ class FavoriteProvider extends ChangeNotifier {
           int index = favoriteProviders.indexWhere((list) => list["id"] == newFavoriteProvider["id"]);
           int idIndex = favProvidersIds.indexWhere((list) => list == newFavoriteProvider["id"]);
 
-          debugPrint(favProvidersIds.toString());
+          // debugPrint(favProvidersIds.toString());
 
           if (index != -1) {
             favoriteProviders.removeAt(index);
@@ -36,7 +36,7 @@ class FavoriteProvider extends ChangeNotifier {
             notifyListeners();
           }
 
-          debugPrint(favProvidersIds.toString());
+          // debugPrint(favProvidersIds.toString());
 
           await db.collection("users")
               .doc(auth.currentUser!.uid)
@@ -46,6 +46,8 @@ class FavoriteProvider extends ChangeNotifier {
           }).onError((e, _) {
             debugPrint("Error updating favorite: $e");
           });
+
+          getFavoriteProviders();
         }
       }, onError: (e) {
         debugPrint("Error querying database: $e");
@@ -111,6 +113,8 @@ class FavoriteProvider extends ChangeNotifier {
           }).onError((e, _) {
             debugPrint("Error updating favorite samples: $e");
           });
+
+          getFavoriteSamples();
         }
       }, onError: (e) {
         debugPrint("Error querying database: $e");
