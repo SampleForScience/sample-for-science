@@ -182,6 +182,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
+                              FavoriteSampleButton(sampleData: sampleData),
                               IconButton(
                                 onPressed: () {
                                   showDialog(

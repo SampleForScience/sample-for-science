@@ -25,10 +25,10 @@ class _FavoriteProviderButtonState extends State<FavoriteProviderButton> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Icon(Icons.person),
+                const Icon(Icons.person, color: Colors.grey,),
                 provider.favProvidersIds.contains(widget.providerData["id"])
-                  ? const Icon(Icons.star)
-                  : const Icon(Icons.star_border),
+                  ? const Icon(Icons.star, color: Colors.grey,)
+                  : const Icon(Icons.star_border, color: Colors.grey,),
               ],
             ),
           )

@@ -25,10 +25,10 @@ class _FavoriteSampleButtonState extends State<FavoriteSampleButton> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Icon(Icons.science),
+                const Icon(Icons.science, color: Colors.grey,),
                 provider.favSamplesIds.contains(widget.sampleData["id"])
-                  ? const Icon(Icons.star)
-                  : const Icon(Icons.star_border),
+                  ? const Icon(Icons.star, color: Colors.grey,)
+                  : const Icon(Icons.star_border, color: Colors.grey,),
               ],
             ),
           )
