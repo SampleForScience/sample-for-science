@@ -22,7 +22,7 @@ class _SamplePageState extends State<SamplePage> {
   Uint8List? imageBytes;
 
   Future<void> waitingSampleData() async{
-    await Future.delayed(const Duration(milliseconds: 1000), () {});
+    await Future.delayed(const Duration(milliseconds: 500), () {});
   }
 
   Future<void> loadSampleImage(String imageName) async {

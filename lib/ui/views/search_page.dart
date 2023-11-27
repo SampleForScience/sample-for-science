@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sample/ui/buttons/favorite_provider_button.dart';
+import 'package:sample/ui/buttons/favorite_sample_button.dart';
 import 'package:sample/ui/widgets/custom_drawer.dart';
 
 class SearchPage extends StatefulWidget {
@@ -14,6 +18,7 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   final db = FirebaseFirestore.instance;
   final auth = FirebaseAuth.instance;
+  bool searching = false;
   List<Map<String, dynamic>> foundSamples = [];
 
   TextEditingController searchController = TextEditingController();
@@ -24,7 +29,6 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Future<void>searchSamples(String toSearch) async {
-    debugPrint("searching: $toSearch");
     setState(() {
       foundSamples = [];
     });
@@ -33,7 +37,31 @@ class _SearchPageState extends State<SearchPage> {
       await db.collection("samples").get().then((querySnapshot) async {
         final samples = querySnapshot.docs;
         for (var sample in samples) {
-          if (sample.data()["search"].toString().contains(toSearch.toLowerCase())) {
+          if (sample.data()["search"].toString().contains(toSearch.toLowerCase().replaceAll(" ", ""))) {
+            Map<String, dynamic> providerData = {};
+            await db.collection("users").where("id", isEqualTo: sample.data()["provider"]).get().then((querySnapshot) async {
+              final users = querySnapshot.docs;
+              for (var user in users) {
+                setState(() {
+                  providerData = {
+                    "id": user.data()["id"],
+                    "name": user.data()["name"],
+                    "email": user.data()["email"],
+                    "address": user.data()["address"],
+                    "country": user.data()["country"],
+                    "department": user.data()["department"],
+                    "google_scholar": user.data()["google_scholar"],
+                    "institution": user.data()["institution"],
+                    "mobile": user.data()["mobile"],
+                    "orcid": user.data()["orcid"],
+                    "other": user.data()["other"],
+                    "webpage": user.data()["webpage"],
+                  };
+                });
+              }
+            }, onError: (e) {
+              debugPrint("Error completing: $e");
+            });
             sampleData = {
               "id": sample.data()["id"],
               "provider": sample.data()["provider"],
@@ -57,11 +85,12 @@ class _SearchPageState extends State<SearchPage> {
               "image": sample.data()["image"],
               "search": sample.data()["search"],
               "registration": sample.data()["registration"],
+              "providerData": providerData,
             };
             setState(() {
               foundSamples.add(sampleData);
             });
-            debugPrint(sampleData.toString());
+            // debugPrint(sampleData.toString());
           }
         }
       }, onError: (e) {
@@ -91,15 +120,25 @@ class _SearchPageState extends State<SearchPage> {
                   Expanded(
                     child: TextField(
                       controller: searchController,
+                      onSubmitted: (value) {
+                        if (value.isNotEmpty) {
+                          searchSamples(value);
+                        }
+                      },
                       decoration: const InputDecoration(
                         hintText: 'Type here...',
                       ),
                     ),
                   ),
                   IconButton(
-                    onPressed: () async {
-                      if (searchController.text != "") {
+                    onPressed: () {
+                      if (searchController.text.isNotEmpty) {
                         searchSamples(searchController.text);
+                        Timer.periodic(const Duration(milliseconds: 500), (timer) {
+                          setState(() {
+                            searching = true;
+                          });
+                        });
                       }
                     },
                     icon: const Icon(
@@ -111,6 +150,19 @@ class _SearchPageState extends State<SearchPage> {
                 ],
               ),
             ),
+          ),
+          if (searching) Text(
+            "${foundSamples.length} ${foundSamples.isNotEmpty && foundSamples.length > 1 ? 'samples' : 'sample'} found"
+          ),
+          if (foundSamples.isNotEmpty) TextButton(
+            onPressed: () {
+              setState(() {
+                searching = false;
+                searchController.text = "";
+                foundSamples.clear();
+              });
+            },
+            child: const Text("Clear Search"),
           ),
           if (foundSamples.isNotEmpty) Expanded(
             child: ListView.builder(
@@ -141,6 +193,9 @@ class _SearchPageState extends State<SearchPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
+                          if (foundSamples[index]["provider"] != auth.currentUser!.uid)
+                            FavoriteProviderButton(providerData: foundSamples[index]["providerData"]),
+                          FavoriteSampleButton(sampleData: foundSamples[index]),
                           IconButton(
                             onPressed: () {
                               Navigator.pushNamed(context, "/sample", arguments: foundSamples[index],);

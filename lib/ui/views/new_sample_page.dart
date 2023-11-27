@@ -124,7 +124,7 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("New Sample"),
+        title: const Text("Provide Sample"),
         centerTitle: true,
         actions: const [
           CircularAvatarButton()
@@ -716,7 +716,7 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                       sugDiffractionController.text +
                       sugThermalController.text +
                       sugOpticalController.text +
-                      sugOtherController.text).toLowerCase()
+                      sugOtherController.text).toLowerCase().replaceAll(" ", "")
                 };
 
                 saveNewSample(newSample, sampleId);

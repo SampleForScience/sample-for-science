@@ -5,6 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sample/providers/favorite_provider.dart';
 import 'package:sample/ui/buttons/circular_avatar_button.dart';
+import 'package:sample/ui/buttons/favorite_provider_button.dart';
+import 'package:sample/ui/buttons/favorite_sample_button.dart';
 import 'package:sample/ui/widgets/custom_drawer.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -60,6 +62,7 @@ class _DashboardPageState extends State<DashboardPage> {
               "animals": sample.data()["animals"],
               "image": sample.data()["image"],
               "registration": sample.data()["registration"],
+              "ProviderData": sample.data()["providerData"],
             };
             setState(() {
               mySamples.add(sampleData);
@@ -78,6 +81,7 @@ class _DashboardPageState extends State<DashboardPage> {
     Future.delayed(Duration.zero, () {
       getMySamples();
       Provider.of<FavoriteProvider>(context, listen: false).getFavoriteProviders();
+      Provider.of<FavoriteProvider>(context, listen: false).getFavoriteSamples();
     });
     super.initState();
   }
@@ -178,6 +182,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
+                              FavoriteSampleButton(sampleData: sampleData),
                               IconButton(
                                 onPressed: () {
                                   showDialog(
@@ -232,70 +237,57 @@ class _DashboardPageState extends State<DashboardPage> {
                     );
                   }).toList()
               ),
-              ExpansionTile(
-                title: const Text('Favorite Samples'),
-                children: <Widget>[
-                  ListTile(
-                    title: const Row(
-                      children: [
-                        Icon(Icons.science),
-                        Text(" Favorite sample test item 0"),
-                      ],
-                    ),
-                    onTap: () {
-                      debugPrint("Favorite sample test item 0 clicked");
-                      // Navigator.pop(context);
-                    },
-                  ),
-                  ListTile(
-                    title: const Row(
-                      children: [
-                        Icon(Icons.science),
-                        Text(" Favorite sample test item 1"),
-                      ],
-                    ),
-                    onTap: () {
-                      debugPrint("Favorite sample test item 1 clicked");
-                      // Navigator.pop(context);
-                    },
-                  ),
-                  ListTile(
-                    title: const Row(
-                      children: [
-                        Icon(Icons.science),
-                        Text(" Favorite sample test item 2"),
-                      ],
-                    ),
-                    onTap: () {
-                      debugPrint("Favorite sample test item 2 clicked");
-                      // Navigator.pop(context);
-                    },
-                  ),
-                  ListTile(
-                    title: const Row(
-                      children: [
-                        Icon(Icons.science),
-                        Text(" Favorite sample test item 3"),
-                      ],
-                    ),
-                    onTap: () {
-                      debugPrint("Favorite sample test item 3 clicked");
-                      // Navigator.pop(context);
-                    },
-                  ),
-                  ListTile(
-                    title: const Row(
-                      children: [
-                        Icon(Icons.science),
-                        Text(" Favorite sample test item 4"),
-                      ],
-                    ),
-                    onTap: () {
-                      debugPrint("Favorite sample test item 4 clicked");
-                      // Navigator.pop(context);
-                    },
-                  ),
-                ],
+              Consumer<FavoriteProvider>(
+                builder: (context, provider, child) {
+                  return ExpansionTile(
+                      title: const Text('Favorite Samples'),
+                      children: provider.favoriteSamples.isEmpty
+                          ? <ListTile>[const ListTile(
+                        title: Text("Your favorite samples will be shown here."),
+                      ),]
+                          : provider.favoriteSamples.map((sampleData) {
+                        return ListTile(
+                          title: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Divider(
+                                thickness: 1,
+                              ),
+                              const Text(
+                                "Code",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text(sampleData['code']),
+                              const Text(
+                                "Chemical Formula",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text(sampleData['formula']),
+                              const Text(
+                                "Registration date",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text(formatDateWithUserTimezone(sampleData["registration"].toDate())),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  if (sampleData["provider"] != auth.currentUser!.uid)
+                                    FavoriteProviderButton(providerData: sampleData["providerData"]),
+                                  FavoriteSampleButton(sampleData: sampleData),
+                                  IconButton(
+                                    onPressed: () {
+                                      Navigator.pushNamed(context, "/sample", arguments: sampleData,);
+                                    },
+                                    icon: const Icon(Icons.remove_red_eye),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList()
+                  );
+                },
               ),
               Consumer<FavoriteProvider>(
                 builder: (context, provider, child) {
@@ -325,6 +317,7 @@ class _DashboardPageState extends State<DashboardPage> {
                               if (auth.currentUser!.uid != providerData["id"])Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
+                                  FavoriteProviderButton(providerData: providerData),
                                   IconButton(
                                     onPressed: () {
                                       Navigator.pushNamed(context, "/provider", arguments: providerData,);

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sample/providers/favorite_provider.dart';
 import 'package:sample/ui/buttons/circular_avatar_button.dart';
+import 'package:sample/ui/buttons/favorite_provider_button.dart';
 import 'package:sample/ui/views/chat_page.dart';
 
 class ProviderPage extends StatefulWidget {
@@ -20,7 +21,7 @@ class _ProviderPageState extends State<ProviderPage> {
   late Map<String, dynamic> providerData;
 
   Future<void> waitingProviderData() async{
-    await Future.delayed(const Duration(milliseconds: 1000), () {});
+    await Future.delayed(const Duration(milliseconds: 500), () {});
   }
 
   Future<void> getProvider(String provider) async {
@@ -264,32 +265,9 @@ class _ProviderPageState extends State<ProviderPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Consumer<FavoriteProvider>(
-                            builder: (context, provider, child) {
-                              return ElevatedButton(
-                                onPressed: () {
-                                  provider.addRemoveFavoriteProvider({
-                                    "id": providerData["id"],
-                                    "name": providerData["name"],
-                                    "email": providerData["email"],
-                                  }, context);
-                                  debugPrint({
-                                    "id": providerData["id"],
-                                    "name": providerData["name"],
-                                    "email": providerData["email"],
-                                  }.toString());
-                                },
-                                child: const Row(
-                                  children: [
-                                    Text("Favorite provider "),
-                                    Icon(Icons.star)
-                                  ],
-                                )
-                              );
-                            },
-                          )
+                          FavoriteProviderButton(providerData: providerData),
                         ],
-                      ),
+                      )
                     ],
                   ),
                 ),
