@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sample/ui/buttons/circular_avatar_button.dart';
 import 'package:sample/ui/buttons/favorite_provider_button.dart';
 import 'package:sample/ui/buttons/favorite_sample_button.dart';
 import 'package:sample/ui/widgets/custom_drawer.dart';
@@ -28,18 +29,25 @@ class _SearchPageState extends State<SearchPage> {
     return formatter.format(dateTime.toLocal());
   }
 
-  Future<void>searchSamples(String toSearch) async {
+  Future<void> searchSamples(String toSearch) async {
     setState(() {
       foundSamples = [];
     });
     late Map<String, dynamic> sampleData;
-    try{
+    try {
       await db.collection("samples").get().then((querySnapshot) async {
         final samples = querySnapshot.docs;
         for (var sample in samples) {
-          if (sample.data()["search"].toString().contains(toSearch.toLowerCase().replaceAll(" ", ""))) {
+          if (sample
+              .data()["search"]
+              .toString()
+              .contains(toSearch.toLowerCase().replaceAll(" ", ""))) {
             Map<String, dynamic> providerData = {};
-            await db.collection("users").where("id", isEqualTo: sample.data()["provider"]).get().then((querySnapshot) async {
+            await db
+                .collection("users")
+                .where("id", isEqualTo: sample.data()["provider"])
+                .get()
+                .then((querySnapshot) async {
               final users = querySnapshot.docs;
               for (var user in users) {
                 setState(() {
@@ -96,7 +104,7 @@ class _SearchPageState extends State<SearchPage> {
       }, onError: (e) {
         debugPrint("Error completing: $e");
       });
-    } catch(e) {
+    } catch (e) {
       debugPrint('error in getMySample(): $e');
     }
   }
@@ -106,6 +114,7 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Search"),
+        actions: const [CircularAvatarButton()],
         centerTitle: true,
       ),
       drawer: const CustomDrawer(highlight: Highlight.search),
@@ -130,86 +139,104 @@ class _SearchPageState extends State<SearchPage> {
                       ),
                     ),
                   ),
-                  IconButton(
-                    onPressed: () {
-                      if (searchController.text.isNotEmpty) {
-                        searchSamples(searchController.text);
-                        Timer.periodic(const Duration(milliseconds: 500), (timer) {
-                          setState(() {
-                            searching = true;
-                          });
-                        });
-                      }
-                    },
-                    icon: const Icon(
-                      Icons.search_rounded,
-                      color: Colors.black,
-                      size: 35,
-                    )
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 1, 134, 243),
+                        borderRadius: BorderRadius.circular(10.0)),
+                    child: IconButton(
+                        onPressed: () {
+                          if (searchController.text.isNotEmpty) {
+                            searchSamples(searchController.text);
+                            Timer.periodic(const Duration(milliseconds: 500),
+                                (timer) {
+                              setState(() {
+                                searching = true;
+                              });
+                            });
+                          }
+                        },
+                        icon: const Icon(
+                          Icons.search_rounded,
+                          color: Colors.black,
+                          size: 28,
+                        )),
                   ),
                 ],
               ),
             ),
           ),
-          if (searching) Text(
-            "${foundSamples.length} ${foundSamples.isNotEmpty && foundSamples.length > 1 ? 'samples' : 'sample'} found"
-          ),
-          if (foundSamples.isNotEmpty) TextButton(
-            onPressed: () {
-              setState(() {
-                searching = false;
-                searchController.text = "";
-                foundSamples.clear();
-              });
-            },
-            child: const Text("Clear Search"),
-          ),
-          if (foundSamples.isNotEmpty) Expanded(
-            child: ListView.builder(
-              itemCount: foundSamples.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Divider(
-                        thickness: 1,
-                      ),
-                      const Text(
-                        "Code",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      Text(foundSamples[index]['code']),
-                      const Text(
-                        "Chemical Formula",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      Text(foundSamples[index]['formula']),
-                      const Text(
-                        "Registration date",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      Text(formatDateWithUserTimezone(foundSamples[index]["registration"].toDate())),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          if (foundSamples[index]["provider"] != auth.currentUser!.uid)
-                            FavoriteProviderButton(providerData: foundSamples[index]["providerData"]),
-                          FavoriteSampleButton(sampleData: foundSamples[index]),
-                          IconButton(
-                            onPressed: () {
-                              Navigator.pushNamed(context, "/sample", arguments: foundSamples[index],);
-                            },
-                            icon: const Icon(Icons.remove_red_eye),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
+          if (searching)
+            Text(
+                "${foundSamples.length} ${foundSamples.isNotEmpty && foundSamples.length > 1 ? 'samples' : 'sample'} found"),
+          if (foundSamples.isNotEmpty)
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  searching = false;
+                  searchController.text = "";
+                  foundSamples.clear();
+                });
               },
+              child: const Text("Clear Search"),
             ),
-          ),
+          if (foundSamples.isNotEmpty)
+            Expanded(
+              child: ListView.builder(
+                itemCount: foundSamples.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Divider(
+                          thickness: 1,
+                        ),
+                        const Text(
+                          "Code",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(foundSamples[index]['code']),
+                        const Text(
+                          "Chemical Formula",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(foundSamples[index]['formula']),
+                        const Text(
+                          "Registration date",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(formatDateWithUserTimezone(
+                            foundSamples[index]["registration"].toDate())),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            if (foundSamples[index]["provider"] !=
+                                auth.currentUser!.uid)
+                              FavoriteProviderButton(
+                                  providerData: foundSamples[index]
+                                      ["providerData"]),
+                            FavoriteSampleButton(
+                                sampleData: foundSamples[index]),
+                            IconButton(
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  "/sample",
+                                  arguments: foundSamples[index],
+                                );
+                              },
+                              icon: const Icon(Icons.remove_red_eye),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
         ],
       ),
     );

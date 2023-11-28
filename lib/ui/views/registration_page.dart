@@ -139,6 +139,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   //Quando terminar de resolver esse problema colocarei um condicional aqui pra buscar a foto do firebase
                   CircleAvatar(radius: 64),
                   Positioned(
+                    bottom: 0.0,
+                    right: 0.0,
                     child: IconButton(
                       icon: const Icon(Icons.camera_alt),
                       onPressed: pickAndUploadImage,
