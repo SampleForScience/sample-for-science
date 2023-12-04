@@ -56,34 +56,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
     return userData;
   }
 
-//Deixei separado tudo que usei do resto do código pra você ver melhor//
-  final FirebaseStorage storage = FirebaseStorage.instance;
-
-  Future<void> upload(String path) async {
-    File file = File(path);
-    try {
-      String ref = 'images/img-${DateTime.now().toString()}.jpg';
-      await storage.ref(ref).putFile(file);
-    } on FirebaseException catch (e) {
-      throw Exception('Erro no Upload: ${e.code}');
-    }
-  }
-
-  pickAndUploadImage() async {
-    XFile? file = await getImage();
-    if (file != null) {
-      await upload(file.path);
-    }
-  }
-
-  Future<XFile?> getImage() async {
-    final ImagePicker _picker = ImagePicker();
-    XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    return image;
-  }
-
-//Termina aqui ^
-
   Future<bool> loadUserData() async {
     user = await getUser();
     setState(() {
@@ -114,6 +86,22 @@ class _RegistrationPageState extends State<RegistrationPage> {
     });
   }
 
+  Widget buildCircleAvatar() {
+    List<String> initials = nameController.text.split(' ');
+
+    String firstInitial = initials.isNotEmpty ? initials[0][0] : "";
+    String secondInitial =
+        initials.length > 1 && initials[1].isNotEmpty ? initials[1][0] : "";
+
+    return CircleAvatar(
+      radius: 64,
+      child: Text(
+        '$firstInitial$secondInitial',
+        style: TextStyle(fontSize: 72),
+      ),
+    );
+  }
+
   @override
   void initState() {
     loadUserData();
@@ -135,18 +123,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Stack(children: [
-                  //Quando terminar de resolver esse problema colocarei um condicional aqui pra buscar a foto do firebase
-                  CircleAvatar(radius: 64),
-                  Positioned(
-                    bottom: 0.0,
-                    right: 0.0,
-                    child: IconButton(
-                      icon: const Icon(Icons.camera_alt),
-                      onPressed: pickAndUploadImage,
-                    ),
-                  )
-                ]),
+                //Quando terminar de resolver esse problema colocarei um condicional aqui pra buscar a foto do firebase
+                if (nameController.text.isNotEmpty) buildCircleAvatar(),
+
                 TextField(
                   controller: nameController,
                   decoration: const InputDecoration(
