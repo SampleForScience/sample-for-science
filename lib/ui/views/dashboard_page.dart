@@ -3,10 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:sample/providers/favorite_provider.dart';
+import 'package:sample/providers/sample_provider.dart';
 import 'package:sample/ui/buttons/circular_avatar_button.dart';
 import 'package:sample/ui/buttons/favorite_provider_button.dart';
 import 'package:sample/ui/buttons/favorite_sample_button.dart';
+import 'package:sample/ui/buttons/publication_button.dart';
 import 'package:sample/ui/widgets/custom_drawer.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -19,69 +20,18 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   final db = FirebaseFirestore.instance;
   final auth = FirebaseAuth.instance;
-  List<Map<String, dynamic>> mySamples = [];
 
   String formatDateWithUserTimezone(DateTime dateTime) {
     final formatter = DateFormat('MM/dd/yyyy HH:mm', Intl.getCurrentLocale());
     return formatter.format(dateTime.toLocal());
   }
 
-  Future<void>getMySamples() async {
-    setState(() {
-      mySamples = [];
-    });
-    late Map<String, dynamic> sampleData;
-    try{
-      await db.collection("samples")
-        .where("provider", isEqualTo: auth.currentUser!.uid)
-        .get()
-        .then((querySnapshot) async {
-          final samples = querySnapshot.docs;
-          for (var sample in samples) {
-            sampleData = {
-              "id": sample.data()["id"],
-              "provider": sample.data()["provider"],
-              "number": sample.data()["number"],
-              "code": sample.data()["code"],
-              "formula": sample.data()["formula"],
-              "keywords": sample.data()["keywords"],
-              "type": sample.data()["type"],
-              "otherType": sample.data()["otherType"],
-              "morphology": sample.data()["morphology"],
-              "otherMorphology": sample.data()["otherMorphology"],
-              "previousDiffraction": sample.data()["previousDiffraction"],
-              "previousThermal": sample.data()["previousThermal"],
-              "previousOptical": sample.data()["previousOptical"],
-              "otherPrevious": sample.data()["otherPrevious"],
-              "doi": sample.data()["doi"],
-              "suggestionDiffraction": sample.data()["suggestionDiffraction"],
-              "suggestionThermal": sample.data()["suggestionThermal"],
-              "suggestionOptical": sample.data()["suggestionOptical"],
-              "otherSuggestions": sample.data()["otherSuggestions"],
-              "hazardous": sample.data()["hazardous"],
-              "animals": sample.data()["animals"],
-              "image": sample.data()["image"],
-              "registration": sample.data()["registration"],
-              "ProviderData": sample.data()["providerData"],
-            };
-            setState(() {
-              mySamples.add(sampleData);
-            });
-          }
-        }, onError: (e) {
-          debugPrint("Error completing: $e");
-        });
-    } catch(e) {
-      debugPrint('error in getMySample(): $e');
-    }
-  }
-
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
-      getMySamples();
-      Provider.of<FavoriteProvider>(context, listen: false).getFavoriteProviders();
-      Provider.of<FavoriteProvider>(context, listen: false).getFavoriteSamples();
+      Provider.of<SampleProvider>(context, listen: false).getMySamples();
+      Provider.of<SampleProvider>(context, listen: false).getFavoriteProviders();
+      Provider.of<SampleProvider>(context, listen: false).getFavoriteSamples();
     });
     super.initState();
   }
@@ -146,17 +96,19 @@ class _DashboardPageState extends State<DashboardPage> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              ExpansionTile(
+              Consumer<SampleProvider>(
+                builder: (context, provider, child) {
+                return ExpansionTile(
                   title: const Text('My Samples'),
-                  children: mySamples.isEmpty
-                      ? <ListTile>[ListTile(
-                    title: const Text("Your samples will be shown here."),
-                    onTap: () {
-                      debugPrint("Favorite sample test item 0 clicked");
-                      // Navigator.pop(context);
-                    },
-                  ),]
-                      : mySamples.map((sampleData) {
+                  children: provider.mySamples.isEmpty
+                  ? <ListTile>[ListTile(
+                      title: const Text("Your samples will be shown here."),
+                      onTap: () {
+                        debugPrint("Favorite sample test item 0 clicked");
+                        // Navigator.pop(context);
+                      },
+                    ),]
+                  : provider.mySamples.map((sampleData) {
                     return ListTile(
                       title: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -182,7 +134,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              FavoriteSampleButton(sampleData: sampleData),
+                              PublicationButton(sampleData: sampleData),
                               IconButton(
                                 onPressed: () {
                                   showDialog(
@@ -206,7 +158,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                                   .then((doc) => debugPrint("Sample deleted"),
                                                 onError: (e) => debugPrint("Error updating document $e"),
                                               );
-                                              getMySamples();
+                                              provider.getMySamples();
                                               Navigator.of(context).pop();
                                             },
                                             child: const Text("Delete"),
@@ -216,36 +168,37 @@ class _DashboardPageState extends State<DashboardPage> {
                                     },
                                   );
                                 },
-                                icon: const Icon(Icons.delete),
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  Navigator.pushNamed(context, "/sample", arguments: sampleData,);
-                                },
-                                icon: const Icon(Icons.sticky_note_2_outlined),
+                                icon: const Icon(Icons.delete, color: Colors.black,),
                               ),
                               IconButton(
                                 onPressed: () {
                                   Navigator.pushNamed(context, "/update-sample", arguments: sampleData,);
                                 },
-                                icon: const Icon(Icons.edit),
+                                icon: const Icon(Icons.edit, color: Colors.black,),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.pushNamed(context, "/sample", arguments: sampleData,);
+                                },
+                                icon: const Icon(Icons.sticky_note_2_outlined, color: Colors.black,),
                               ),
                             ],
                           ),
                         ],
                       ),
                     );
-                  }).toList()
+                  }).toList());
+                },
               ),
-              Consumer<FavoriteProvider>(
+              Consumer<SampleProvider>(
                 builder: (context, provider, child) {
                   return ExpansionTile(
-                      title: const Text('Favorite Samples'),
-                      children: provider.favoriteSamples.isEmpty
-                          ? <ListTile>[const ListTile(
-                        title: Text("Your favorite samples will be shown here."),
-                      ),]
-                          : provider.favoriteSamples.map((sampleData) {
+                    title: const Text('Favorite Samples'),
+                    children: provider.favoriteSamples.isEmpty
+                      ? <ListTile>[const ListTile(
+                          title: Text("Your favorite samples will be shown here."),
+                        ),]
+                      : provider.favoriteSamples.map((sampleData) {
                         return ListTile(
                           title: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -289,15 +242,15 @@ class _DashboardPageState extends State<DashboardPage> {
                   );
                 },
               ),
-              Consumer<FavoriteProvider>(
+              Consumer<SampleProvider>(
                 builder: (context, provider, child) {
                   return ExpansionTile(
-                      title: const Text('Favorite Providers'),
-                      children: provider.favoriteProviders.isEmpty
-                          ? <ListTile>[const ListTile(
-                        title: Text("Your favorite providers will be shown here."),
-                      ),]
-                          : provider.favoriteProviders.map((providerData) {
+                    title: const Text('Favorite Providers'),
+                    children: provider.favoriteProviders.isEmpty
+                      ? <ListTile>[const ListTile(
+                          title: Text("Your favorite providers will be shown here."),
+                        ),]
+                      : provider.favoriteProviders.map((providerData) {
                         return ListTile(
                           title: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sample/providers/favorite_provider.dart';
+import 'package:sample/providers/sample_provider.dart';
 
 class FavoriteSampleButton extends StatefulWidget {
   final Map<String, dynamic> sampleData;
@@ -14,7 +14,7 @@ class FavoriteSampleButton extends StatefulWidget {
 class _FavoriteSampleButtonState extends State<FavoriteSampleButton> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<FavoriteProvider>(
+    return Consumer<SampleProvider>(
       builder: (context, provider, child) {
         return TextButton(
           onPressed: () {

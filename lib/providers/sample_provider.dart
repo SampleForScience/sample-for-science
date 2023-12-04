@@ -2,14 +2,65 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class FavoriteProvider extends ChangeNotifier {
+class SampleProvider extends ChangeNotifier {
   final db = FirebaseFirestore.instance;
   final FirebaseAuth auth = FirebaseAuth.instance;
 
+  List<Map<String, dynamic>> mySamples = [];
   List<Map<String, dynamic>>favoriteProviders = [];
   List<String> favProvidersIds = [];
   List<Map<String, dynamic>>favoriteSamples = [];
   List<String> favSamplesIds = [];
+
+  Future<void>getMySamples() async {
+    mySamples = [];
+    notifyListeners();
+
+    late Map<String, dynamic> sampleData;
+    try{
+      await db.collection("samples")
+          .where("provider", isEqualTo: auth.currentUser!.uid)
+          .get()
+          .then((querySnapshot) async {
+        final samples = querySnapshot.docs;
+        for (var sample in samples) {
+          sampleData = {
+            "id": sample.data()["id"],
+            "provider": sample.data()["provider"],
+            "number": sample.data()["number"],
+            "code": sample.data()["code"],
+            "formula": sample.data()["formula"],
+            "keywords": sample.data()["keywords"],
+            "type": sample.data()["type"],
+            "otherType": sample.data()["otherType"],
+            "morphology": sample.data()["morphology"],
+            "otherMorphology": sample.data()["otherMorphology"],
+            "previousDiffraction": sample.data()["previousDiffraction"],
+            "previousThermal": sample.data()["previousThermal"],
+            "previousOptical": sample.data()["previousOptical"],
+            "otherPrevious": sample.data()["otherPrevious"],
+            "doi": sample.data()["doi"],
+            "suggestionDiffraction": sample.data()["suggestionDiffraction"],
+            "suggestionThermal": sample.data()["suggestionThermal"],
+            "suggestionOptical": sample.data()["suggestionOptical"],
+            "otherSuggestions": sample.data()["otherSuggestions"],
+            "hazardous": sample.data()["hazardous"],
+            "animals": sample.data()["animals"],
+            "image": sample.data()["image"],
+            "publicationStatus": sample.data()["publicationStatus"],
+            "registration": sample.data()["registration"],
+            "ProviderData": sample.data()["providerData"],
+          };
+          mySamples.add(sampleData);
+          notifyListeners();
+        }
+      }, onError: (e) {
+        debugPrint("Error completing: $e");
+      });
+    } catch(e) {
+      debugPrint('error in getMySample(): $e');
+    }
+  }
 
   void addRemoveFavoriteProvider(Map<String, dynamic> newFavoriteProvider, BuildContext context) async {
     try {
@@ -82,6 +133,7 @@ class FavoriteProvider extends ChangeNotifier {
     }
   }
 
+  // TODO: Adicionar só id das amostras
   void addRemoveFavoriteSample(Map<String, dynamic> newFavoriteSample, BuildContext context) async {
     try {
       await db.collection("users")
@@ -124,6 +176,7 @@ class FavoriteProvider extends ChangeNotifier {
     }
   }
 
+  // TODO: Buscar amostras por id e mostrar se publivationStatus for Public
   Future<void>getFavoriteSamples() async {
     favoriteSamples = [];
     favSamplesIds = [];
@@ -136,16 +189,18 @@ class FavoriteProvider extends ChangeNotifier {
         final users = querySnapshot.docs;
         for (var user in users) {
           favoriteSamples = [...user["favoriteSamples"]];
-          for (var id in user["favoriteSamples"]) {
-            favSamplesIds.add(id["id"]);
+
+          for (var favSample in user["favoriteSamples"]) {
+            favSamplesIds.add(favSample["id"]);
           }
+
           notifyListeners();
         }
       }, onError: (e) {
         debugPrint("Error completing: $e");
       });
     } catch(e) {
-      debugPrint('error in getFavoriteProviders(): $e');
+      debugPrint('error in getFavoriteSamples(): $e');
     }
   }
 }
