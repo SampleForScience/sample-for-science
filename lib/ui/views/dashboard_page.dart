@@ -222,7 +222,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 onPressed: () {
                                   Navigator.pushNamed(context, "/sample", arguments: sampleData,);
                                 },
-                                icon: const Icon(Icons.remove_red_eye),
+                                icon: const Icon(Icons.sticky_note_2_outlined),
                               ),
                               IconButton(
                                 onPressed: () {
@@ -278,7 +278,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                     onPressed: () {
                                       Navigator.pushNamed(context, "/sample", arguments: sampleData,);
                                     },
-                                    icon: const Icon(Icons.remove_red_eye),
+                                    icon: const Icon(Icons.sticky_note_2_outlined),
                                   ),
                                 ],
                               ),
@@ -322,7 +322,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                     onPressed: () {
                                       Navigator.pushNamed(context, "/provider", arguments: providerData,);
                                     },
-                                    icon: const Icon(Icons.remove_red_eye),
+                                    icon: const Icon(Icons.sticky_note_2_outlined),
                                   )
                                 ],
                               ),

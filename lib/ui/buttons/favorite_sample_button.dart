@@ -20,16 +20,27 @@ class _FavoriteSampleButtonState extends State<FavoriteSampleButton> {
           onPressed: () {
             provider.addRemoveFavoriteSample(widget.sampleData, context);
           },
-          child: SizedBox(
-            // width: 50,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Icon(Icons.science, color: Colors.grey,),
-                provider.favSamplesIds.contains(widget.sampleData["id"])
-                  ? const Icon(Icons.star, color: Colors.grey,)
-                  : const Icon(Icons.star_border, color: Colors.grey,),
-              ],
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.black26,
+              borderRadius: BorderRadius.circular(5.0),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(3.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.science, color: Colors.black,),
+                  provider.favSamplesIds.contains(widget.sampleData["id"])
+                    ? const Stack(
+                        children: [
+                          Icon(Icons.star, color: Colors.yellow,),
+                          Icon(Icons.star_border, color: Colors.black,),
+                        ],
+                      )
+                    : const Icon(Icons.star_border, color: Colors.black,),
+                ],
+              ),
             ),
           )
         );
