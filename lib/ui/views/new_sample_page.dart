@@ -45,8 +45,6 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
   // Status variable
   String publicationStatus = "Public";
 
-
-
   List<String> typeOfSampleList = <String>[
     "Ceramics",
     "Metals",
@@ -735,21 +733,6 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
           ),
         ]
       ),
-
-      //
-      // Row(
-      //   children: [
-      //
-
-      //   ],
-      // ),
-      // Row(
-      //   children: [
-
-
-      //   ],
-      // ),
-
 
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16.0),
