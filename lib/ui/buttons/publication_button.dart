@@ -23,36 +23,7 @@ class _PublicationButtonState extends State<PublicationButton> {
       builder: (context, provider, child) {
         return IconButton(
           onPressed: () {
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: const Text("Confirm Deletion"),
-                  content: const Text("Are you sure you want to delete this sample?"),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop(); // Fecha o diálogo
-                      },
-                      child: const Text("Cancel"),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        db.collection("samples")
-                            .doc(widget.sampleData["id"])
-                            .delete()
-                            .then((doc) => debugPrint("Sample deleted"),
-                          onError: (e) => debugPrint("Error updating document $e"),
-                        );
-                        Provider.of<SampleProvider>(context, listen: false).getMySamples();
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text("Delete"),
-                    ),
-                  ],
-                );
-              },
-            );
+            debugPrint("publicationStatus button clicked..."); // TODO: função para mudar status
           },
           icon: widget.sampleData["publicationStatus"] == "Public"
             ? const Icon(Icons.visibility_rounded, color: Colors.black,)

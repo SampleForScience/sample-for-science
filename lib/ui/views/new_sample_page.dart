@@ -1,3 +1,5 @@
+// TODO: Adicionar publicationStatus
+
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';

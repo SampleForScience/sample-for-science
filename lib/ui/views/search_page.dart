@@ -1,5 +1,6 @@
-import 'dart:async';
+// TODO: verificar bug da contagem de amostras encontradas
 
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -83,12 +84,15 @@ class _SearchPageState extends State<SearchPage> {
               "hazardous": sample.data()["hazardous"],
               "animals": sample.data()["animals"],
               "image": sample.data()["image"],
+              "publicationStatus": sample.data()["publicationStatus"],
               "search": sample.data()["search"],
               "registration": sample.data()["registration"],
               "providerData": providerData,
             };
             setState(() {
-              foundSamples.add(sampleData);
+              if (sampleData["publicationStatus"] == "Public") {
+                foundSamples.add(sampleData);
+              }
             });
             // debugPrint(sampleData.toString());
           }
@@ -200,7 +204,7 @@ class _SearchPageState extends State<SearchPage> {
                             onPressed: () {
                               Navigator.pushNamed(context, "/sample", arguments: foundSamples[index],);
                             },
-                            icon: const Icon(Icons.remove_red_eye),
+                            icon: const Icon(Icons.sticky_note_2_outlined),
                           ),
                         ],
                       ),

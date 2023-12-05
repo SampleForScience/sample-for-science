@@ -112,7 +112,6 @@ class SampleProvider extends ChangeNotifier {
           int index = favoriteProviders.indexWhere((list) => list["id"] == newFavoriteProvider["id"]);
           int idIndex = favProvidersIds.indexWhere((list) => list == newFavoriteProvider["id"]);
 
-          // debugPrint(favProvidersIds.toString());
 
           if (index != -1) {
             favoriteProviders.removeAt(index);
@@ -123,8 +122,6 @@ class SampleProvider extends ChangeNotifier {
             favProvidersIds.add(newFavoriteProvider["id"]);
             notifyListeners();
           }
-
-          // debugPrint(favProvidersIds.toString());
 
           await db.collection("users")
               .doc(auth.currentUser!.uid)
@@ -170,7 +167,6 @@ class SampleProvider extends ChangeNotifier {
     }
   }
 
-  // TODO: Adicionar só id das amostras
   void addRemoveFavoriteSample(String newFavoriteSampleId, BuildContext context) async {
     try {
       await db.collection("users")
@@ -224,8 +220,10 @@ class SampleProvider extends ChangeNotifier {
         for (var user in users) {
           for(var sampleId in user["favoriteSamples"]) {
             Map<String, dynamic> favSample = await getSampleById(sampleId);
-            favSamplesIds.add(sampleId);
-            favoriteSamples.add(favSample);
+            if (favSample["publicationStatus"] == "Public") {
+              favSamplesIds.add(sampleId);
+              favoriteSamples.add(favSample);
+            }
           }
           notifyListeners();
         }
