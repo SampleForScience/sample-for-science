@@ -24,6 +24,7 @@ class SampleProvider extends ChangeNotifier {
           .then((querySnapshot) async {
         final samples = querySnapshot.docs;
         for (var sample in samples) {
+          // TODO: refatorar sem esse map
           sampleData = {
             "id": sample.data()["id"],
             "provider": sample.data()["provider"],
@@ -49,7 +50,6 @@ class SampleProvider extends ChangeNotifier {
             "image": sample.data()["image"],
             "publicationStatus": sample.data()["publicationStatus"],
             "registration": sample.data()["registration"],
-            "ProviderData": sample.data()["providerData"],
           };
           mySamples.add(sampleData);
           notifyListeners();
@@ -63,19 +63,40 @@ class SampleProvider extends ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> getSampleById(String sampleId) async {
-    late Map<String, dynamic> foundSample;
+    Map<String, dynamic> foundSample = {};
     await db.collection("samples")
         .where("id", isEqualTo: sampleId)
         .get()
         .then((querySnapshot) async {
       final samples = querySnapshot.docs;
       for (var sample in samples) {
-        foundSample = sample.data();
+        Map<String, dynamic> providerData = await getProviderById(sample.data()["provider"]);
+
+        foundSample = {
+          ...sample.data(),
+          "providerData": providerData
+        };
       }
     }, onError: (e) {
       debugPrint("Error querying database: $e");
     });
     return foundSample;
+  }
+
+  Future<Map<String, dynamic>> getProviderById(String providerId) async {
+    Map<String, dynamic> foundProvider = {};
+    await db.collection("users")
+        .where("id", isEqualTo: providerId)
+        .get()
+        .then((querySnapshot) async {
+      final users = querySnapshot.docs;
+      for (var user in users) {
+        foundProvider = user.data();
+      }
+    }, onError: (e) {
+      debugPrint("Error querying database: $e");
+    });
+    return foundProvider;
   }
 
   void addRemoveFavoriteProvider(Map<String, dynamic> newFavoriteProvider, BuildContext context) async {
@@ -179,7 +200,6 @@ class SampleProvider extends ChangeNotifier {
             debugPrint("Error updating favorite samples: $e");
           });
 
-          getSampleById(newFavoriteSampleId);
           getFavoriteSamples();
         }
       }, onError: (e) {
@@ -207,8 +227,6 @@ class SampleProvider extends ChangeNotifier {
             favSamplesIds.add(sampleId);
             favoriteSamples.add(favSample);
           }
-          debugPrint(favSamplesIds.toString());
-          debugPrint(favoriteSamples.toString());
           notifyListeners();
         }
       }, onError: (e) {
