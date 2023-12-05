@@ -71,7 +71,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget messageItem(DocumentSnapshot document) {
     Map<String, dynamic> data = document.data() as Map<String, dynamic>;
     DateTime timestamp = (data["timestamp"] as Timestamp).toDate();
-    // TODO: formatar de acordo com a localização
+    // TODO: formatar data de acordo com a localização
     String formattedTimestamp = DateFormat('dd/MM/yyyy HH:mm:ss').format(timestamp);
 
     Alignment alignment = (data["senderId"] == auth.currentUser!.uid)

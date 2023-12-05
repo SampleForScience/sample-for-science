@@ -206,7 +206,6 @@ class SampleProvider extends ChangeNotifier {
     }
   }
 
-  // TODO: Buscar amostras por id e mostrar se publivationStatus for Public
   Future<void>getFavoriteSamples() async {
     favoriteSamples = [];
     favSamplesIds = [];

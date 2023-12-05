@@ -1,4 +1,4 @@
-// TODO: verificar bug da contagem de amostras encontradas
+// TODO: verificar bug da contagem de amostras encontradas na primeira busca
 
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';

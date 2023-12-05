@@ -1,5 +1,3 @@
-// TODO: criar botão e checagem nas funções getSample
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
