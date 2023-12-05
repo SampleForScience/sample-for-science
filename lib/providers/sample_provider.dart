@@ -62,6 +62,22 @@ class SampleProvider extends ChangeNotifier {
     }
   }
 
+  Future<Map<String, dynamic>> getSampleById(String sampleId) async {
+    late Map<String, dynamic> foundSample;
+    await db.collection("samples")
+        .where("id", isEqualTo: sampleId)
+        .get()
+        .then((querySnapshot) async {
+      final samples = querySnapshot.docs;
+      for (var sample in samples) {
+        foundSample = sample.data();
+      }
+    }, onError: (e) {
+      debugPrint("Error querying database: $e");
+    });
+    return foundSample;
+  }
+
   void addRemoveFavoriteProvider(Map<String, dynamic> newFavoriteProvider, BuildContext context) async {
     try {
       await db.collection("users")
@@ -101,7 +117,7 @@ class SampleProvider extends ChangeNotifier {
           getFavoriteProviders();
         }
       }, onError: (e) {
-        debugPrint("Error querying database: $e");
+        debugPrint("Error querying database in addRemoveFavoriteProvider: $e");
       });
     } catch (e) {
       debugPrint('Error in addRemoveFavoriteProvider(): $e');
@@ -134,7 +150,7 @@ class SampleProvider extends ChangeNotifier {
   }
 
   // TODO: Adicionar só id das amostras
-  void addRemoveFavoriteSample(Map<String, dynamic> newFavoriteSample, BuildContext context) async {
+  void addRemoveFavoriteSample(String newFavoriteSampleId, BuildContext context) async {
     try {
       await db.collection("users")
           .where("id", isEqualTo: auth.currentUser!.uid)
@@ -142,30 +158,28 @@ class SampleProvider extends ChangeNotifier {
           .then((querySnapshot) async {
         final users = querySnapshot.docs;
         for (var user in users) {
-          var favoriteSamples = List.from(user["favoriteSamples"]);
+          favSamplesIds = List.from(user["favoriteSamples"]);
 
-          int index = favoriteSamples.indexWhere((list) => list["id"] == newFavoriteSample["id"]);
-          int idIndex = favSamplesIds.indexWhere((list) => list == newFavoriteSample["id"]);
+          int idIndex = favSamplesIds.indexWhere((id) => id == newFavoriteSampleId);
 
-          if (index != -1) {
-            favoriteSamples.removeAt(index);
+          if (idIndex != -1) {
             favSamplesIds.removeAt(idIndex);
             notifyListeners();
           } else {
-            favoriteSamples.add(newFavoriteSample);
-            favSamplesIds.add(newFavoriteSample["id"]);
+            favSamplesIds.add(newFavoriteSampleId);
             notifyListeners();
           }
 
           await db.collection("users")
               .doc(auth.currentUser!.uid)
-              .update({"favoriteSamples": favoriteSamples})
+              .update({"favoriteSamples": favSamplesIds})
               .then((_) {
             debugPrint("Favorite samples updated");
           }).onError((e, _) {
             debugPrint("Error updating favorite samples: $e");
           });
 
+          getSampleById(newFavoriteSampleId);
           getFavoriteSamples();
         }
       }, onError: (e) {
@@ -180,7 +194,7 @@ class SampleProvider extends ChangeNotifier {
   Future<void>getFavoriteSamples() async {
     favoriteSamples = [];
     favSamplesIds = [];
-    notifyListeners();
+    // notifyListeners();
     try{
       await db.collection("users")
           .where("id", isEqualTo: auth.currentUser!.uid)
@@ -188,12 +202,13 @@ class SampleProvider extends ChangeNotifier {
           .then((querySnapshot) async {
         final users = querySnapshot.docs;
         for (var user in users) {
-          favoriteSamples = [...user["favoriteSamples"]];
-
-          for (var favSample in user["favoriteSamples"]) {
-            favSamplesIds.add(favSample["id"]);
+          for(var sampleId in user["favoriteSamples"]) {
+            Map<String, dynamic> favSample = await getSampleById(sampleId);
+            favSamplesIds.add(sampleId);
+            favoriteSamples.add(favSample);
           }
-
+          debugPrint(favSamplesIds.toString());
+          debugPrint(favoriteSamples.toString());
           notifyListeners();
         }
       }, onError: (e) {

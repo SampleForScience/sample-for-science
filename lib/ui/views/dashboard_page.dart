@@ -194,51 +194,52 @@ class _DashboardPageState extends State<DashboardPage> {
                 builder: (context, provider, child) {
                   return ExpansionTile(
                     title: const Text('Favorite Samples'),
-                    children: provider.favoriteSamples.isEmpty
-                      ? <ListTile>[const ListTile(
-                          title: Text("Your favorite samples will be shown here."),
-                        ),]
-                      : provider.favoriteSamples.map((sampleData) {
-                        return ListTile(
-                          title: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Divider(
-                                thickness: 1,
-                              ),
-                              const Text(
-                                "Code",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Text(sampleData['code']),
-                              const Text(
-                                "Chemical Formula",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Text(sampleData['formula']),
-                              const Text(
-                                "Registration date",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Text(formatDateWithUserTimezone(sampleData["registration"].toDate())),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  if (sampleData["provider"] != auth.currentUser!.uid)
-                                    FavoriteProviderButton(providerData: sampleData["providerData"]),
-                                  FavoriteSampleButton(sampleData: sampleData),
-                                  IconButton(
-                                    onPressed: () {
-                                      Navigator.pushNamed(context, "/sample", arguments: sampleData,);
-                                    },
-                                    icon: const Icon(Icons.sticky_note_2_outlined),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        );
-                      }).toList()
+                    // children: provider.favoriteSamples.isEmpty
+                    //   ?
+                    // <ListTile>[const ListTile(
+                    //       title: Text("Your favorite samples will be shown here."),
+                    //     ),]
+                      // : provider.favoriteSamples.map((sampleData) {
+                      //   return ListTile(
+                      //     title: Column(
+                      //       crossAxisAlignment: CrossAxisAlignment.start,
+                      //       children: [
+                      //         const Divider(
+                      //           thickness: 1,
+                      //         ),
+                      //         const Text(
+                      //           "Code",
+                      //           style: TextStyle(fontWeight: FontWeight.bold),
+                      //         ),
+                      //         Text(sampleData['code']),
+                      //         const Text(
+                      //           "Chemical Formula",
+                      //           style: TextStyle(fontWeight: FontWeight.bold),
+                      //         ),
+                      //         Text(sampleData['formula']),
+                      //         const Text(
+                      //           "Registration date",
+                      //           style: TextStyle(fontWeight: FontWeight.bold),
+                      //         ),
+                      //         Text(formatDateWithUserTimezone(sampleData["registration"].toDate())),
+                      //         Row(
+                      //           mainAxisAlignment: MainAxisAlignment.end,
+                      //           children: [
+                      //             if (sampleData["provider"] != auth.currentUser!.uid)
+                      //               FavoriteProviderButton(providerData: sampleData["providerData"]),
+                      //             FavoriteSampleButton(sampleData: sampleData),
+                      //             IconButton(
+                      //               onPressed: () {
+                      //                 Navigator.pushNamed(context, "/sample", arguments: sampleData,);
+                      //               },
+                      //               icon: const Icon(Icons.sticky_note_2_outlined),
+                      //             ),
+                      //           ],
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   );
+                      // }).toList()
                   );
                 },
               ),

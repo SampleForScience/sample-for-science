@@ -18,7 +18,7 @@ class _FavoriteSampleButtonState extends State<FavoriteSampleButton> {
       builder: (context, provider, child) {
         return TextButton(
           onPressed: () {
-            provider.addRemoveFavoriteSample(widget.sampleData, context);
+            provider.addRemoveFavoriteSample(widget.sampleData["id"], context);
           },
           child: Container(
             decoration: BoxDecoration(
