@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -42,8 +41,11 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
   TextEditingController sugThermalController = TextEditingController();
   TextEditingController sugOpticalController = TextEditingController();
   TextEditingController sugOtherController = TextEditingController();
+  // Hazard variables
   bool hazardChecked = false;
   bool animalChecked = false;
+  // Status variable
+  String publicationStatus = "Public";
 
   List<String> typeOfsampleList = <String>[
     "Ceramics",
@@ -68,6 +70,7 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
     const Tab(text: "Results",),
     const Tab(text: "Suggestions",),
     const Tab(text: "Hazard",),
+    const Tab(text: "Status",),
   ];
   late TabController _tabController;
 
@@ -106,13 +109,13 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
       prevOpticalController.text = sampleData["previousOptical"];
       prevOtherController.text = sampleData["otherPrevious"];
       doiController.text = sampleData["doi"];
-      //Suggestions variables//
       sugDiffractionController.text = sampleData["suggestionDiffraction"];
       sugThermalController.text = sampleData["suggestionThermal"];
       sugOpticalController.text = sampleData["suggestionOptical"];
       sugOtherController.text = sampleData["otherSuggestions"];
       animalChecked = sampleData["animals"];
       hazardChecked = sampleData["hazardous"];
+      publicationStatus = sampleData["publicationStatus"];
       imageName = sampleData["image"];
     });
     if(imageName != "") {
@@ -502,6 +505,90 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
               ],
             ),
           ),
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(12.0),
+                  child: Text(
+                    "Publication Status",
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+                Row(
+                  children: [
+                    Column(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.info_outline),
+                          onPressed: () {
+                            showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                content: const Text("Public - everyone will be able to see the sample"),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context, 'OK'),
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 7,),
+                        IconButton(
+                          icon: const Icon(Icons.info_outline),
+                          onPressed: () {
+                            showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                content: const Text("Private - only you will be able to see the sample"),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context, 'OK'),
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          RadioListTile(
+                            title: const Text('Public'),
+                            value: 'Public',
+                            groupValue: publicationStatus,
+                            onChanged: (value) {
+                              setState(() {
+                                publicationStatus = value.toString();
+                              });
+                            },
+                          ),
+                          RadioListTile(
+                            title: const Text('Private'),
+                            value: 'Private',
+                            groupValue: publicationStatus,
+                            onChanged: (value) {
+                              setState(() {
+                                publicationStatus = value.toString();
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                )
+              ],
+            ),
+          ),
         ]
       ),
 
@@ -556,6 +643,7 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
                   "hazardous": hazardChecked,
                   "animals": animalChecked,
                   "image": imagePath != null ? sampleId : "",
+                  "publicationStatus": publicationStatus,
                   "search": (codeController.text +
                       formulaController.text +
                       keywordsController.text +

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sample/providers/favorite_provider.dart';
+import 'package:sample/providers/sample_provider.dart';
 
 class FavoriteSampleButton extends StatefulWidget {
   final Map<String, dynamic> sampleData;
@@ -14,22 +14,33 @@ class FavoriteSampleButton extends StatefulWidget {
 class _FavoriteSampleButtonState extends State<FavoriteSampleButton> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<FavoriteProvider>(
+    return Consumer<SampleProvider>(
       builder: (context, provider, child) {
         return TextButton(
           onPressed: () {
-            provider.addRemoveFavoriteSample(widget.sampleData, context);
+            provider.addRemoveFavoriteSample(widget.sampleData["id"], context);
           },
-          child: SizedBox(
-            // width: 50,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Icon(Icons.science, color: Colors.grey,),
-                provider.favSamplesIds.contains(widget.sampleData["id"])
-                  ? const Icon(Icons.star, color: Colors.grey,)
-                  : const Icon(Icons.star_border, color: Colors.grey,),
-              ],
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.black26,
+              borderRadius: BorderRadius.circular(5.0),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(3.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.science, color: Colors.black,),
+                  provider.favSamplesIds.contains(widget.sampleData["id"])
+                    ? const Stack(
+                        children: [
+                          Icon(Icons.star, color: Colors.yellow,),
+                          Icon(Icons.star_border, color: Colors.black,),
+                        ],
+                      )
+                    : const Icon(Icons.star_border, color: Colors.black,),
+                ],
+              ),
             ),
           )
         );
