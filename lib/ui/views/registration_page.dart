@@ -124,7 +124,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             child: Column(
               children: [
                 //Quando terminar de resolver esse problema colocarei um condicional aqui pra buscar a foto do firebase
-                if (nameController.text.isNotEmpty) buildCircleAvatar(),
+                //if (nameController.text.isNotEmpty) buildCircleAvatar(),
 
                 TextField(
                   controller: nameController,

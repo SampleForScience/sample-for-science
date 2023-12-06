@@ -44,7 +44,8 @@ class _UsersPageState extends State<UsersPage> {
           title: Row(
             children: [
               CircleAvatar(
-                child: Text(initials[0][0] + " " + initials[1][0]),
+                child: Text(
+                    initials[0][0] + " " + initials[initials.length - 1][0]),
               ),
               const SizedBox(width: 8),
               Flexible(

@@ -23,9 +23,10 @@ class _LoginButtonState extends State<DrawerLogoutButton> {
       title: Row(
         children: [
           SizedBox(
-            width: 140,
-            child: Text(_googleSignInHandler.auth.currentUser!.displayName!,
-                style: const TextStyle(color: Colors.white70)
+            width: 150,
+            child: Text(
+              _googleSignInHandler.auth.currentUser!.displayName!,
+              style: const TextStyle(color: Colors.white70),
             ),
           ),
           const Icon(Icons.exit_to_app, color: Colors.white70),
