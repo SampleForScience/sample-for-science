@@ -16,7 +16,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      width: 200,
+      width: 220,
       backgroundColor: const Color.fromARGB(255, 55, 98, 118),
       child: ListView(
         padding: EdgeInsets.zero,
@@ -29,55 +29,52 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ),
           Container(
             color: widget.highlight == Highlight.dashboard
-              ? const Color.fromARGB(255, 245, 252, 255)
-              : const Color.fromARGB(255, 55, 98, 118),
+                ? const Color.fromARGB(255, 245, 252, 255)
+                : const Color.fromARGB(255, 55, 98, 118),
             child: ListTile(
               title: Row(
                 children: [
                   Icon(
                     Icons.apps,
                     color: widget.highlight == Highlight.dashboard
-                      ? Colors.black87
-                      : Colors.white70,
+                        ? Colors.black87
+                        : Colors.white70,
                   ),
-                  Text(
-                    " Dashboard",
-                    style: TextStyle(
-                      color: widget.highlight == Highlight.dashboard
-                          ? Colors.black87
-                          : Colors.white70,
-                    )
-                  ),
+                  Text(" Dashboard",
+                      style: TextStyle(
+                        color: widget.highlight == Highlight.dashboard
+                            ? Colors.black87
+                            : Colors.white70,
+                      )),
                 ],
               ),
               onTap: () {
                 debugPrint("Dashboard clicked");
                 Navigator.pop(context);
-                Navigator.of(context).pushNamedAndRemoveUntil("/dashboard", (route) => false);
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil("/dashboard", (route) => false);
               },
             ),
           ),
           Container(
             color: widget.highlight == Highlight.provide
-              ? const Color.fromARGB(255, 245, 252, 255)
-              : const Color.fromARGB(255, 55, 98, 118),
+                ? const Color.fromARGB(255, 245, 252, 255)
+                : const Color.fromARGB(255, 55, 98, 118),
             child: ListTile(
               title: Row(
                 children: [
                   Icon(
                     Icons.add,
                     color: widget.highlight == Highlight.provide
-                      ? Colors.black87
-                      : Colors.white70,
-                  ),
-                  Text(
-                    " Provide sample",
-                    style: TextStyle(
-                      color: widget.highlight == Highlight.provide
                         ? Colors.black87
                         : Colors.white70,
-                    )
                   ),
+                  Text(" Provide sample",
+                      style: TextStyle(
+                        color: widget.highlight == Highlight.provide
+                            ? Colors.black87
+                            : Colors.white70,
+                      )),
                 ],
               ),
               onTap: () {
@@ -89,25 +86,23 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ),
           Container(
             color: widget.highlight == Highlight.search
-              ? const Color.fromARGB(255, 245, 252, 255)
-              : const Color.fromARGB(255, 55, 98, 118),
+                ? const Color.fromARGB(255, 245, 252, 255)
+                : const Color.fromARGB(255, 55, 98, 118),
             child: ListTile(
               title: Row(
                 children: [
                   Icon(
                     Icons.search,
                     color: widget.highlight == Highlight.search
-                      ? Colors.black87
-                      : Colors.white70,
-                  ),
-                  Text(
-                    " Search",
-                    style: TextStyle(
-                      color: widget.highlight == Highlight.search
                         ? Colors.black87
                         : Colors.white70,
-                    )
-                  )
+                  ),
+                  Text(" Search",
+                      style: TextStyle(
+                        color: widget.highlight == Highlight.search
+                            ? Colors.black87
+                            : Colors.white70,
+                      ))
                 ],
               ),
               onTap: () {
@@ -119,25 +114,23 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ),
           Container(
             color: widget.highlight == Highlight.messages
-              ? const Color.fromARGB(255, 245, 252, 255)
-              : const Color.fromARGB(255, 55, 98, 118),
+                ? const Color.fromARGB(255, 245, 252, 255)
+                : const Color.fromARGB(255, 55, 98, 118),
             child: ListTile(
               title: Row(
                 children: [
                   Icon(
                     Icons.messenger_outline_sharp,
                     color: widget.highlight == Highlight.messages
-                      ? Colors.black87
-                      : Colors.white70,
-                  ),
-                  Text(
-                    " Messages",
-                    style: TextStyle(
-                      color: widget.highlight == Highlight.messages
                         ? Colors.black87
                         : Colors.white70,
-                    )
                   ),
+                  Text(" Messages",
+                      style: TextStyle(
+                        color: widget.highlight == Highlight.messages
+                            ? Colors.black87
+                            : Colors.white70,
+                      )),
                 ],
               ),
               onTap: () {

@@ -19,51 +19,53 @@ class _UsersPageState extends State<UsersPage> {
 
   Widget usersList() {
     return StreamBuilder<QuerySnapshot>(
-      stream: db.collection("users").snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return const Text("Error");
-        }
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Text ("Loading users...");
-        }
-        return ListView (
-          children: snapshot.data!.docs.map<Widget>((doc) => usersListItem(doc)).toList(),
-        );
-      }
-    );
+        stream: db.collection("users").snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const Text("Error");
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Text("Loading users...");
+          }
+          return ListView(
+            children: snapshot.data!.docs
+                .map<Widget>((doc) => usersListItem(doc))
+                .toList(),
+          );
+        });
   }
 
   Widget usersListItem(DocumentSnapshot document) {
     Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+    List<String> initials = data["name"].split(' ');
 
     if (data.isNotEmpty && auth.currentUser!.email != data["email"]) {
       return ListTile(
-        title: Row(
-          children: [
-            CircleAvatar(),
-            const SizedBox(width: 8),
-          Flexible(
-            child:
-            Text('${data["name"]}\n(${data["email"]})',
-              overflow: TextOverflow.ellipsis,),
-
-            )
-          ],
-        ),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ChatPage(
-                receiverUserEmail: data["email"],
-                receiverUserId: data["id"],
-                receiverUserName: data["name"],
+          title: Row(
+            children: [
+              CircleAvatar(
+                child: Text(
+                    initials[0][0] + " " + initials[initials.length - 1][0]),
+              ),
+              const SizedBox(width: 8),
+              Flexible(
+                child: Text(
+                  '${data["name"]}\n(${data["email"]})',
+                  overflow: TextOverflow.ellipsis,
+                ),
               )
-            )
-          );
-        }
-      );
+            ],
+          ),
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ChatPage(
+                          receiverUserEmail: data["email"],
+                          receiverUserId: data["id"],
+                          receiverUserName: data["name"],
+                        )));
+          });
     } else {
       return Container();
     }
@@ -74,9 +76,7 @@ class _UsersPageState extends State<UsersPage> {
     return Scaffold(
       drawer: const CustomDrawer(highlight: Highlight.messages),
       appBar: AppBar(
-          actions: [
-      CircularAvatarButton()],
-
+        actions: [CircularAvatarButton()],
         title: const Text("Messages"),
       ),
       body: usersList(),

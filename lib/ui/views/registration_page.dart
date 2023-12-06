@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:sample/ui/buttons/circular_avatar_button.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 // Itens do popMenuButton
 enum MenuItem { logIn }
@@ -33,16 +38,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   Future<Map<String, dynamic>> getUser() async {
     Map<String, dynamic> userData = {};
-    await db.collection("users")
+    await db
+        .collection("users")
         .where("id", isEqualTo: auth.currentUser!.uid)
         .get()
-        .then((querySnapshot) {
-      debugPrint("Successfully completed");
-      for (var docSnapshot in querySnapshot.docs) {
-        debugPrint('ID: ${docSnapshot.id}; Data:${docSnapshot.data()}');
-        userData = docSnapshot.data();
-      }
-    },
+        .then(
+      (querySnapshot) {
+        debugPrint("Successfully completed");
+        for (var docSnapshot in querySnapshot.docs) {
+          debugPrint('ID: ${docSnapshot.id}; Data:${docSnapshot.data()}');
+          userData = docSnapshot.data();
+        }
+      },
       onError: (e) => debugPrint("Error completing: $e"),
     );
     debugPrint(userData.toString());
@@ -72,11 +79,27 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
     await db.collection("users").doc(fileName).set(user).then((_) {
       debugPrint("User saved");
-      Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
-    }
-    ).onError((e, _) {
+      Navigator.pushNamedAndRemoveUntil(
+          context, '/dashboard', (route) => false);
+    }).onError((e, _) {
       debugPrint("Error saving user: $e");
     });
+  }
+
+  Widget buildCircleAvatar() {
+    List<String> initials = nameController.text.split(' ');
+
+    String firstInitial = initials.isNotEmpty ? initials[0][0] : "";
+    String secondInitial =
+        initials.length > 1 && initials[1].isNotEmpty ? initials[1][0] : "";
+
+    return CircleAvatar(
+      radius: 64,
+      child: Text(
+        '$firstInitial$secondInitial',
+        style: TextStyle(fontSize: 72),
+      ),
+    );
   }
 
   @override
@@ -88,121 +111,123 @@ class _RegistrationPageState extends State<RegistrationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+        appBar: AppBar(
           title: const Text('Registration'),
           centerTitle: true,
           actions: const [
             CircularAvatarButton(),
           ],
         ),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              TextField(
-                controller: nameController,
-                decoration: const InputDecoration(
-                  label: Text("Name"),
+        body: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                //Quando terminar de resolver esse problema colocarei um condicional aqui pra buscar a foto do firebase
+                //if (nameController.text.isNotEmpty) buildCircleAvatar(),
+
+                TextField(
+                  controller: nameController,
+                  decoration: const InputDecoration(
+                    label: Text("Name"),
+                  ),
                 ),
-              ),
-              TextField(
-                controller: emailController,
-                decoration: const InputDecoration(
-                  label: Text("Email"),
+                TextField(
+                  controller: emailController,
+                  decoration: const InputDecoration(
+                    label: Text("Email"),
+                  ),
                 ),
-              ),
-              TextField(
-                controller: institutionController,
-                decoration: const InputDecoration(
-                  label: Text("Institution"),
+                TextField(
+                  controller: institutionController,
+                  decoration: const InputDecoration(
+                    label: Text("Institution"),
+                  ),
                 ),
-              ),
-              TextField(
-                controller: departmentController,
-                decoration: const InputDecoration(
-                  label: Text("Department"),
+                TextField(
+                  controller: departmentController,
+                  decoration: const InputDecoration(
+                    label: Text("Department"),
+                  ),
                 ),
-              ),
-              ElevatedButton(onPressed: () {
-                showCountryPicker(
-                  context: context,
-                  onSelect: (Country country) {
-                    setState(() {
-                      selectedCountry = country.name;
-                    });
-                    debugPrint('Country code: ${country.countryCode}; Phone code: ${country.phoneCode}');
-                  },
-                );
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(selectedCountry),
-                  const Icon(Icons.arrow_drop_down)
-                ],
-              )
-              ),
-              TextField(
-                controller: addressController,
-                decoration: const InputDecoration(
-                  label: Text("Full Address"),
+                ElevatedButton(
+                    onPressed: () {
+                      showCountryPicker(
+                        context: context,
+                        onSelect: (Country country) {
+                          setState(() {
+                            selectedCountry = country.name;
+                          });
+                          debugPrint(
+                              'Country code: ${country.countryCode}; Phone code: ${country.phoneCode}');
+                        },
+                      );
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(selectedCountry),
+                        const Icon(Icons.arrow_drop_down)
+                      ],
+                    )),
+                TextField(
+                  controller: addressController,
+                  decoration: const InputDecoration(
+                    label: Text("Full Address"),
+                  ),
                 ),
-              ),
-              TextField(
-                controller: mobileController,
-                decoration: const InputDecoration(
-                  label: Text("Mobile"),
+                TextField(
+                  controller: mobileController,
+                  decoration: const InputDecoration(
+                    label: Text("Mobile"),
+                  ),
                 ),
-              ),
-              TextField(
-                controller: webpageController,
-                decoration: const InputDecoration(
-                  label: Text("Personal webpage"),
+                TextField(
+                  controller: webpageController,
+                  decoration: const InputDecoration(
+                    label: Text("Personal webpage"),
+                  ),
                 ),
-              ),
-              TextField(
-                controller: orcidController,
-                decoration: const InputDecoration(
-                  label: Text("ORCID"),
+                TextField(
+                  controller: orcidController,
+                  decoration: const InputDecoration(
+                    label: Text("ORCID"),
+                  ),
                 ),
-              ),
-              TextField(
-                controller: scholarController,
-                decoration: const InputDecoration(
-                  label: Text("Google Scholar"),
+                TextField(
+                  controller: scholarController,
+                  decoration: const InputDecoration(
+                    label: Text("Google Scholar"),
+                  ),
                 ),
-              ),
-              TextField(
-                controller: otherController,
-                decoration: const InputDecoration(
-                  label: Text("Other database"),
+                TextField(
+                  controller: otherController,
+                  decoration: const InputDecoration(
+                    label: Text("Other database"),
+                  ),
                 ),
-              ),
-              Row(
-                children: [
+                Row(children: [
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: () {
-                        user = {
-                          "id": auth.currentUser!.uid,
-                          "name": nameController.text,
-                          "email": emailController.text,
-                          "institution": institutionController.text,
-                          "department": departmentController.text,
-                          "country": selectedCountry,
-                          "address": addressController.text,
-                          "mobile": mobileController.text,
-                          "webpage": webpageController.text,
-                          "orcid": orcidController.text,
-                          "google_scholar": scholarController.text,
-                          "other": otherController.text
-                        };
+                        onPressed: () {
+                          user = {
+                            "id": auth.currentUser!.uid,
+                            "name": nameController.text,
+                            "email": emailController.text,
+                            "institution": institutionController.text,
+                            "department": departmentController.text,
+                            "country": selectedCountry,
+                            "address": addressController.text,
+                            "mobile": mobileController.text,
+                            "webpage": webpageController.text,
+                            "orcid": orcidController.text,
+                            "google_scholar": scholarController.text,
+                            "other": otherController.text
+                          };
 
-                        saveUser(user);
-                      },
-                      child: const Text("Save")
-                    ),
+                          saveUser(user);
+                        },
+                        child: const Text("Save")),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
@@ -210,15 +235,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        child: const Text("Cancel")
-                    ),
+                        child: const Text("Cancel")),
                   ),
-                ]
-              )
-            ],
+                ])
+              ],
+            ),
           ),
-        ),
-      )
-    );
+        ));
   }
 }
