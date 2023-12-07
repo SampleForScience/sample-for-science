@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sample/firebase_options.dart';
-import 'package:sample/providers/favorite_provider.dart';
+import 'package:sample/providers/sample_provider.dart';
 import 'package:sample/ui/views/dashboard_page.dart';
 import 'package:sample/ui/views/login_page.dart';
 import 'package:sample/ui/views/new_sample_page.dart';
@@ -20,7 +20,7 @@ Future<void> main() async {
   );
   runApp(
     ChangeNotifierProvider(
-      create: (context) => FavoriteProvider(),
+      create: (context) => SampleProvider(),
       child: const MyApp(),
     ),
   );

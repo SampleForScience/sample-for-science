@@ -39,9 +39,11 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
   TextEditingController sugThermalController = TextEditingController();
   TextEditingController sugOpticalController = TextEditingController();
   TextEditingController sugOtherController = TextEditingController();
+  // Hazard variables
   bool hazardChecked = false;
   bool animalChecked = false;
-
+  // Status variable
+  String publicationStatus = "Public";
 
   List<String> typeOfSampleList = <String>[
     "Ceramics",
@@ -68,6 +70,7 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
     const Tab(text: "Results",),
     const Tab(text: "Suggestions",),
     const Tab(text: "Hazard",),
+    const Tab(text: "Status",),
   ];
   late TabController _tabController;
 
@@ -644,6 +647,90 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
               ],
             ),
           ),
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(12.0),
+                  child: Text(
+                    "Publication Status",
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+                Row(
+                  children: [
+                    Column(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.info_outline),
+                          onPressed: () {
+                            showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                content: const Text("Public - everyone will be able to see the sample"),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context, 'OK'),
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 7,),
+                        IconButton(
+                          icon: const Icon(Icons.info_outline),
+                          onPressed: () {
+                            showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                content: const Text("Private - only you will be able to see the sample"),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context, 'OK'),
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          RadioListTile(
+                            title: const Text('Public'),
+                            value: 'Public',
+                            groupValue: publicationStatus,
+                            onChanged: (value) {
+                              setState(() {
+                                publicationStatus = value.toString();
+                              });
+                            },
+                          ),
+                          RadioListTile(
+                            title: const Text('Private'),
+                            value: 'Private',
+                            groupValue: publicationStatus,
+                            onChanged: (value) {
+                              setState(() {
+                                publicationStatus = value.toString();
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                )
+              ],
+            ),
+          ),
         ]
       ),
 
@@ -701,6 +788,7 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                   "animals": animalChecked,
                   "image": imagePath != null ? sampleId : "",
                   "registration": registrationDate,
+                  "publicationStatus": publicationStatus,
                   "search": (codeController.text +
                       formulaController.text +
                       keywordsController.text +

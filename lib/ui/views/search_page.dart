@@ -1,5 +1,6 @@
-import 'dart:async';
+// TODO: verificar bug da contagem de amostras encontradas na primeira busca
 
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -91,12 +92,15 @@ class _SearchPageState extends State<SearchPage> {
               "hazardous": sample.data()["hazardous"],
               "animals": sample.data()["animals"],
               "image": sample.data()["image"],
+              "publicationStatus": sample.data()["publicationStatus"],
               "search": sample.data()["search"],
               "registration": sample.data()["registration"],
               "providerData": providerData,
             };
             setState(() {
-              foundSamples.add(sampleData);
+              if (sampleData["publicationStatus"] == "Public") {
+                foundSamples.add(sampleData);
+              }
             });
             // debugPrint(sampleData.toString());
           }
@@ -167,76 +171,65 @@ class _SearchPageState extends State<SearchPage> {
               ),
             ),
           ),
-          if (searching)
-            Text(
-                "${foundSamples.length} ${foundSamples.isNotEmpty && foundSamples.length > 1 ? 'samples' : 'sample'} found"),
-          if (foundSamples.isNotEmpty)
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  searching = false;
-                  searchController.text = "";
-                  foundSamples.clear();
-                });
+          if (searching) Text(
+            "${foundSamples.length} ${foundSamples.isNotEmpty && foundSamples.length > 1 ? 'samples' : 'sample'} found"
+          ),
+          if (foundSamples.isNotEmpty) TextButton(
+            onPressed: () {
+              setState(() {
+                searching = false;
+                searchController.text = "";
+                foundSamples.clear();
+              });
+            },
+            child: const Text("Clear Search"),
+          ),
+          if (foundSamples.isNotEmpty) Expanded(
+            child: ListView.builder(
+              itemCount: foundSamples.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Divider(
+                        thickness: 1,
+                      ),
+                      const Text(
+                        "Code",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(foundSamples[index]['code']),
+                      const Text(
+                        "Chemical Formula",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(foundSamples[index]['formula']),
+                      const Text(
+                        "Registration date",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(formatDateWithUserTimezone(foundSamples[index]["registration"].toDate())),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          if (foundSamples[index]["provider"] != auth.currentUser!.uid)
+                            FavoriteProviderButton(providerData: foundSamples[index]["providerData"]),
+                          FavoriteSampleButton(sampleData: foundSamples[index]),
+                          IconButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, "/sample", arguments: foundSamples[index],);
+                            },
+                            icon: const Icon(Icons.sticky_note_2_outlined),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
               },
-              child: const Text("Clear Search"),
             ),
-          if (foundSamples.isNotEmpty)
-            Expanded(
-              child: ListView.builder(
-                itemCount: foundSamples.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Divider(
-                          thickness: 1,
-                        ),
-                        const Text(
-                          "Code",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Text(foundSamples[index]['code']),
-                        const Text(
-                          "Chemical Formula",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Text(foundSamples[index]['formula']),
-                        const Text(
-                          "Registration date",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Text(formatDateWithUserTimezone(
-                            foundSamples[index]["registration"].toDate())),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            if (foundSamples[index]["provider"] !=
-                                auth.currentUser!.uid)
-                              FavoriteProviderButton(
-                                  providerData: foundSamples[index]
-                                      ["providerData"]),
-                            FavoriteSampleButton(
-                                sampleData: foundSamples[index]),
-                            IconButton(
-                              onPressed: () {
-                                Navigator.pushNamed(
-                                  context,
-                                  "/sample",
-                                  arguments: foundSamples[index],
-                                );
-                              },
-                              icon: const Icon(Icons.remove_red_eye),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
+          )
         ],
       ),
     );
