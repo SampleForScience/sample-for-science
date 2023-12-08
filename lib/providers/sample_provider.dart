@@ -180,23 +180,59 @@ class SampleProvider extends ChangeNotifier {
           int idIndex = favSamplesIds.indexWhere((id) => id == newFavoriteSampleId);
 
           if (idIndex != -1) {
-            favSamplesIds.removeAt(idIndex);
-            notifyListeners();
+            Future.delayed(Duration.zero, () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text("Remove sample from favorites?"),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text("Cancel"),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          favSamplesIds.removeAt(idIndex);
+
+                          await db.collection("users")
+                              .doc(auth.currentUser!.uid)
+                              .update({"favoriteSamples": favSamplesIds})
+                              .then((_) {
+                            debugPrint("Favorite samples updated");
+                          }).onError((e, _) {
+                            debugPrint("Error updating favorite samples: $e");
+                          });
+
+                          getFavoriteSamples();
+
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text("Remove"),
+                      ),
+                    ],
+                  );
+                },
+              );
+            });
           } else {
             favSamplesIds.add(newFavoriteSampleId);
+
+            await db.collection("users")
+                .doc(auth.currentUser!.uid)
+                .update({"favoriteSamples": favSamplesIds})
+                .then((_) {
+              debugPrint("Favorite samples updated");
+            }).onError((e, _) {
+              debugPrint("Error updating favorite samples: $e");
+            });
+
             notifyListeners();
+
+            getFavoriteSamples();
           }
-
-          await db.collection("users")
-              .doc(auth.currentUser!.uid)
-              .update({"favoriteSamples": favSamplesIds})
-              .then((_) {
-            debugPrint("Favorite samples updated");
-          }).onError((e, _) {
-            debugPrint("Error updating favorite samples: $e");
-          });
-
-          getFavoriteSamples();
         }
       }, onError: (e) {
         debugPrint("Error querying database: $e");
