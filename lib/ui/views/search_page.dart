@@ -30,6 +30,83 @@ class _SearchPageState extends State<SearchPage> {
     return formatter.format(dateTime.toLocal());
   }
 
+  Future<void> getSamples() async {
+    setState(() {
+      foundSamples = [];
+    });
+    late Map<String, dynamic> sampleData;
+    try {
+      await db.collection("samples").get().then((querySnapshot) async {
+        final samples = querySnapshot.docs;
+        for (var sample in samples) {
+          Map<String, dynamic> providerData = {};
+          await db
+              .collection("users")
+              .where("id", isEqualTo: sample.data()["provider"])
+              .get()
+              .then((querySnapshot) async {
+            final users = querySnapshot.docs;
+            for (var user in users) {
+              setState(() {
+                providerData = {
+                  "id": user.data()["id"],
+                  "name": user.data()["name"],
+                  "email": user.data()["email"],
+                  "address": user.data()["address"],
+                  "country": user.data()["country"],
+                  "department": user.data()["department"],
+                  "google_scholar": user.data()["google_scholar"],
+                  "institution": user.data()["institution"],
+                  "mobile": user.data()["mobile"],
+                  "orcid": user.data()["orcid"],
+                  "other": user.data()["other"],
+                  "webpage": user.data()["webpage"],
+                };
+              });
+            }
+          }, onError: (e) {
+            debugPrint("Error completing: $e");
+          });
+          sampleData = {
+            "id": sample.data()["id"],
+            "provider": sample.data()["provider"],
+            "number": sample.data()["number"],
+            "code": sample.data()["code"],
+            "formula": sample.data()["formula"],
+            "keywords": sample.data()["keywords"],
+            "type": sample.data()["type"],
+            "morphology": sample.data()["morphology"],
+            "previousDiffraction": sample.data()["previousDiffraction"],
+            "previousThermal": sample.data()["previousThermal"],
+            "previousOptical": sample.data()["previousOptical"],
+            "otherPrevious": sample.data()["otherPrevious"],
+            "doi": sample.data()["doi"],
+            "suggestionDiffraction": sample.data()["suggestionDiffraction"],
+            "suggestionThermal": sample.data()["suggestionThermal"],
+            "suggestionOptical": sample.data()["suggestionOptical"],
+            "otherSuggestions": sample.data()["otherSuggestions"],
+            "hazardous": sample.data()["hazardous"],
+            "animals": sample.data()["animals"],
+            "image": sample.data()["image"],
+            "publicationStatus": sample.data()["publicationStatus"],
+            "search": sample.data()["search"],
+            "registration": sample.data()["registration"],
+            "providerData": providerData,
+          };
+          setState(() {
+            if (sampleData["publicationStatus"] == "Public") {
+              foundSamples.add(sampleData);
+            }
+          });
+        }
+      }, onError: (e) {
+        debugPrint("Error completing: $e");
+      });
+    } catch (e) {
+      debugPrint('error in getMySample(): $e');
+    }
+  }
+
   Future<void> searchSamples(String toSearch) async {
     setState(() {
       foundSamples = [];
@@ -111,6 +188,12 @@ class _SearchPageState extends State<SearchPage> {
     } catch (e) {
       debugPrint('error in getMySample(): $e');
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getSamples();
   }
 
   @override
