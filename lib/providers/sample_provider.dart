@@ -112,30 +112,63 @@ class SampleProvider extends ChangeNotifier {
           int index = favoriteProviders.indexWhere((list) => list["id"] == newFavoriteProvider["id"]);
           int idIndex = favProvidersIds.indexWhere((list) => list == newFavoriteProvider["id"]);
 
+          if (idIndex != -1) {
+            Future.delayed(Duration.zero, () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text("Remove provider from favorites?"),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text("Cancel"),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          favoriteProviders.removeAt(index);
+                          favProvidersIds.removeAt(idIndex);
 
-          if (index != -1) {
-            favoriteProviders.removeAt(index);
-            favProvidersIds.removeAt(idIndex);
-            notifyListeners();
+                          await db.collection("users")
+                              .doc(auth.currentUser!.uid)
+                              .update({"favoriteProviders": favoriteProviders})
+                              .then((_) {
+                            debugPrint("Favorite updated");
+                          }).onError((e, _) {
+                            debugPrint("Error updating favorite: $e");
+                          });
+
+                          getFavoriteProviders();
+
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text("Remove"),
+                      ),
+                    ],
+                  );
+                },
+              );
+            });
           } else {
             favoriteProviders.add(newFavoriteProvider);
             favProvidersIds.add(newFavoriteProvider["id"]);
-            notifyListeners();
+
+            await db.collection("users")
+                .doc(auth.currentUser!.uid)
+                .update({"favoriteProviders": favoriteProviders})
+                .then((_) {
+              debugPrint("Favorite updated");
+            }).onError((e, _) {
+              debugPrint("Error updating favorite: $e");
+            });
+
+            getFavoriteProviders();
           }
-
-          await db.collection("users")
-              .doc(auth.currentUser!.uid)
-              .update({"favoriteProviders": favoriteProviders})
-              .then((_) {
-            debugPrint("Favorite updated");
-          }).onError((e, _) {
-            debugPrint("Error updating favorite: $e");
-          });
-
-          getFavoriteProviders();
         }
       }, onError: (e) {
-        debugPrint("Error querying database in addRemoveFavoriteProvider: $e");
+        debugPrint("Error querying database: $e");
       });
     } catch (e) {
       debugPrint('Error in addRemoveFavoriteProvider(): $e');
@@ -180,23 +213,59 @@ class SampleProvider extends ChangeNotifier {
           int idIndex = favSamplesIds.indexWhere((id) => id == newFavoriteSampleId);
 
           if (idIndex != -1) {
-            favSamplesIds.removeAt(idIndex);
-            notifyListeners();
+            Future.delayed(Duration.zero, () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text("Remove sample from favorites?"),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text("Cancel"),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          favSamplesIds.removeAt(idIndex);
+
+                          await db.collection("users")
+                              .doc(auth.currentUser!.uid)
+                              .update({"favoriteSamples": favSamplesIds})
+                              .then((_) {
+                            debugPrint("Favorite samples updated");
+                          }).onError((e, _) {
+                            debugPrint("Error updating favorite samples: $e");
+                          });
+
+                          getFavoriteSamples();
+
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text("Remove"),
+                      ),
+                    ],
+                  );
+                },
+              );
+            });
           } else {
             favSamplesIds.add(newFavoriteSampleId);
+
+            await db.collection("users")
+                .doc(auth.currentUser!.uid)
+                .update({"favoriteSamples": favSamplesIds})
+                .then((_) {
+              debugPrint("Favorite samples updated");
+            }).onError((e, _) {
+              debugPrint("Error updating favorite samples: $e");
+            });
+
             notifyListeners();
+
+            getFavoriteSamples();
           }
-
-          await db.collection("users")
-              .doc(auth.currentUser!.uid)
-              .update({"favoriteSamples": favSamplesIds})
-              .then((_) {
-            debugPrint("Favorite samples updated");
-          }).onError((e, _) {
-            debugPrint("Error updating favorite samples: $e");
-          });
-
-          getFavoriteSamples();
         }
       }, onError: (e) {
         debugPrint("Error querying database: $e");
