@@ -200,9 +200,11 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Search"),
+        backgroundColor: const Color.fromARGB(255, 85, 134, 158),
+        title: const Text("Search", style: TextStyle(color: Colors.white)),
         actions: const [CircularAvatarButton()],
         centerTitle: true,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       drawer: const CustomDrawer(highlight: Highlight.search),
       body: Column(
@@ -227,11 +229,12 @@ class _SearchPageState extends State<SearchPage> {
                     ),
                   ),
                   Container(
+                    alignment: Alignment.center,
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 1, 134, 243),
-                        borderRadius: BorderRadius.circular(10.0)),
+                        color: Color.fromARGB(255, 85, 134, 158),
+                        borderRadius: BorderRadius.circular(8.0)),
                     child: IconButton(
                         onPressed: () {
                           if (searchController.text.isNotEmpty) {
@@ -246,73 +249,101 @@ class _SearchPageState extends State<SearchPage> {
                         },
                         icon: const Icon(
                           Icons.search_rounded,
-                          color: Colors.black,
-                          size: 28,
+                          color: Colors.white,
+                          size: 24,
                         )),
                   ),
                 ],
               ),
             ),
           ),
-          if (searching) Text(
-            "${foundSamples.length} ${foundSamples.isNotEmpty && foundSamples.length > 1 ? 'samples' : 'sample'} found"
-          ),
-          if (foundSamples.isNotEmpty) TextButton(
-            onPressed: () {
-              setState(() {
-                searching = false;
-                searchController.text = "";
-                foundSamples.clear();
-              });
-            },
-            child: const Text("Clear Search"),
-          ),
-          if (foundSamples.isNotEmpty) Expanded(
-            child: ListView.builder(
-              itemCount: foundSamples.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Divider(
-                        thickness: 1,
-                      ),
-                      const Text(
-                        "Code",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      Text(foundSamples[index]['code']),
-                      const Text(
-                        "Chemical Formula",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      Text(foundSamples[index]['formula']),
-                      const Text(
-                        "Registration date",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      Text(formatDateWithUserTimezone(foundSamples[index]["registration"].toDate())),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          if (foundSamples[index]["provider"] != auth.currentUser!.uid)
-                            FavoriteProviderButton(providerData: foundSamples[index]["providerData"]),
-                          FavoriteSampleButton(sampleData: foundSamples[index]),
-                          IconButton(
-                            onPressed: () {
-                              Navigator.pushNamed(context, "/sample", arguments: foundSamples[index],);
-                            },
-                            icon: const Icon(Icons.sticky_note_2_outlined),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
+          if (searching)
+            Text(
+                "${foundSamples.length} ${foundSamples.isNotEmpty && foundSamples.length > 1 ? 'samples' : 'sample'} found"),
+          if (foundSamples.isNotEmpty)
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  searching = false;
+                  searchController.text = "";
+                  foundSamples.clear();
+                });
               },
+              child: const Text("Clear Search"),
             ),
-          )
+          if (foundSamples.isNotEmpty)
+            Expanded(
+              child: ListView.builder(
+                itemCount: foundSamples.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10),
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10)),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: const Offset(4, 8))
+                          ]),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Code",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text(foundSamples[index]['code']),
+                            const Text(
+                              "Chemical Formula",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text(foundSamples[index]['formula']),
+                            const Text(
+                              "Registration date",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text(formatDateWithUserTimezone(
+                                foundSamples[index]["registration"].toDate())),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                if (foundSamples[index]["provider"] !=
+                                    auth.currentUser!.uid)
+                                  FavoriteProviderButton(
+                                      providerData: foundSamples[index]
+                                          ["providerData"]),
+                                FavoriteSampleButton(
+                                    sampleData: foundSamples[index]),
+                                IconButton(
+                                  onPressed: () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      "/sample",
+                                      arguments: foundSamples[index],
+                                    );
+                                  },
+                                  icon:
+                                      const Icon(Icons.sticky_note_2_outlined),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            )
         ],
       ),
     );
