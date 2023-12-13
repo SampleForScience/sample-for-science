@@ -44,8 +44,10 @@ class _UsersPageState extends State<UsersPage> {
           title: Row(
             children: [
               CircleAvatar(
+                backgroundColor: const Color.fromARGB(255, 85, 134, 158),
                 child: Text(
-                    initials[0][0] + " " + initials[initials.length - 1][0]),
+                    initials[0][0] + " " + initials[initials.length - 1][0],
+                    style: TextStyle(color: Colors.white)),
               ),
               const SizedBox(width: 8),
               Flexible(
@@ -76,8 +78,10 @@ class _UsersPageState extends State<UsersPage> {
     return Scaffold(
       drawer: const CustomDrawer(highlight: Highlight.messages),
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 85, 134, 158),
         actions: [CircularAvatarButton()],
-        title: const Text("Messages"),
+        title: const Text("Messages", style: TextStyle(color: Colors.white)),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: usersList(),
     );
