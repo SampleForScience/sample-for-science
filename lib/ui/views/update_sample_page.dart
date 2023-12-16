@@ -196,6 +196,7 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
 
                     Expanded(
                       child: TextField(
+                        keyboardType: TextInputType.number,
                         controller: numberController,
                         decoration: const InputDecoration(
                           label: Text("Number of samples"),

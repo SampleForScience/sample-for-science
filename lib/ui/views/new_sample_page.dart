@@ -174,6 +174,7 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                     ),
                     Expanded(
                       child: TextField(
+                        keyboardType: TextInputType.number,
                         controller: numberController,
                         decoration: const InputDecoration(
                           label: Text("Number of samples"),
