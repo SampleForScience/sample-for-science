@@ -31,8 +31,7 @@ class _LoginPageState extends State<LoginPage> {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (snapshot.data == true) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              // vai pra deshboard page depois do widget carregar
-              Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
+              Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
             });
             return Container();
           } else {
