@@ -362,7 +362,7 @@ class _UpdateSamplePageState extends State<UpdateSamplePage> with SingleTickerPr
                       child: TextField(
                         controller: doiController,
                         decoration: const InputDecoration(
-                          label: Text("doi*..."),
+                          label: Text("doi..."),
                         ),
                       ),
                     ),

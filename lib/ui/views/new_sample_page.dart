@@ -470,7 +470,7 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
                       child: TextField(
                         controller: doiController,
                         decoration: const InputDecoration(
-                          label: Text("doi*..."),
+                          label: Text("doi..."),
                         ),
                       ),
                     ),
