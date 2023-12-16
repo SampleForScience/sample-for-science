@@ -60,25 +60,13 @@ class _LoginPageState extends State<LoginPage> {
                         )
                       ),
                       const Padding(
-                        padding: EdgeInsets.all(4.0),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Text(
-                            'Log in To Sample',
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 30, fontFamily: 'Arial')
-                          ),
-                        ),
-                      ),
-                      const Padding(
                         padding: EdgeInsets.only(top: 16.0),
                         child: GoogleLoginButton(),
                       ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 16.0),
-                        child: AppleLoginButton(),
-                      )
+                      // const Padding(
+                      //   padding: EdgeInsets.symmetric(vertical: 16.0),
+                      //   child: AppleLoginButton(),
+                      // )
                     ]
                   ),
                 )

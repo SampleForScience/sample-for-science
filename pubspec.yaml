@@ -40,7 +40,6 @@ dependencies:
   firebase_auth: ^4.9.0
   google_sign_in: ^6.1.5
   flutter_launcher_icons: ^0.13.1
-  flutter_native_splash: ^2.3.2
   font_awesome_flutter: ^10.5.0
   flutter_svg: any
   country_picker: ^2.0.21
@@ -59,13 +58,6 @@ flutter_launcher_icons:
   android: "launcher_icon"
   adaptive_icon_background: "#FFFFFF"
   adaptive_icon_foreground: "assets/icon.png"
-
-flutter_native_splash:
-  color: "#3F51B5"
-  image: "assets/icon.png"
-  android: true
-  ios: true
-
 
 dev_dependencies:
   flutter_test:
