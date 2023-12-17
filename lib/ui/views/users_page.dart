@@ -19,6 +19,64 @@ class UsersPage extends StatefulWidget {
 class _UsersPageState extends State<UsersPage> {
   final db = FirebaseFirestore.instance;
   final FirebaseAuth auth = FirebaseAuth.instance;
+  List<Map<String, dynamic>> usersToShow = [];
+  List<String> foundChatRooms = [];
+
+  Future<void>getProvidersToShow() async {
+    try{
+      await db.collection("users")
+          .where("id", isEqualTo: auth.currentUser!.uid)
+          .get()
+          .then((querySnapshot) async {
+        final users = querySnapshot.docs;
+        for (var user in users) {
+          usersToShow = [...user["favoriteProviders"]];
+        }
+      }, onError: (e) {
+        debugPrint("Error completing: $e");
+      });
+
+      await db.collection("chat_rooms")
+          .get()
+          .then((querySnapshot) async {
+        final chatRooms = querySnapshot.docs;
+        for (var chatRoom in chatRooms) {
+          setState(() {
+            foundChatRooms.add(chatRoom.id);
+          });
+        }
+      }, onError: (e) {
+        debugPrint("Error completing: $e");
+      });
+
+      await db.collection("users").get().then((querySnapshot) async {
+        bool alreadyFound = false;
+        final users = querySnapshot.docs;
+        for (var user in users) {
+          for (var chatRoom in foundChatRooms) {
+            if (chatRoom.contains(user["id"])) {
+              for (var userToShow in usersToShow) {
+                if (user["id"] == userToShow["id"]) {
+                  alreadyFound = true;
+                }
+              }
+              if (!alreadyFound) {
+                setState(() {
+                  usersToShow.add(user.data());
+                });
+              }
+            }
+          }
+        }
+      }, onError: (e) {
+        debugPrint("Error completing: $e");
+      });
+
+      debugPrint("Added");
+    } catch(e) {
+      debugPrint('error in getFavoriteProviders(): $e');
+    }
+  }
 
   Widget usersList() {
     return StreamBuilder<QuerySnapshot>(
@@ -31,14 +89,12 @@ class _UsersPageState extends State<UsersPage> {
           return const Text("Loading users...");
         }
 
-        Provider.of<SampleProvider>(context, listen: false).getFavoriteProviders();
-
         return Consumer<SampleProvider>(
           builder: (context, provider, child) {
-            List<Map<String, dynamic>> favoriteProviders = provider.favoriteProviders;
+            // List<Map<String, dynamic>> favoriteProviders = provider.favoriteProviders;
 
             return ListView(
-              children: favoriteProviders.map<Widget>((map) {
+              children: usersToShow.map<Widget>((map) {
                 return usersListItem(map);
               }).toList(),
             );
@@ -103,6 +159,12 @@ class _UsersPageState extends State<UsersPage> {
     } else {
       return Container();
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getProvidersToShow();
   }
 
   @override
