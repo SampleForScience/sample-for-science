@@ -30,7 +30,9 @@ class _UsersPageState extends State<UsersPage> {
           .then((querySnapshot) async {
         final users = querySnapshot.docs;
         for (var user in users) {
-          usersToShow = [...user["favoriteProviders"]];
+          setState(() {
+            usersToShow = [...user["favoriteProviders"]];
+          });
         }
       }, onError: (e) {
         debugPrint("Error completing: $e");
@@ -65,6 +67,7 @@ class _UsersPageState extends State<UsersPage> {
                   usersToShow.add(user.data());
                 });
               }
+              alreadyFound = false;
             }
           }
         }
