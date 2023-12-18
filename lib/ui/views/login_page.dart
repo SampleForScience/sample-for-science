@@ -5,7 +5,6 @@ import 'package:sample/ui/buttons/apple_login_button.dart';
 import 'package:sample/ui/buttons/google_login_button.dart';
 
 class LoginPage extends StatefulWidget {
-
   const LoginPage({Key? key}) : super(key: key);
 
   @override
@@ -32,58 +31,39 @@ class _LoginPageState extends State<LoginPage> {
           } else if (snapshot.data == true) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               // vai pra deshboard page depois do widget carregar
-              Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/dashboard', (route) => false);
             });
             return Container();
           } else {
-            return
-              Center(
-              child: Container(
-                width: double.infinity,
-                height: double.infinity,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: const Color.fromARGB(100, 199, 209, 241), // Cor da borda vermelha
-                    width: 16.0, // Largura da borda
-                  ),
-                  borderRadius: BorderRadius.circular(20.0)
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      Container(
-                        color: Colors.white,
-                        child: SvgPicture.asset(
-                          "assets/logo.svg",
-                          width: 300
-                        )
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.all(4.0),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Text(
-                            'Log in To Sample',
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 30, fontFamily: 'Arial')
-                          ),
+            return Center(
+                child: Container(
+                    width: double.infinity,
+                    height: double.infinity,
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                          color: const Color.fromARGB(
+                              100, 199, 209, 241), // Cor da borda vermelha
+                          width: 16.0, // Largura da borda
                         ),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 16.0),
-                        child: GoogleLoginButton(),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 16.0),
-                        child: AppleLoginButton(),
-                      )
-                    ]
-                  ),
-                )
-              )
-            );
+                        borderRadius: BorderRadius.circular(20.0)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(children: [
+                        Container(
+                            color: Colors.white,
+                            child: SvgPicture.asset("assets/logo.svg",
+                                width: 300)),
+                        const Padding(
+                          padding: EdgeInsets.only(top: 16.0),
+                          child: GoogleLoginButton(),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16.0),
+                          child: AppleLoginButton(),
+                        )
+                      ]),
+                    )));
           }
         },
       ),

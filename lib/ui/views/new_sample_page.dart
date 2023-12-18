@@ -375,7 +375,7 @@ class _NewSamplePageState extends State<NewSamplePage>
                     child: TextField(
                       controller: prevDiffractionController,
                       decoration: const InputDecoration(
-                        label: Text("Previous diffraction means..."),
+                        label: Text("Previous diffraction measurement"),
                       ),
                     ),
                   ),
@@ -435,7 +435,7 @@ class _NewSamplePageState extends State<NewSamplePage>
                     child: TextField(
                       controller: prevOpticalController,
                       decoration: const InputDecoration(
-                        label: Text("Previous optical measurements..."),
+                        label: Text("Previous optical measurements"),
                       ),
                     ),
                   ),
@@ -450,7 +450,7 @@ class _NewSamplePageState extends State<NewSamplePage>
                         context: context,
                         builder: (BuildContext context) => AlertDialog(
                           content: const Text(
-                              "If you have made any other characterization, please, comment here.\n\nExamples:\n-Optical or eletronical microscopes(SEM,TEM,...)\n-Mechanical characterization\n-etc"),
+                              "If you have made any other characterization, please, comment here.\n\nExamples:\n-Optical or electronical microscopies(SEM,TEM,...)\n-Mechanical characterization\n-etc"),
                           actions: <Widget>[
                             TextButton(
                               onPressed: () => Navigator.pop(context, 'OK'),
@@ -540,66 +540,69 @@ class _NewSamplePageState extends State<NewSamplePage>
           ),
         ),
         SingleChildScrollView(
-          child: Column(
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(12.0),
-                child: Text(
-                  "Suggestions for new measurements",
-                  style: TextStyle(
-                    fontSize: 20,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(12),
+                  child: Text(
+                    "Suggestions for new measurements",
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
                   ),
                 ),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: sugDiffractionController,
-                      decoration: const InputDecoration(
-                        label: Text("Suggestion of diffraction measurements"),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: sugDiffractionController,
+                        decoration: const InputDecoration(
+                          label: Text("Suggestion of diffraction measurements"),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: sugThermalController,
-                      decoration: const InputDecoration(
-                        label: Text("Suggestion of thermal measurements"),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: sugThermalController,
+                        decoration: const InputDecoration(
+                          label: Text("Suggestion of thermal measurements"),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: sugOpticalController,
-                      decoration: const InputDecoration(
-                        label: Text("Suggestion of optical measurements"),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: sugOpticalController,
+                        decoration: const InputDecoration(
+                          label: Text("Suggestion of optical measurements"),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: sugOtherController,
-                      decoration: const InputDecoration(
-                        label: Text("Other suggestion"),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: sugOtherController,
+                        decoration: const InputDecoration(
+                          label: Text("Other suggestion"),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
         SingleChildScrollView(
