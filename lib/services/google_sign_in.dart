@@ -64,7 +64,9 @@ class GoogleSignInHandler {
             {
               "id": auth.currentUser!.uid,
               "name": auth.currentUser!.displayName,
-              "email": auth.currentUser!.email
+              "email": auth.currentUser!.email,
+              "favoriteProviders": [],
+              "favoriteSamples": [],
             }
         ).then((_) {
           debugPrint("New user saved");
