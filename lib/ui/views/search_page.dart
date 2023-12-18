@@ -210,50 +210,56 @@ class _SearchPageState extends State<SearchPage> {
       body: Column(
         children: [
           SizedBox(
-            height: 50,
+            height: 75,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: searchController,
-                      onSubmitted: (value) {
-                        if (value.isNotEmpty) {
-                          searchSamples(value);
-                        }
-                      },
-                      decoration: const InputDecoration(
-                        hintText: 'Type here...',
-                      ),
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 85, 134, 158),
-                        borderRadius: BorderRadius.circular(8.0)),
-                    child: IconButton(
-                        onPressed: () {
-                          if (searchController.text.isNotEmpty) {
-                            searchSamples(searchController.text);
-                            Timer.periodic(const Duration(milliseconds: 500),
-                                (timer) {
-                              setState(() {
-                                searching = true;
-                              });
-                            });
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.white10,
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    border: Border.all(color: Colors.grey)),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: searchController,
+                        onSubmitted: (value) {
+                          if (value.isNotEmpty) {
+                            searchSamples(value);
                           }
                         },
-                        icon: const Icon(
-                          Icons.search_rounded,
-                          color: Colors.white,
-                          size: 24,
-                        )),
-                  ),
-                ],
+                        decoration: const InputDecoration(
+                            hintText: ' Type here...',
+                            border: InputBorder.none),
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.center,
+                      width: 50,
+                      height: 75,
+                      decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 85, 134, 158),
+                          borderRadius: BorderRadius.circular(8.0)),
+                      child: IconButton(
+                          onPressed: () {
+                            if (searchController.text.isNotEmpty) {
+                              searchSamples(searchController.text);
+                              Timer.periodic(const Duration(milliseconds: 500),
+                                  (timer) {
+                                setState(() {
+                                  searching = true;
+                                });
+                              });
+                            }
+                          },
+                          icon: const Icon(
+                            Icons.search_rounded,
+                            color: Colors.white,
+                            size: 32,
+                          )),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
