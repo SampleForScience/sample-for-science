@@ -30,7 +30,8 @@ class _DashboardPageState extends State<DashboardPage> {
   void initState() {
     Future.delayed(Duration.zero, () {
       Provider.of<SampleProvider>(context, listen: false).getMySamples();
-      Provider.of<SampleProvider>(context, listen: false).getFavoriteProviders();
+      Provider.of<SampleProvider>(context, listen: false)
+          .getFavoriteProviders();
       Provider.of<SampleProvider>(context, listen: false).getFavoriteSamples();
     });
     super.initState();
@@ -45,10 +46,9 @@ class _DashboardPageState extends State<DashboardPage> {
           context: context,
           builder: (c) => AlertDialog(
             backgroundColor: Colors.blueGrey,
-            content: const Text("Do you want to exit the app?",
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.white),
+            content: const Text(
+              "Do you want to exit the app?",
+              style: TextStyle(fontSize: 18, color: Colors.white),
             ),
             actions: [
               TextButton(
@@ -58,10 +58,9 @@ class _DashboardPageState extends State<DashboardPage> {
                 child: const Text(
                   "Leave",
                   style: TextStyle(
-                    decoration: TextDecoration.underline,
-                    fontSize: 18,
-                    color: Colors.white
-                  ),
+                      decoration: TextDecoration.underline,
+                      fontSize: 18,
+                      color: Colors.white),
                 ),
               ),
               TextButton(
@@ -71,10 +70,9 @@ class _DashboardPageState extends State<DashboardPage> {
                 child: const Text(
                   "Stay",
                   style: TextStyle(
-                    decoration: TextDecoration.underline,
-                    fontSize: 18,
-                    color: Colors.white
-                  ),
+                      decoration: TextDecoration.underline,
+                      fontSize: 18,
+                      color: Colors.white),
                 ),
               ),
             ],
@@ -86,8 +84,10 @@ class _DashboardPageState extends State<DashboardPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Dashboard'),
+          backgroundColor: const Color.fromARGB(255, 85, 134, 158),
+          title: const Text('Dashboard', style: TextStyle(color: Colors.white)),
           centerTitle: true,
+          iconTheme: const IconThemeData(color: Colors.white),
           actions: const [
             CircularAvatarButton(),
           ],
@@ -98,190 +98,373 @@ class _DashboardPageState extends State<DashboardPage> {
             children: [
               Consumer<SampleProvider>(
                 builder: (context, provider, child) {
-                return ExpansionTile(
-                  title: const Text('My Samples'),
-                  children: provider.mySamples.isEmpty
-                  ? <ListTile>[ListTile(
-                      title: const Text("Your samples will be shown here."),
-                      onTap: () {
-                        debugPrint("Favorite sample test item 0 clicked");
-                        // Navigator.pop(context);
-                      },
-                    ),]
-                  : provider.mySamples.map((sampleData) {
-                    return ListTile(
-                      title: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Divider(
-                            thickness: 1,
-                          ),
-                          const Text(
-                            "Code",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          Text(sampleData['code']),
-                          const Text(
-                            "Chemical Formula",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          Text(sampleData['formula']),
-                          const Text(
-                            "Registration date",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          Text(formatDateWithUserTimezone(sampleData["registration"].toDate())),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10),
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10)),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: const Offset(4, 8))
+                          ]),
+                      child: ExpansionTile(
+                          title: const Row(
                             children: [
-                              PublicationButton(sampleData: sampleData),
-                              IconButton(
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: const Text("Confirm Deletion"),
-                                        content: const Text("Are you sure you want to delete this sample?"),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop(); // Fecha o diálogo
-                                            },
-                                            child: const Text("Cancel"),
+                              Icon(Icons.science, color: Colors.black),
+                              Text('My Samples'),
+                            ],
+                          ),
+                          children: provider.mySamples.isEmpty
+                              ? <ListTile>[
+                                  ListTile(
+                                    title: const Text(
+                                        "Your samples will be shown here."),
+                                    onTap: () {
+                                      debugPrint(
+                                          "Favorite sample test item 0 clicked");
+                                      // Navigator.pop(context);
+                                    },
+                                  ),
+                                ]
+                              : provider.mySamples.map((sampleData) {
+                                  return ListTile(
+                                    title: Container(
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            topRight: Radius.circular(10),
+                                            bottomLeft: Radius.circular(10),
+                                            bottomRight: Radius.circular(10)),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const Divider(),
+                                          const Text(
+                                            "Code",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
                                           ),
-                                          TextButton(
-                                            onPressed: () {
-                                              db.collection("samples")
-                                                  .doc(sampleData["id"])
-                                                  .delete()
-                                                  .then((doc) => debugPrint("Sample deleted"),
-                                                onError: (e) => debugPrint("Error updating document $e"),
-                                              );
-                                              provider.getMySamples();
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: const Text("Delete"),
+                                          Text(sampleData['code']),
+                                          const Text(
+                                            "Chemical Formula",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(sampleData['formula']),
+                                          const Text(
+                                            "Registration date",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(formatDateWithUserTimezone(
+                                              sampleData["registration"]
+                                                  .toDate())),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                    color: const Color.fromARGB(
+                                                        255, 165, 207, 228),
+                                                    borderRadius:
+                                                        const BorderRadius.only(
+                                                            topLeft:
+                                                                Radius.circular(
+                                                                    20),
+                                                            topRight:
+                                                                Radius.circular(
+                                                                    20),
+                                                            bottomLeft:
+                                                                Radius.circular(
+                                                                    20),
+                                                            bottomRight:
+                                                                Radius.circular(
+                                                                    20)),
+                                                    border: Border.all(
+                                                      color: Color.fromARGB(
+                                                          255, 165, 207, 228),
+                                                      width: 5,
+                                                    )),
+                                                child: Row(
+                                                  children: [
+                                                    PublicationButton(
+                                                        sampleData: sampleData),
+                                                    IconButton(
+                                                      onPressed: () {
+                                                        showDialog(
+                                                          context: context,
+                                                          builder: (BuildContext
+                                                              context) {
+                                                            return AlertDialog(
+                                                              title: const Text(
+                                                                  "Confirm Deletion"),
+                                                              content: const Text(
+                                                                  "Are you sure you want to delete this sample?"),
+                                                              actions: [
+                                                                TextButton(
+                                                                  onPressed:
+                                                                      () {
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .pop(); // Fecha o diálogo
+                                                                  },
+                                                                  child: const Text(
+                                                                      "Cancel"),
+                                                                ),
+                                                                TextButton(
+                                                                  onPressed:
+                                                                      () {
+                                                                    db
+                                                                        .collection(
+                                                                            "samples")
+                                                                        .doc(sampleData[
+                                                                            "id"])
+                                                                        .delete()
+                                                                        .then(
+                                                                          (doc) =>
+                                                                              debugPrint("Sample deleted"),
+                                                                          onError: (e) =>
+                                                                              debugPrint("Error updating document $e"),
+                                                                        );
+                                                                    provider
+                                                                        .getMySamples();
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .pop();
+                                                                  },
+                                                                  child: const Text(
+                                                                      "Delete"),
+                                                                ),
+                                                              ],
+                                                            );
+                                                          },
+                                                        );
+                                                      },
+                                                      icon: const Icon(
+                                                        Icons.delete,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                    IconButton(
+                                                      onPressed: () {
+                                                        Navigator.pushNamed(
+                                                          context,
+                                                          "/update-sample",
+                                                          arguments: sampleData,
+                                                        );
+                                                      },
+                                                      icon: const Icon(
+                                                        Icons.edit,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                    IconButton(
+                                                      onPressed: () {
+                                                        Navigator.pushNamed(
+                                                          context,
+                                                          "/sample",
+                                                          arguments: sampleData,
+                                                        );
+                                                      },
+                                                      icon: const Icon(
+                                                        Icons
+                                                            .sticky_note_2_outlined,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
-                                      );
-                                    },
+                                      ),
+                                    ),
                                   );
-                                },
-                                icon: const Icon(Icons.delete, color: Colors.black,),
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  Navigator.pushNamed(context, "/update-sample", arguments: sampleData,);
-                                },
-                                icon: const Icon(Icons.edit, color: Colors.black,),
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  Navigator.pushNamed(context, "/sample", arguments: sampleData,);
-                                },
-                                icon: const Icon(Icons.sticky_note_2_outlined, color: Colors.black,),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList());
-                },
-              ),
-              Consumer<SampleProvider>(
-                builder: (context, provider, child) {
-                  return ExpansionTile(
-                    title: const Text('Favorite Samples'),
-                    children: provider.favoriteSamples.isEmpty
-                      ? <ListTile>[const ListTile(title: Text("Your favorite samples will be shown here."),),]
-                      : provider.favoriteSamples.map((favSample) {
-                        return ListTile(
-                          // title: Text("${favSample}"),
-                          title: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Divider(
-                                thickness: 1,
-                              ),
-                              const Text(
-                                "Code",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Text(favSample["code"]),
-                              const Text(
-                                "Chemical Formula",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Text(favSample["formula"]),
-                              const Text(
-                                "Registration date",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Text(formatDateWithUserTimezone(favSample["registration"].toDate())),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  if (favSample["provider"] != auth.currentUser!.uid)
-                                    FavoriteProviderButton(providerData: favSample["providerData"]),
-                                  FavoriteSampleButton(sampleData: favSample),
-                                  IconButton(
-                                    onPressed: () {
-                                      Navigator.pushNamed(context, "/sample", arguments: favSample,);
-                                    },
-                                    icon: const Icon(Icons.sticky_note_2_outlined),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        );
-                      }).toList()
+                                }).toList()),
+                    ),
                   );
                 },
               ),
               Consumer<SampleProvider>(
                 builder: (context, provider, child) {
-                  return ExpansionTile(
-                    title: const Text('Favorite Providers'),
-                    children: provider.favoriteProviders.isEmpty
-                      ? <ListTile>[const ListTile(
-                          title: Text("Your favorite providers will be shown here."),
-                        ),]
-                      : provider.favoriteProviders.map((providerData) {
-                        return ListTile(
-                          title: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10),
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10)),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: const Offset(4, 8))
+                          ]),
+                      child: ExpansionTile(
+                          title: const Row(
                             children: [
-                              const Text(
-                                  "Provider",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  )
-                              ),
-                              Text("Name: ${providerData['name']}\nEmail: ${providerData['email']}",
-                                  style: const TextStyle(
-                                      fontSize: 16
-                                  )
-                              ),
-                              if (auth.currentUser!.uid != providerData["id"])Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  FavoriteProviderButton(providerData: providerData),
-                                  IconButton(
-                                    onPressed: () {
-                                      Navigator.pushNamed(context, "/provider", arguments: providerData,);
-                                    },
-                                    icon: const Icon(Icons.sticky_note_2_outlined),
-                                  )
-                                ],
-                              ),
+                              Icon(Icons.star, color: Colors.black),
+                              Text('Favorite Samples'),
                             ],
                           ),
-                        );
-                      }).toList()
+                          children: provider.favoriteSamples.isEmpty
+                              ? <ListTile>[
+                                  const ListTile(
+                                    title: Text(
+                                        "Your favorite samples will be shown here."),
+                                  ),
+                                ]
+                              : provider.favoriteSamples.map((favSample) {
+                                  return ListTile(
+                                    // title: Text("${favSample}"),
+                                    title: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          "Code",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(favSample["code"]),
+                                        const Text(
+                                          "Chemical Formula",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(favSample["formula"]),
+                                        const Text(
+                                          "Registration date",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(formatDateWithUserTimezone(
+                                            favSample["registration"]
+                                                .toDate())),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            if (favSample["provider"] !=
+                                                auth.currentUser!.uid)
+                                              FavoriteProviderButton(
+                                                  providerData: favSample[
+                                                      "providerData"]),
+                                            FavoriteSampleButton(
+                                                sampleData: favSample),
+                                            IconButton(
+                                              onPressed: () {
+                                                Navigator.pushNamed(
+                                                  context,
+                                                  "/sample",
+                                                  arguments: favSample,
+                                                );
+                                              },
+                                              icon: const Icon(
+                                                  Icons.sticky_note_2_outlined),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }).toList()),
+                    ),
+                  );
+                },
+              ),
+              Consumer<SampleProvider>(
+                builder: (context, provider, child) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10),
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10)),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: const Offset(4, 8))
+                          ]),
+                      child: ExpansionTile(
+                          title: const Row(
+                            children: [
+                              Icon(Icons.person),
+                              Text('Favorite Providers'),
+                            ],
+                          ),
+                          children: provider.favoriteProviders.isEmpty
+                              ? <ListTile>[
+                                  const ListTile(
+                                    title: Text(
+                                        "Your favorite providers will be shown here."),
+                                  ),
+                                ]
+                              : provider.favoriteProviders.map((providerData) {
+                                  return ListTile(
+                                    title: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text("Provider",
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            )),
+                                        Text(
+                                            "Name: ${providerData['name']}\nEmail: ${providerData['email']}",
+                                            style:
+                                                const TextStyle(fontSize: 16)),
+                                        if (auth.currentUser!.uid !=
+                                            providerData["id"])
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              FavoriteProviderButton(
+                                                  providerData: providerData),
+                                              IconButton(
+                                                onPressed: () {
+                                                  Navigator.pushNamed(
+                                                    context,
+                                                    "/provider",
+                                                    arguments: providerData,
+                                                  );
+                                                },
+                                                icon: const Icon(Icons
+                                                    .sticky_note_2_outlined),
+                                              )
+                                            ],
+                                          ),
+                                      ],
+                                    ),
+                                  );
+                                }).toList()),
+                    ),
                   );
                 },
               ),

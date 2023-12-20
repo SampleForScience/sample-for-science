@@ -8,7 +8,11 @@ class ChatPage extends StatefulWidget {
   final String receiverUserEmail;
   final String receiverUserId;
   final String receiverUserName;
-  const ChatPage({super.key, required this.receiverUserEmail, required this.receiverUserId, required this.receiverUserName});
+  const ChatPage(
+      {super.key,
+      required this.receiverUserEmail,
+      required this.receiverUserId,
+      required this.receiverUserName});
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -21,7 +25,8 @@ class _ChatPageState extends State<ChatPage> {
 
   void sendMessage() async {
     if (messageContrtoller.text.isNotEmpty) {
-      await chatService.sendMessage(widget.receiverUserId, messageContrtoller.text);
+      await chatService.sendMessage(
+          widget.receiverUserId, messageContrtoller.text);
       messageContrtoller.clear();
     }
   }
@@ -53,34 +58,39 @@ class _ChatPageState extends State<ChatPage> {
 
   Widget messageList() {
     return StreamBuilder(
-      stream: chatService.getMessages(widget.receiverUserId, auth.currentUser!.uid),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Text("Error: ${snapshot.error}");
-        }
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Text("Loading");
-        }
-        return ListView(
-          children: snapshot.data!.docs.map((document) => messageItem(document)).toList(),
-        );
-      }
-    );
+        stream: chatService.getMessages(
+            widget.receiverUserId, auth.currentUser!.uid),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text("Error: ${snapshot.error}");
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Text("Loading");
+          }
+          return ListView(
+            children: snapshot.data!.docs
+                .map((document) => messageItem(document))
+                .toList(),
+          );
+        });
   }
 
   Widget messageItem(DocumentSnapshot document) {
     Map<String, dynamic> data = document.data() as Map<String, dynamic>;
     DateTime timestamp = (data["timestamp"] as Timestamp).toDate();
-    // TODO: formatar data de acordo com a localização
-    String formattedTimestamp = DateFormat('dd/MM/yyyy HH:mm:ss').format(timestamp);
+    String formattedTimestamp =
+        DateFormat('dd/MM/yyyy HH:mm:ss').format(timestamp);
 
-    Alignment alignment = (data["senderId"] == auth.currentUser!.uid)
-      ? Alignment.centerRight
-      : Alignment.centerLeft;
+    bool isMyMessage = (data["senderId"] == auth.currentUser!.uid);
 
-    CrossAxisAlignment crossAxisAlignment = (data["senderId"] == auth.currentUser!.uid)
-        ? CrossAxisAlignment.end
-        : CrossAxisAlignment.start;
+    Alignment alignment =
+        isMyMessage ? Alignment.centerRight : Alignment.centerLeft;
+
+    CrossAxisAlignment crossAxisAlignment =
+        isMyMessage ? CrossAxisAlignment.end : CrossAxisAlignment.start;
+
+    Color boxColor =
+        isMyMessage ? Colors.blue : Color.fromARGB(99, 58, 108, 245);
 
     return Container(
       padding: const EdgeInsets.all(8.0),
@@ -96,19 +106,16 @@ class _ChatPageState extends State<ChatPage> {
             padding: const EdgeInsets.all(8.0),
             width: 200,
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: boxColor,
               borderRadius: BorderRadius.circular(8.0),
             ),
             child: Text(
               data["message"],
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16
-              ),
-            )
+              style: const TextStyle(color: Colors.white, fontSize: 16),
+            ),
           ),
         ],
-      )
+      ),
     );
   }
 
@@ -133,11 +140,12 @@ class _ChatPageState extends State<ChatPage> {
       body: Column(
         children: [
           Expanded(child: messageList()),
-          messageInput(),
+          Padding(
+            padding: const EdgeInsets.only(left: 12, bottom: 24.0),
+            child: messageInput(),
+          ),
         ],
       ),
     );
   }
-
 }
-
