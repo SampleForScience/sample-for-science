@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: true,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255,55,98,118)),
-    ),
+      ),
       home: const LoginPage(),
       routes: {
         '/login': (context) => const LoginPage(),

@@ -136,6 +136,12 @@ class SampleProvider extends ChangeNotifier {
                               .update({"favoriteProviders": favoriteProviders})
                               .then((_) {
                             debugPrint("Favorite updated");
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Provider removed from favorites"),
+                                duration: Duration(seconds: 2),
+                              ),
+                            );
                           }).onError((e, _) {
                             debugPrint("Error updating favorite: $e");
                           });
@@ -160,6 +166,12 @@ class SampleProvider extends ChangeNotifier {
                 .update({"favoriteProviders": favoriteProviders})
                 .then((_) {
               debugPrint("Favorite updated");
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("Provider added to favorites"),
+                  duration: Duration(seconds: 2),
+                ),
+              );
             }).onError((e, _) {
               debugPrint("Error updating favorite: $e");
             });
@@ -235,6 +247,12 @@ class SampleProvider extends ChangeNotifier {
                               .update({"favoriteSamples": favSamplesIds})
                               .then((_) {
                             debugPrint("Favorite samples updated");
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Sample removed from favorites"),
+                                duration: Duration(seconds: 2),
+                              ),
+                            );
                           }).onError((e, _) {
                             debugPrint("Error updating favorite samples: $e");
                           });
@@ -258,6 +276,12 @@ class SampleProvider extends ChangeNotifier {
                 .update({"favoriteSamples": favSamplesIds})
                 .then((_) {
               debugPrint("Favorite samples updated");
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("Sample added to favorites"),
+                  duration: Duration(seconds: 2),
+                ),
+              );
             }).onError((e, _) {
               debugPrint("Error updating favorite samples: $e");
             });
