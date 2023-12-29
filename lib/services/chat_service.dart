@@ -26,6 +26,9 @@ class ChatService extends ChangeNotifier {
 
     debugPrint(">>>$chatRoomId<<<");
 
+    db.collection("chat_rooms")
+      .doc(chatRoomId).set({"id": chatRoomId});
+
     await db.collection("chat_rooms")
       .doc(chatRoomId)
       .collection("messages")

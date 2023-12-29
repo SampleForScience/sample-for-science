@@ -64,18 +64,20 @@ class GoogleSignInHandler {
             {
               "id": auth.currentUser!.uid,
               "name": auth.currentUser!.displayName,
-              "email": auth.currentUser!.email
+              "email": auth.currentUser!.email,
+              "favoriteProviders": [],
+              "favoriteSamples": [],
             }
         ).then((_) {
           debugPrint("New user saved");
-          Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
+          Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
         }
         ).onError((e, _) {
           debugPrint("Error saving user: $e");
         });
       } else {
         debugPrint("User already registered");
-        Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
+        Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
       }
     }
   }

@@ -27,7 +27,7 @@ class _LoginButtonState extends State<AppleLoginButton> {
           children: [
             Icon(FontAwesomeIcons.apple),
             SizedBox(width: 15,),
-            Text("Sign in with Apple",
+            Text("Login with Apple",
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 15,

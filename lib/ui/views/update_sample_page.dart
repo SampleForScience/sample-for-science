@@ -204,6 +204,7 @@ class _UpdateSamplePageState extends State<UpdateSamplePage>
                 children: [
                   Expanded(
                     child: TextField(
+                      keyboardType: TextInputType.number,
                       controller: numberController,
                       decoration: const InputDecoration(
                         label: Text("Number of samples"),
@@ -369,7 +370,7 @@ class _UpdateSamplePageState extends State<UpdateSamplePage>
                     child: TextField(
                       controller: doiController,
                       decoration: const InputDecoration(
-                        label: Text("doi*..."),
+                        label: Text("doi..."),
                       ),
                     ),
                   ),

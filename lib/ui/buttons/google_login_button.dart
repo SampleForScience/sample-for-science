@@ -36,7 +36,7 @@ class _LoginButtonState extends State<GoogleLoginButton> {
           children: [
             Icon(FontAwesomeIcons.google),
             SizedBox(width: 15,),
-            Text("Sign in with Google",
+            Text("Login with Google",
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 15,
