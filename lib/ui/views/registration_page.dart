@@ -154,6 +154,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     label: Text("Department"),
                   ),
                 ),
+                const SizedBox(height: 8,),
+                const Text("Country"),
                 ElevatedButton(
                     onPressed: () {
                       showCountryPicker(
