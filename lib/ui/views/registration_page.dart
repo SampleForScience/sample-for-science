@@ -24,6 +24,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final auth = FirebaseAuth.instance;
   Map<String, dynamic> user = {};
   String selectedCountry = "Select country";
+  List favoriteProviders = [];
+  List favoriteSamples = [];
 
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -70,6 +72,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
       orcidController.text = user["orcid"];
       scholarController.text = user["google_scholar"];
       otherController.text = user["other"];
+      favoriteProviders = user["favoriteProviders"];
+      favoriteSamples = user["favoriteSamples"];
     });
     return true;
   }
@@ -150,6 +154,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     label: Text("Department"),
                   ),
                 ),
+                const SizedBox(height: 8,),
+                const Text("Country"),
                 ElevatedButton(
                     onPressed: () {
                       showCountryPicker(
@@ -210,6 +216,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   Expanded(
                     child: ElevatedButton(
                         onPressed: () {
+
+                          debugPrint(favoriteSamples.toString());
+
                           user = {
                             "id": auth.currentUser!.uid,
                             "name": nameController.text,
@@ -222,7 +231,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             "webpage": webpageController.text,
                             "orcid": orcidController.text,
                             "google_scholar": scholarController.text,
-                            "other": otherController.text
+                            "other": otherController.text,
+                            "favoriteProviders": favoriteProviders,
+                            "favoriteSamples": favoriteSamples
                           };
 
                           saveUser(user);
