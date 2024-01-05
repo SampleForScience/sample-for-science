@@ -115,107 +115,326 @@ class _SamplePageState extends State<SamplePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        "Code",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(sampleData["code"],
-                        style: const TextStyle(
-                            fontSize: 16
-                        )
-                      ),
-                      const Divider(),
-                      const Text(
-                        "Number",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        )
-                      ),
-                      Text(sampleData["number"],
-                        style: const TextStyle(
-                            fontSize: 16
-                        )
-                      ),
-                      const Divider(),
-                      const Text(
-                        "Formula",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        )
-                      ),
-                      Text(sampleData["formula"],
-                        style: const TextStyle(
-                            fontSize: 16
-                        )
-                      ),
-                      const Divider(),
-                      const Text(
-                        "Type",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        )
-                      ),
-                      Text(sampleData["type"],
-                        style: const TextStyle(
-                            fontSize: 16
-                        )
-                      ),
-                      const Divider(),
-                      const Text(
-                        "Morfology",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        )
-                      ),
-                      Text(sampleData["morphology"],
-                        style: const TextStyle(
-                            fontSize: 16
-                        )
-                      ),
-                      const Divider(),
-                      const Text(
-                        "Keywords",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        )
-                      ),
-                      Text(sampleData["keywords"],
-                        style: const TextStyle(
-                            fontSize: 16
-                        )
-                      ),
-                      const Divider(),
-                      const Text(
-                        "Registration",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        )
-                      ),
-                      Text(formatDateWithUserTimezone(sampleData["registration"].toDate()),
-                        style: const TextStyle(
-                          fontSize: 16
-                        )
-                      ),
-                      const Divider(),
-                      if (imageBytes != null) Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.0),
-                          image: DecorationImage(
-                            image: MemoryImage(imageBytes!),
-                            fit: BoxFit.cover,
+                      Row(
+                        children: [
+                          const Text(
+                            "Code: ",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        width: 100,
-                        height: 100,
+                          Text(sampleData["code"],
+                            style: const TextStyle(
+                                fontSize: 16
+                            )
+                          ),
+                        ],
+                      ),
+                      const Divider(),
+                      Row(
+                        children: [
+                          const Text(
+                            "Number of samples: ",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            )
+                          ),
+                          Text(sampleData["number"],
+                            style: const TextStyle(
+                                fontSize: 16
+                            )
+                          ),
+                        ],
+                      ),
+                      const Divider(),
+                      Row(
+                        children: [
+                          const Text(
+                            "Formula: ",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            )
+                          ),
+                          Text(sampleData["formula"],
+                            style: const TextStyle(
+                                fontSize: 16
+                            )
+                          ),
+                        ],
+                      ),
+                      const Divider(),
+                      Row(
+                        children: [
+                          const Text(
+                            "Type: ",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            )
+                          ),
+                          Text(sampleData["type"],
+                            style: const TextStyle(
+                                fontSize: 16
+                            )
+                          ),
+                        ],
+                      ),
+                      const Divider(),
+                      Row(
+                        children: [
+                          const Text(
+                            "Morfology: ",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            )
+                          ),
+                          Text(sampleData["morphology"],
+                            style: const TextStyle(
+                                fontSize: 16
+                            )
+                          ),
+                        ],
+                      ),
+                      const Divider(),
+                      Row(
+                        children: [
+                          const Text(
+                            "Keywords: ",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            )
+                          ),
+                          Text(sampleData["keywords"],
+                            style: const TextStyle(
+                                fontSize: 16
+                            )
+                          ),
+                        ],
+                      ),
+                      const Divider(),
+                      Row(
+                        children: [
+                          const Text(
+                            "Previous diffraction measurements: ",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            )
+                          ),
+                          Text(sampleData["previousDiffraction"],
+                              style: const TextStyle(
+                                  fontSize: 16
+                              )
+                          ),
+                        ],
+                      ),
+                      const Divider(),
+                      Row(
+                        children: [
+                          const Text(
+                              "Previous thermal measurements: ",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              )
+                          ),
+                          Text(sampleData["previousThermal"],
+                              style: const TextStyle(
+                                  fontSize: 16
+                              )
+                          ),
+                        ],
+                      ),
+                      const Divider(),
+                      Row(
+                        children: [
+                          const Text(
+                              "Previous optical measurements: ",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              )
+                          ),
+                          Text(sampleData["previousOptical"],
+                              style: const TextStyle(
+                                  fontSize: 16
+                              )
+                          ),
+                        ],
+                      ),
+                      const Divider(),
+                      Row(
+                        children: [
+                          const Text(
+                              "Other previous measurements: ",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              )
+                          ),
+                          Text(sampleData["otherPrevious"],
+                              style: const TextStyle(
+                                  fontSize: 16
+                              )
+                          ),
+                        ],
+                      ),
+                      const Divider(),
+                      Row(
+                        children: [
+                          const Text(
+                              "DOI: ",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              )
+                          ),
+                          Text(sampleData["doi"],
+                              style: const TextStyle(
+                                  fontSize: 16
+                              )
+                          ),
+                        ],
+                      ),
+                      const Divider(),
+                      Row(
+                        children: [
+                          const Text(
+                              "Suggestion of diffraction measurements: ",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              )
+                          ),
+                          Text(sampleData["suggestionDiffraction"],
+                              style: const TextStyle(
+                                  fontSize: 16
+                              )
+                          ),
+                        ],
+                      ),
+                      const Divider(),
+                      Row(
+                        children: [
+                          const Text(
+                              "Suggestion of thermal measurements: ",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              )
+                          ),
+                          Text(sampleData["suggestionThermal"],
+                              style: const TextStyle(
+                                  fontSize: 16
+                              )
+                          ),
+                        ],
+                      ),
+                      const Divider(),
+                      Row(
+                        children: [
+                          const Text(
+                              "Suggestion of optical measurements: ",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              )
+                          ),
+                          Text(sampleData["suggestionOptical"],
+                              style: const TextStyle(
+                                  fontSize: 16
+                              )
+                          ),
+                        ],
+                      ),
+                      const Divider(),
+                      Row(
+                        children: [
+                          const Text(
+                              "Other Suggestions: ",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              )
+                          ),
+                          Text(sampleData["otherSuggestions"],
+                              style: const TextStyle(
+                                  fontSize: 16
+                              )
+                          ),
+                        ],
+                      ),
+                      const Divider(),
+                      Row(
+                        children: [
+                          const Text(
+                              "Hazardous: ",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              )
+                          ),
+                          Text(sampleData["hazardous"].toString(),
+                              style: const TextStyle(
+                                  fontSize: 16
+                              )
+                          ),
+                        ],
+                      ),
+                      const Divider(),
+                      Row(
+                        children: [
+                          const Text(
+                              "Animals: ",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              )
+                          ),
+                          Text(sampleData["animals"].toString(),
+                              style: const TextStyle(
+                                  fontSize: 16
+                              )
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          const Text(
+                              "Registration: ",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              )
+                          ),
+                          Text(formatDateWithUserTimezone(sampleData["registration"].toDate()),
+                              style: const TextStyle(
+                                  fontSize: 16
+                              )
+                          ),
+                        ],
+                      ),
+                      if (imageBytes != null) Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Divider(),
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                              image: DecorationImage(
+                                image: MemoryImage(imageBytes!),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            width: 100,
+                            height: 100,
+                          ),
+                        ],
                       ),
                       const Divider(),
                       const Text(
