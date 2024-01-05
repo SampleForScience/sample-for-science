@@ -8,6 +8,7 @@ import 'package:sample/ui/buttons/circular_avatar_button.dart';
 import 'package:sample/ui/buttons/favorite_provider_button.dart';
 import 'package:sample/ui/buttons/favorite_sample_button.dart';
 import 'package:sample/ui/buttons/publication_button.dart';
+import 'package:sample/ui/buttons/see_sample_button.dart';
 import 'package:sample/ui/widgets/custom_drawer.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -271,20 +272,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                                         color: Colors.black,
                                                       ),
                                                     ),
-                                                    IconButton(
-                                                      onPressed: () {
-                                                        Navigator.pushNamed(
-                                                          context,
-                                                          "/sample",
-                                                          arguments: sampleData,
-                                                        );
-                                                      },
-                                                      icon: const Icon(
-                                                        Icons
-                                                            .sticky_note_2_outlined,
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
+                                                    SeeSampleButton(sampleData: sampleData),
                                                   ],
                                                 ),
                                               ),
@@ -370,17 +358,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                                       "providerData"]),
                                             FavoriteSampleButton(
                                                 sampleData: favSample),
-                                            IconButton(
-                                              onPressed: () {
-                                                Navigator.pushNamed(
-                                                  context,
-                                                  "/sample",
-                                                  arguments: favSample,
-                                                );
-                                              },
-                                              icon: const Icon(
-                                                  Icons.sticky_note_2_outlined),
-                                            ),
+                                            SeeSampleButton(sampleData: favSample)
                                           ],
                                         ),
                                       ],

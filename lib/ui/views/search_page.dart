@@ -10,6 +10,7 @@ import 'package:sample/providers/sample_provider.dart';
 import 'package:sample/ui/buttons/circular_avatar_button.dart';
 import 'package:sample/ui/buttons/favorite_provider_button.dart';
 import 'package:sample/ui/buttons/favorite_sample_button.dart';
+import 'package:sample/ui/buttons/see_sample_button.dart';
 import 'package:sample/ui/widgets/custom_drawer.dart';
 
 class SearchPage extends StatefulWidget {
@@ -334,17 +335,7 @@ class _SearchPageState extends State<SearchPage> {
                                           ["providerData"]),
                                 FavoriteSampleButton(
                                     sampleData: foundSamples[index]),
-                                IconButton(
-                                  onPressed: () {
-                                    Navigator.pushNamed(
-                                      context,
-                                      "/sample",
-                                      arguments: foundSamples[index],
-                                    );
-                                  },
-                                  icon:
-                                      const Icon(Icons.sticky_note_2_outlined),
-                                ),
+                                SeeSampleButton(sampleData: foundSamples[index])
                               ],
                             ),
                           ],
