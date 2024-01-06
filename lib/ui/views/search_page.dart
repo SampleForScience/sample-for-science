@@ -113,6 +113,7 @@ class _SearchPageState extends State<SearchPage> {
   Future<void> searchSamples(String toSearch) async {
     setState(() {
       foundSamples = [];
+      searching = true;
     });
     late Map<String, dynamic> sampleData;
     try {
@@ -250,12 +251,6 @@ class _SearchPageState extends State<SearchPage> {
                           onPressed: () {
                             if (searchController.text.isNotEmpty) {
                               searchSamples(searchController.text);
-                              Timer.periodic(const Duration(milliseconds: 500),
-                                  (timer) {
-                                setState(() {
-                                  searching = true;
-                                });
-                              });
                             }
                           },
                           icon: const Icon(
@@ -269,9 +264,8 @@ class _SearchPageState extends State<SearchPage> {
               ),
             ),
           ),
-          if (searching)
-            Text(
-                "${foundSamples.length} ${foundSamples.isNotEmpty && foundSamples.length > 1 ? 'samples' : 'sample'} found"),
+          if (searching == true)
+            Text("${foundSamples.length} ${foundSamples.isNotEmpty && foundSamples.length > 1 ? 'samples' : 'sample'} found"),
           if (foundSamples.isNotEmpty)
             TextButton(
               onPressed: () {
