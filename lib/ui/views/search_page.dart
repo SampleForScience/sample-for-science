@@ -266,7 +266,7 @@ class _SearchPageState extends State<SearchPage> {
           ),
           if (searching == true)
             Text("${foundSamples.length} ${foundSamples.isNotEmpty && foundSamples.length > 1 ? 'samples' : 'sample'} found"),
-          if (foundSamples.isNotEmpty)
+          if (searching == true)
             TextButton(
               onPressed: () {
                 setState(() {
