@@ -48,7 +48,7 @@ class _DashboardPageState extends State<DashboardPage> {
           builder: (c) => AlertDialog(
             backgroundColor: Colors.blueGrey,
             content: const Text(
-              "Do you want to exit the app?",
+              "Do youwant to exit the app?",
               style: TextStyle(fontSize: 18, color: Colors.white),
             ),
             actions: [
