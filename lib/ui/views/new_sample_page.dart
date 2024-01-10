@@ -127,12 +127,15 @@ class _NewSamplePageState extends State<NewSamplePage> with SingleTickerProvider
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Provide Sample"),
+        backgroundColor: const Color.fromARGB(255, 85, 134, 158),
+        title: const Text("Provide Sample", style: TextStyle(color: Colors.white)),
+        iconTheme: const IconThemeData(color: Colors.white),
         centerTitle: true,
         actions: const [
           CircularAvatarButton()
         ],
         bottom: TabBar(
+          labelColor: Colors.white,   
           controller: _tabController,
           tabs: tabs,
         ),

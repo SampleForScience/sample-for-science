@@ -328,14 +328,44 @@ class _SearchPageState extends State<SearchPage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                if (foundSamples[index]["provider"] !=
-                                    auth.currentUser!.uid)
-                                  FavoriteProviderButton(
-                                      providerData: foundSamples[index]
-                                          ["providerData"]),
-                                FavoriteSampleButton(
-                                    sampleData: foundSamples[index]),
-                                SeeSampleButton(sampleData: foundSamples[index])
+                                Container(
+                                  decoration: BoxDecoration(
+                                                  color: const Color.fromARGB(
+                                                            255, 165, 207, 228),
+                                                        borderRadius:
+                                                            const BorderRadius.only(
+                                                                topLeft:
+                                                                    Radius.circular(
+                                                                        20),
+                                                                topRight:
+                                                                    Radius.circular(
+                                                                        20),
+                                                                bottomLeft:
+                                                                    Radius.circular(
+                                                                        20),
+                                                                bottomRight:
+                                                                    Radius.circular(
+                                                                        20)),
+                                                        border: Border.all(
+                                                          color: Color.fromARGB(
+                                                              255, 165, 207, 228),
+                                                          width: 5,
+                                                        )
+                                                ),
+                                  child: Row(
+                                   
+                                    children: [
+                                      if (foundSamples[index]["provider"] !=
+                                          auth.currentUser!.uid)
+                                        FavoriteProviderButton(
+                                            providerData: foundSamples[index]
+                                                ["providerData"]),
+                                      FavoriteSampleButton(
+                                          sampleData: foundSamples[index]),
+                                      SeeSampleButton(sampleData: foundSamples[index])
+                                    ],
+                                  ),
+                                ),
                               ],
                             ),
                           ],
