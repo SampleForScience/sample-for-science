@@ -21,10 +21,7 @@ class _FavoriteProviderButtonState extends State<FavoriteProviderButton> {
             provider.addRemoveFavoriteProvider(widget.providerData, context);
           },
           child: Container(
-            decoration: BoxDecoration(
-              color: Colors.black26,
-              borderRadius: BorderRadius.circular(5.0),
-            ),
+            
             child: Padding(
               padding: const EdgeInsets.all(5.0),
               child: Row(

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sample/services/google_sign_in.dart';
 
 class DrawerLogoutButton extends StatefulWidget {
-  const DrawerLogoutButton({super.key});
+  const DrawerLogoutButton({Key? key});
 
   @override
   State<DrawerLogoutButton> createState() => _LoginButtonState();
@@ -33,9 +33,33 @@ class _LoginButtonState extends State<DrawerLogoutButton> {
         ],
       ),
       onTap: () {
-        Future.delayed(const Duration(milliseconds: 200), () {
-          _googleSignInHandler.signInWithGoogle();
-        });
+        // Exibe o popup de confirmação
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text("Logout confirmation"),
+              content: const Text("Are you sure you want to logout?"),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("Close"),
+                ),
+                TextButton(
+                  onPressed: () {
+                  
+                    _googleSignInHandler.signInWithGoogle();
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("Yes, logout"),
+                ),
+              ],
+            );
+          },
+        );
       },
     );
   }

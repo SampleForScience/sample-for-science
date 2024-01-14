@@ -67,7 +67,9 @@ class _UpdateSamplePageState extends State<UpdateSamplePage>
   String selectedMorphology = "";
 
   List<Tab> tabs = <Tab>[
+    
     const Tab(
+      
       text: "Basics",
     ),
     const Tab(
@@ -179,10 +181,15 @@ class _UpdateSamplePageState extends State<UpdateSamplePage>
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Update Sample"),
+        backgroundColor: const Color.fromARGB(255, 85, 134, 158),
+        title: const Text('Update Sample', style: TextStyle(color: Colors.white)),
+        iconTheme: const IconThemeData(color: Colors.white),
+        
         centerTitle: true,
         actions: const [CircularAvatarButton()],
         bottom: TabBar(
+          labelColor: Colors.white,
+          
           controller: _tabController,
           tabs: tabs,
         ),

@@ -21,10 +21,7 @@ class _FavoriteSampleButtonState extends State<FavoriteSampleButton> {
             provider.addRemoveFavoriteSample(widget.sampleData["id"], context);
           },
           child: Container(
-            decoration: BoxDecoration(
-              color: Colors.black26,
-              borderRadius: BorderRadius.circular(5.0),
-            ),
+            
             child: Padding(
               padding: const EdgeInsets.all(3.0),
               child: Row(

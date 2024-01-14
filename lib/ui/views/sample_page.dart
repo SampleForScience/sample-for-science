@@ -85,7 +85,9 @@ class _SamplePageState extends State<SamplePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sample'),
+        backgroundColor: const Color.fromARGB(255, 85, 134, 158),
+        title: const Text("Sample", style: TextStyle(color: Colors.white)),
+         iconTheme: const IconThemeData(color: Colors.white),
         centerTitle: true,
         actions: const [
           CircularAvatarButton(),

@@ -48,7 +48,7 @@ class _DashboardPageState extends State<DashboardPage> {
           builder: (c) => AlertDialog(
             backgroundColor: Colors.blueGrey,
             content: const Text(
-              "Do you want to exit the app?",
+              "Do youwant to exit the app?",
               style: TextStyle(fontSize: 18, color: Colors.white),
             ),
             actions: [
@@ -347,22 +347,52 @@ class _DashboardPageState extends State<DashboardPage> {
                                         Text(formatDateWithUserTimezone(
                                             favSample["registration"]
                                                 .toDate())),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            if (favSample["provider"] !=
-                                                auth.currentUser!.uid)
-                                              FavoriteProviderButton(
-                                                  providerData: favSample[
-                                                      "providerData"]),
-                                            FavoriteSampleButton(
-                                                sampleData: favSample),
-                                            SeeSampleButton(sampleData: favSample)
-                                          ],
-                                        ),
-                                      ],
+                                       Row(
+                                        mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                         children: [
+                                           Container(
+                                            decoration: BoxDecoration(
+                                              color: const Color.fromARGB(
+                                                        255, 165, 207, 228),
+                                                    borderRadius:
+                                                        const BorderRadius.only(
+                                                            topLeft:
+                                                                Radius.circular(
+                                                                    20),
+                                                            topRight:
+                                                                Radius.circular(
+                                                                    20),
+                                                            bottomLeft:
+                                                                Radius.circular(
+                                                                    20),
+                                                            bottomRight:
+                                                                Radius.circular(
+                                                                    20)),
+                                                    border: Border.all(
+                                                      color: Color.fromARGB(
+                                                          255, 165, 207, 228),
+                                                      width: 5,
+                                                    )
+                                            ),
+                                             child: Row(                                              
+                                                  children: [
+                                                    if (favSample["provider"] !=
+                                                        auth.currentUser!.uid)
+                                                      FavoriteProviderButton(
+                                                          providerData: favSample[
+                                                              "providerData"]),
+                                                    FavoriteSampleButton(
+                                                        sampleData: favSample),
+                                                    SeeSampleButton(sampleData: favSample)
+                                                  ],
+                                                ),
+                                           ),
+                                         ],
+                                       )
+                                        ],                                        
                                     ),
+                                    
                                   );
                                 }).toList()),
                     ),
@@ -421,21 +451,51 @@ class _DashboardPageState extends State<DashboardPage> {
                                             providerData["id"])
                                           Row(
                                             mainAxisAlignment:
-                                                MainAxisAlignment.end,
+                                                  MainAxisAlignment.center,
                                             children: [
-                                              FavoriteProviderButton(
-                                                  providerData: providerData),
-                                              IconButton(
-                                                onPressed: () {
-                                                  Navigator.pushNamed(
-                                                    context,
-                                                    "/provider",
-                                                    arguments: providerData,
-                                                  );
-                                                },
-                                                icon: const Icon(Icons
-                                                    .sticky_note_2_outlined),
-                                              )
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  color: const Color.fromARGB(
+                                                            255, 165, 207, 228),
+                                                        borderRadius:
+                                                            const BorderRadius.only(
+                                                                topLeft:
+                                                                    Radius.circular(
+                                                                        20),
+                                                                topRight:
+                                                                    Radius.circular(
+                                                                        20),
+                                                                bottomLeft:
+                                                                    Radius.circular(
+                                                                        20),
+                                                                bottomRight:
+                                                                    Radius.circular(
+                                                                        20)),
+                                                        border: Border.all(
+                                                          color: Color.fromARGB(
+                                                              255, 165, 207, 228),
+                                                          width: 5,
+                                                        )
+                                                ),
+                                                child: Row(
+                                                                                                      
+                                                  children: [
+                                                    FavoriteProviderButton(
+                                                        providerData: providerData),
+                                                    IconButton(
+                                                      onPressed: () {
+                                                        Navigator.pushNamed(
+                                                          context,
+                                                          "/provider",
+                                                          arguments: providerData,
+                                                        );
+                                                      },
+                                                      icon: const Icon(Icons
+                                                          .sticky_note_2_outlined),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
                                             ],
                                           ),
                                       ],
