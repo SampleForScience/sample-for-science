@@ -403,6 +403,7 @@ class _SamplePageState extends State<SamplePage> {
                           ),
                         ],
                       ),
+                      const Divider(),
                       Row(
                         children: [
                           const Text(
