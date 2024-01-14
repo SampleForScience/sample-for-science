@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sample/ui/buttons/circular_avatar_button.dart';
+import 'package:sample/ui/buttons/favorite_sample_button.dart';
 
 class SamplePage extends StatefulWidget {
   const SamplePage({super.key});
@@ -455,6 +456,7 @@ class _SamplePageState extends State<SamplePage> {
                       if (auth.currentUser!.uid != providerData["id"])Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
+                          FavoriteSampleButton(sampleData: sampleData),
                           ElevatedButton(
                             onPressed: () {
                               Navigator.pushNamed(context, "/provider", arguments: providerData,);
