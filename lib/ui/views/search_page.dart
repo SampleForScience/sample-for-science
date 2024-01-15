@@ -24,6 +24,8 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   final db = FirebaseFirestore.instance;
   final auth = FirebaseAuth.instance;
+  int page = 1;
+  int limit = 25;
   bool searching = false;
   List<Map<String, dynamic>> foundSamples = [];
 
@@ -371,7 +373,16 @@ class _SearchPageState extends State<SearchPage> {
                   );
                 },
               ),
-            )
+            ),
+          if (foundSamples.isNotEmpty && searching)
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  page++;
+                });
+              },
+              child: Text("${limit * (page - 1) + 1} - ${limit * page}")
+            ),
         ],
       ),
     );
