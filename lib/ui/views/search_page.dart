@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_pagination/firebase_pagination.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -33,13 +34,13 @@ class _SearchPageState extends State<SearchPage> {
     return formatter.format(dateTime.toLocal());
   }
 
-  Future<void> getSamples() async {
+  Future<void> getSamples(int limit) async {
     setState(() {
       foundSamples = [];
     });
     late Map<String, dynamic> sampleData;
     try {
-      await db.collection("samples").get().then((querySnapshot) async {
+      await db.collection("samples").limit(limit).get().then((querySnapshot) async {
         final samples = querySnapshot.docs;
         for (var sample in samples) {
           Map<String, dynamic> providerData = {};
@@ -110,87 +111,93 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
+  // TODO: limitar quantidade de itens listados
   Future<void> searchSamples(String toSearch) async {
     setState(() {
       foundSamples = [];
       searching = true;
     });
-    late Map<String, dynamic> sampleData;
     try {
-      await db.collection("samples").get().then((querySnapshot) async {
-        final samples = querySnapshot.docs;
-        for (var sample in samples) {
-          if (sample
-              .data()["search"]
-              .toString()
-              .contains(toSearch.toLowerCase().replaceAll(" ", ""))) {
-            Map<String, dynamic> providerData = {};
-            await db
-                .collection("users")
-                .where("id", isEqualTo: sample.data()["provider"])
-                .get()
-                .then((querySnapshot) async {
-              final users = querySnapshot.docs;
-              for (var user in users) {
-                setState(() {
-                  providerData = {
-                    "id": user.data()["id"],
-                    "name": user.data()["name"],
-                    "email": user.data()["email"],
-                    "address": user.data()["address"],
-                    "country": user.data()["country"],
-                    "department": user.data()["department"],
-                    "google_scholar": user.data()["google_scholar"],
-                    "institution": user.data()["institution"],
-                    "mobile": user.data()["mobile"],
-                    "orcid": user.data()["orcid"],
-                    "other": user.data()["other"],
-                    "webpage": user.data()["webpage"],
-                  };
-                });
-              }
-            }, onError: (e) {
-              debugPrint("Error completing: $e");
-            });
-            sampleData = {
-              "id": sample.data()["id"],
-              "provider": sample.data()["provider"],
-              "number": sample.data()["number"],
-              "code": sample.data()["code"],
-              "formula": sample.data()["formula"],
-              "keywords": sample.data()["keywords"],
-              "type": sample.data()["type"],
-              "morphology": sample.data()["morphology"],
-              "previousDiffraction": sample.data()["previousDiffraction"],
-              "previousThermal": sample.data()["previousThermal"],
-              "previousOptical": sample.data()["previousOptical"],
-              "otherPrevious": sample.data()["otherPrevious"],
-              "doi": sample.data()["doi"],
-              "suggestionDiffraction": sample.data()["suggestionDiffraction"],
-              "suggestionThermal": sample.data()["suggestionThermal"],
-              "suggestionOptical": sample.data()["suggestionOptical"],
-              "otherSuggestions": sample.data()["otherSuggestions"],
-              "hazardous": sample.data()["hazardous"],
-              "animals": sample.data()["animals"],
-              "image": sample.data()["image"],
-              "publicationStatus": sample.data()["publicationStatus"],
-              "search": sample.data()["search"],
-              "registration": sample.data()["registration"],
-              "providerData": providerData,
-            };
-            setState(() {
-              if (sampleData["publicationStatus"] == "Public") {
-                foundSamples.add(sampleData);
-              }
-            });
-            // debugPrint(sampleData.toString());
-          }
-        }
+      await db.collection("samples").get().then((querySnapshot) {
+        processQuerySnapshot(querySnapshot, toSearch);
       }, onError: (e) {
         debugPrint("Error completing: $e");
       });
     } catch (e) {
       debugPrint('error in getMySample(): $e');
+    }
+  }
+
+  // TODO: limitar quantidade de itens listados
+  Future<void> processQuerySnapshot(QuerySnapshot<Map<String, dynamic>> querySnapshot, String toSearch) async {
+    final samples = querySnapshot.docs;
+    late Map<String, dynamic> sampleData;
+    for (var sample in samples) {
+      if (sample
+          .data()["search"]
+          .toString()
+          .contains(toSearch.toLowerCase().replaceAll(" ", ""))) {
+        Map<String, dynamic> providerData = {};
+        await db
+            .collection("users")
+            .where("id", isEqualTo: sample.data()["provider"])
+            .get()
+            .then((querySnapshot) async {
+          final users = querySnapshot.docs;
+          for (var user in users) {
+            setState(() {
+              providerData = {
+                "id": user.data()["id"],
+                "name": user.data()["name"],
+                "email": user.data()["email"],
+                "address": user.data()["address"],
+                "country": user.data()["country"],
+                "department": user.data()["department"],
+                "google_scholar": user.data()["google_scholar"],
+                "institution": user.data()["institution"],
+                "mobile": user.data()["mobile"],
+                "orcid": user.data()["orcid"],
+                "other": user.data()["other"],
+                "webpage": user.data()["webpage"],
+              };
+            });
+          }
+        }, onError: (e) {
+          debugPrint("Error completing: $e");
+        });
+        sampleData = {
+          "id": sample.data()["id"],
+          "provider": sample.data()["provider"],
+          "number": sample.data()["number"],
+          "code": sample.data()["code"],
+          "formula": sample.data()["formula"],
+          "keywords": sample.data()["keywords"],
+          "type": sample.data()["type"],
+          "morphology": sample.data()["morphology"],
+          "previousDiffraction": sample.data()["previousDiffraction"],
+          "previousThermal": sample.data()["previousThermal"],
+          "previousOptical": sample.data()["previousOptical"],
+          "otherPrevious": sample.data()["otherPrevious"],
+          "doi": sample.data()["doi"],
+          "suggestionDiffraction": sample.data()["suggestionDiffraction"],
+          "suggestionThermal": sample.data()["suggestionThermal"],
+          "suggestionOptical": sample.data()["suggestionOptical"],
+          "otherSuggestions": sample.data()["otherSuggestions"],
+          "hazardous": sample.data()["hazardous"],
+          "animals": sample.data()["animals"],
+          "image": sample.data()["image"],
+          "publicationStatus": sample.data()["publicationStatus"],
+          "search": sample.data()["search"],
+          "registration": sample.data()["registration"],
+          "providerData": providerData,
+        };
+        setState(() {
+          if (sampleData["publicationStatus"] == "Public") {
+            foundSamples.add(sampleData);
+          }
+        });
+        // debugPrint(sampleData.toString());
+      }
     }
   }
 
@@ -200,7 +207,7 @@ class _SearchPageState extends State<SearchPage> {
     Provider.of<SampleProvider>(context, listen: false).getMySamples();
     Provider.of<SampleProvider>(context, listen: false).getFavoriteProviders();
     Provider.of<SampleProvider>(context, listen: false).getFavoriteSamples();
-    getSamples();
+    getSamples(25);
   }
 
   @override
