@@ -112,17 +112,25 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   // TODO: limitar quantidade de itens listados
-  Future<void> searchSamples(String toSearch) async {
+  Future<void> searchSamples(String toSearch, String startAfter, int limit) async {
     setState(() {
       foundSamples = [];
       searching = true;
     });
     try {
-      await db.collection("samples").get().then((querySnapshot) {
-        processQuerySnapshot(querySnapshot, toSearch);
-      }, onError: (e) {
-        debugPrint("Error completing: $e");
-      });
+      if (startAfter == "") {
+        await db.collection("samples").orderBy("id").limit(limit).get().then((querySnapshot) {
+          processQuerySnapshot(querySnapshot, toSearch);
+        }, onError: (e) {
+          debugPrint("Error completing: $e");
+        });
+      } else {
+        await db.collection("samples").orderBy("id").startAfter([startAfter]).get().then((querySnapshot) {
+          processQuerySnapshot(querySnapshot, toSearch);
+        }, onError: (e) {
+          debugPrint("Error completing: $e");
+        });
+      }
     } catch (e) {
       debugPrint('error in getMySample(): $e');
     }
@@ -239,7 +247,7 @@ class _SearchPageState extends State<SearchPage> {
                         controller: searchController,
                         onSubmitted: (value) {
                           if (value.isNotEmpty) {
-                            searchSamples(value);
+                            searchSamples(value, "", 25);
                           }
                         },
                         decoration: const InputDecoration(
@@ -257,7 +265,7 @@ class _SearchPageState extends State<SearchPage> {
                       child: IconButton(
                           onPressed: () {
                             if (searchController.text.isNotEmpty) {
-                              searchSamples(searchController.text);
+                              searchSamples(searchController.text, "", 25);
                             }
                           },
                           icon: const Icon(
