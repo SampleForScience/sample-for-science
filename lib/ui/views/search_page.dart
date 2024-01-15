@@ -26,6 +26,7 @@ class _SearchPageState extends State<SearchPage> {
   final auth = FirebaseAuth.instance;
   int page = 1;
   int limit = 25;
+  int count = 0;
   bool searching = false;
   List<Map<String, dynamic>> foundSamples = [];
 
@@ -122,13 +123,13 @@ class _SearchPageState extends State<SearchPage> {
     try {
       if (startAfter == "") {
         await db.collection("samples").orderBy("id").limit(limit).get().then((querySnapshot) {
-          processQuerySnapshot(querySnapshot, toSearch);
+          processSearchQuerySnapshot(querySnapshot, toSearch);
         }, onError: (e) {
           debugPrint("Error completing: $e");
         });
       } else {
         await db.collection("samples").orderBy("id").startAfter([startAfter]).get().then((querySnapshot) {
-          processQuerySnapshot(querySnapshot, toSearch);
+          processSearchQuerySnapshot(querySnapshot, toSearch);
         }, onError: (e) {
           debugPrint("Error completing: $e");
         });
@@ -138,8 +139,29 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
+  Future<void> countFoundSamples(String toSearch) async {
+    setState(() {
+      count = 0;
+    });
+    await db.collection("samples").get().then((querySnapshot) {
+      final samples = querySnapshot.docs;
+      for (var sample in samples) {
+        if (sample
+            .data()["search"]
+            .toString()
+            .contains(toSearch.toLowerCase().replaceAll(" ", ""))) {
+          setState(() {
+            count += 1;
+          });
+        }
+      }
+    }, onError: (e) {
+      debugPrint("Error completing: $e");
+    });
+  }
+
   // TODO: limitar quantidade de itens listados
-  Future<void> processQuerySnapshot(QuerySnapshot<Map<String, dynamic>> querySnapshot, String toSearch) async {
+  Future<void> processSearchQuerySnapshot(QuerySnapshot<Map<String, dynamic>> querySnapshot, String toSearch) async {
     final samples = querySnapshot.docs;
     late Map<String, dynamic> sampleData;
     for (var sample in samples) {
@@ -249,6 +271,7 @@ class _SearchPageState extends State<SearchPage> {
                         controller: searchController,
                         onSubmitted: (value) {
                           if (value.isNotEmpty) {
+                            countFoundSamples(searchController.text);
                             searchSamples(value, "", 25);
                           }
                         },
@@ -267,6 +290,7 @@ class _SearchPageState extends State<SearchPage> {
                       child: IconButton(
                           onPressed: () {
                             if (searchController.text.isNotEmpty) {
+                              countFoundSamples(searchController.text);
                               searchSamples(searchController.text, "", 25);
                             }
                           },
@@ -281,14 +305,15 @@ class _SearchPageState extends State<SearchPage> {
               ),
             ),
           ),
-          if (searching == true)
-            Text("${foundSamples.length} ${foundSamples.isNotEmpty && foundSamples.length > 1 ? 'samples' : 'sample'} found"),
+          // if (searching == true)
+          //   Text("${foundSamples.length} ${foundSamples.isNotEmpty && foundSamples.length > 1 ? 'samples' : 'sample'} found"),
           if (searching == true)
             TextButton(
               onPressed: () {
                 setState(() {
                   searching = false;
                   searchController.text = "";
+                  count = 0;
                   foundSamples.clear();
                 });
               },
@@ -375,13 +400,37 @@ class _SearchPageState extends State<SearchPage> {
               ),
             ),
           if (foundSamples.isNotEmpty && searching)
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  page++;
-                });
-              },
-              child: Text("${limit * (page - 1) + 1} - ${limit * page}")
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                page <= 1
+                  ? const TextButton(
+                    onPressed: null,
+                    child: Text("<")
+                  )
+                  : TextButton(
+                    onPressed: () {
+                      setState(() {
+                        page -= 1;
+                      });
+                    },
+                    child: const Text("<")
+                  ),
+                Text("showing  ${limit * (page - 1) + 1} - ${limit * page >= count ? count : limit * page}  of  $count"),
+                ((limit * page) >= count)
+                ? const TextButton(
+                    onPressed: null,
+                    child: Text(">")
+                  )
+                 : TextButton(
+                    onPressed: () {
+                      setState(() {
+                        page += 1;
+                      });
+                    },
+                    child: const Text(">")
+                ),
+              ],
             ),
         ],
       ),
