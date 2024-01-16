@@ -1,9 +1,6 @@
-// TODO: verificar bug da contagem de amostras encontradas na primeira busca
-
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_pagination/firebase_pagination.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -25,10 +22,12 @@ class _SearchPageState extends State<SearchPage> {
   final db = FirebaseFirestore.instance;
   final auth = FirebaseAuth.instance;
   int page = 1;
-  int limit = 25;
+  int limit = 5;
   int count = 0;
   bool searching = false;
   List<Map<String, dynamic>> foundSamples = [];
+  List<Map<String, dynamic>> samplesToShow = [];
+  List<List<Map<String, dynamic>>> paginatedSamples = [];
 
   TextEditingController searchController = TextEditingController();
 
@@ -106,6 +105,7 @@ class _SearchPageState extends State<SearchPage> {
             }
           });
         }
+        samplesToShow = foundSamples;
       }, onError: (e) {
         debugPrint("Error completing: $e");
       });
@@ -115,25 +115,17 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   // TODO: limitar quantidade de itens listados
-  Future<void> searchSamples(String toSearch, String startAfter, int limit) async {
+  Future<void> searchSamples(String toSearch) async {
     setState(() {
       foundSamples = [];
       searching = true;
     });
     try {
-      if (startAfter == "") {
-        await db.collection("samples").orderBy("id").limit(limit).get().then((querySnapshot) {
-          processSearchQuerySnapshot(querySnapshot, toSearch);
-        }, onError: (e) {
-          debugPrint("Error completing: $e");
-        });
-      } else {
-        await db.collection("samples").orderBy("id").startAfter([startAfter]).get().then((querySnapshot) {
-          processSearchQuerySnapshot(querySnapshot, toSearch);
-        }, onError: (e) {
-          debugPrint("Error completing: $e");
-        });
-      }
+      await db.collection("samples").orderBy("id").get().then((querySnapshot) {
+        processSearchQuerySnapshot(querySnapshot, toSearch);
+      }, onError: (e) {
+        debugPrint("Error completing: $e");
+      });
     } catch (e) {
       debugPrint('error in getMySample(): $e');
     }
@@ -164,6 +156,7 @@ class _SearchPageState extends State<SearchPage> {
   Future<void> processSearchQuerySnapshot(QuerySnapshot<Map<String, dynamic>> querySnapshot, String toSearch) async {
     final samples = querySnapshot.docs;
     late Map<String, dynamic> sampleData;
+
     for (var sample in samples) {
       if (sample
           .data()["search"]
@@ -228,9 +221,21 @@ class _SearchPageState extends State<SearchPage> {
             foundSamples.add(sampleData);
           }
         });
-        // debugPrint(sampleData.toString());
+        // int start = limit * (page - 1);
+        // int end = limit * page >= count ? count : limit * page;
+        // debugPrint("start: $start | end: $end");
+        // // samplesToShow = foundSamples.sublist(start, end);
+        // samplesToShow = foundSamples;
       }
     }
+    for (int i = 0; i < foundSamples.length; i += 5) {
+      int fim = i + 5;
+      if (fim > foundSamples.length) {
+        fim = foundSamples.length;
+      }
+      paginatedSamples.add(foundSamples.sublist(i, fim));
+    }
+    samplesToShow = paginatedSamples[0];
   }
 
   @override
@@ -271,8 +276,13 @@ class _SearchPageState extends State<SearchPage> {
                         controller: searchController,
                         onSubmitted: (value) {
                           if (value.isNotEmpty) {
+                            setState(() {
+                              foundSamples.clear();
+                              samplesToShow.clear();
+                              paginatedSamples.clear();
+                            });
                             countFoundSamples(searchController.text);
-                            searchSamples(value, "", 25);
+                            searchSamples(searchController.text);
                           }
                         },
                         decoration: const InputDecoration(
@@ -289,9 +299,14 @@ class _SearchPageState extends State<SearchPage> {
                           borderRadius: BorderRadius.circular(8.0)),
                       child: IconButton(
                           onPressed: () {
+                            setState(() {
+                              foundSamples.clear();
+                              samplesToShow.clear();
+                              paginatedSamples.clear();
+                            });
                             if (searchController.text.isNotEmpty) {
                               countFoundSamples(searchController.text);
-                              searchSamples(searchController.text, "", 25);
+                              searchSamples(searchController.text);
                             }
                           },
                           icon: const Icon(
@@ -315,14 +330,16 @@ class _SearchPageState extends State<SearchPage> {
                   searchController.text = "";
                   count = 0;
                   foundSamples.clear();
+                  samplesToShow.clear();
+                  paginatedSamples.clear();
                 });
               },
               child: const Text("Clear Search"),
             ),
-          if (foundSamples.isNotEmpty)
+          if (samplesToShow.isNotEmpty)
             Expanded(
               child: ListView.builder(
-                itemCount: foundSamples.length,
+                itemCount: samplesToShow.length,
                 itemBuilder: (context, index) {
                   return ListTile(
                     title: Container(
@@ -349,43 +366,43 @@ class _SearchPageState extends State<SearchPage> {
                               "Code",
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            Text(foundSamples[index]['code']),
+                            Text(samplesToShow[index]['code']),
                             const Text(
                               "Chemical Formula",
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            Text(foundSamples[index]['formula']),
+                            Text(samplesToShow[index]['formula']),
                             const Text(
                               "Registration date",
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             Text(formatDateWithUserTimezone(
-                                foundSamples[index]["registration"].toDate())),
+                                samplesToShow[index]["registration"].toDate())),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Container(
                                   decoration: BoxDecoration(
-                                    color: const Color.fromARGB(255, 165, 207, 228),
-                                    borderRadius:
-                                      const BorderRadius.only(
-                                        topLeft: Radius.circular(20),
-                                        topRight: Radius.circular(20),
-                                        bottomLeft: Radius.circular(20),
-                                        bottomRight: Radius.circular(20)
-                                      ),
-                                    border: Border.all(
                                       color: const Color.fromARGB(255, 165, 207, 228),
-                                      width: 5,
-                                    )
+                                      borderRadius:
+                                      const BorderRadius.only(
+                                          topLeft: Radius.circular(20),
+                                          topRight: Radius.circular(20),
+                                          bottomLeft: Radius.circular(20),
+                                          bottomRight: Radius.circular(20)
+                                      ),
+                                      border: Border.all(
+                                        color: const Color.fromARGB(255, 165, 207, 228),
+                                        width: 5,
+                                      )
                                   ),
                                   child: Row(
                                     children: [
-                                      if (foundSamples[index]["provider"] != auth.currentUser!.uid)
-                                        FavoriteProviderButton(providerData: foundSamples[index]["providerData"]),
-                                      if (foundSamples[index]["provider"] != auth.currentUser!.uid)
-                                        FavoriteSampleButton(sampleData: foundSamples[index]),
-                                      SeeSampleButton(sampleData: foundSamples[index])
+                                      if (samplesToShow[index]["provider"] != auth.currentUser!.uid)
+                                        FavoriteProviderButton(providerData: samplesToShow[index]["providerData"]),
+                                      if (samplesToShow[index]["provider"] != auth.currentUser!.uid)
+                                        FavoriteSampleButton(sampleData: samplesToShow[index]),
+                                      SeeSampleButton(sampleData: samplesToShow[index])
                                     ],
                                   ),
                                 ),
@@ -404,28 +421,30 @@ class _SearchPageState extends State<SearchPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 page <= 1
-                  ? const TextButton(
+                    ? const TextButton(
                     onPressed: null,
                     child: Text("<")
-                  )
-                  : TextButton(
+                )
+                    : TextButton(
                     onPressed: () {
                       setState(() {
                         page -= 1;
+                        samplesToShow = paginatedSamples[page - 1];
                       });
                     },
                     child: const Text("<")
-                  ),
+                ),
                 Text("showing  ${limit * (page - 1) + 1} - ${limit * page >= count ? count : limit * page}  of  $count"),
                 ((limit * page) >= count)
-                ? const TextButton(
+                    ? const TextButton(
                     onPressed: null,
                     child: Text(">")
-                  )
-                 : TextButton(
+                )
+                    : TextButton(
                     onPressed: () {
                       setState(() {
                         page += 1;
+                        samplesToShow = paginatedSamples[page - 1];
                       });
                     },
                     child: const Text(">")
