@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sample/ui/buttons/about_button.dart';
 import 'package:sample/ui/buttons/drawer_logout_button.dart';
+import 'package:sample/ui/buttons/report_bug_button.dart';
 
 enum Highlight { dashboard, provide, search, messages, other }
 
@@ -142,6 +143,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ),
           const DrawerLogoutButton(),
           const AboutButton(),
+          const ReportBugButton()
+
         ],
       ),
     );
