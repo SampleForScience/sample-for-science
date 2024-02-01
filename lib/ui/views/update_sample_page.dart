@@ -67,9 +67,7 @@ class _UpdateSamplePageState extends State<UpdateSamplePage>
   String selectedMorphology = "";
 
   List<Tab> tabs = <Tab>[
-    
     const Tab(
-      
       text: "Basics",
     ),
     const Tab(
@@ -182,306 +180,314 @@ class _UpdateSamplePageState extends State<UpdateSamplePage>
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 85, 134, 158),
-        title: const Text('Update Sample', style: TextStyle(color: Colors.white)),
+        title:
+            const Text('Update Sample', style: TextStyle(color: Colors.white)),
         iconTheme: const IconThemeData(color: Colors.white),
-        
         centerTitle: true,
         actions: const [CircularAvatarButton()],
         bottom: TabBar(
           labelColor: Colors.white,
-          
           controller: _tabController,
           tabs: tabs,
         ),
       ),
       body: TabBarView(controller: _tabController, children: [
         SingleChildScrollView(
-          child: Column(
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(12.0),
-                child: Text(
-                  "Basic Information",
-                  style: TextStyle(
-                    fontSize: 20,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8),
+            child: Column(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(12.0),
+                  child: Text(
+                    "Basic Information",
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
                   ),
                 ),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      keyboardType: TextInputType.number,
-                      controller: numberController,
-                      decoration: const InputDecoration(
-                        label: Text("Number of samples"),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: codeController,
-                      decoration: const InputDecoration(
-                        label: Text("Assign a code"),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: formulaController,
-                      decoration: const InputDecoration(
-                        label: Text("Chemical formula"),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: keywordsController,
-                      decoration: const InputDecoration(
-                        label: Text("Keywords"),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  DropdownMenu<String>(
-                    width: MediaQuery.of(context).size.width,
-                    hintText: "Type of Sample",
-                    initialSelection: sampleData["type"],
-                    onSelected: (String? value) {
-                      setState(() {
-                        selectedTypeOfSample = value!;
-                      });
-                    },
-                    dropdownMenuEntries: typeOfsampleList
-                        .map<DropdownMenuEntry<String>>((String value) {
-                      return DropdownMenuEntry<String>(
-                          value: value, label: value);
-                    }).toList(),
-                  ),
-                ],
-              ),
-              if (selectedTypeOfSample == "Other")
-                TextField(
-                  controller: otherTypeController,
-                  decoration: const InputDecoration(
-                    label: Text("Type of sample"),
-                  ),
-                ),
-              Row(
-                children: [
-                  DropdownMenu<String>(
-                    width: MediaQuery.of(context).size.width,
-                    hintText: "Morphology",
-                    initialSelection: sampleData["morphology"],
-                    onSelected: (String? value) {
-                      setState(() {
-                        selectedMorphology = value!;
-                      });
-                    },
-                    dropdownMenuEntries: morphologyList
-                        .map<DropdownMenuEntry<String>>((String value) {
-                      return DropdownMenuEntry<String>(
-                          value: value, label: value);
-                    }).toList(),
-                  ),
-                ],
-              ),
-              if (selectedMorphology == "Other")
-                TextField(
-                  controller: otherMorphologyController,
-                  decoration: const InputDecoration(
-                    label: Text("Morphology"),
-                  ),
-                )
-            ],
-          ),
-        ),
-        SingleChildScrollView(
-          child: Column(
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(12.0),
-                child: Text(
-                  "Previous results",
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
-                ),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: prevDiffractionController,
-                      decoration: const InputDecoration(
-                        label: Text("Previous diffraction measurements"),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: prevThermalController,
-                      decoration: const InputDecoration(
-                        label: Text("Previous thermal measurements"),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: prevOpticalController,
-                      decoration: const InputDecoration(
-                        label: Text("Previous optical measurements"),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: prevOtherController,
-                      decoration: const InputDecoration(
-                        label: Text("Other previous measurements"),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: doiController,
-                      decoration: const InputDecoration(
-                        label: Text("doi..."),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                Row(
                   children: [
-                    imageBytes != null
-                        ? Column(
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  debugPrint("Image Clicked");
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    image: DecorationImage(
-                                      image: MemoryImage(imageBytes!),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                  width: 100,
-                                  height: 100,
-                                ),
-                              ),
-                              ElevatedButton(
-                                  onPressed: imagePicker,
-                                  child: const Text("Change Image")),
-                            ],
-                          )
-                        : ElevatedButton(
-                            onPressed: imagePicker,
-                            child: const Text("Add Image")),
+                    Expanded(
+                      child: TextField(
+                        keyboardType: TextInputType.number,
+                        controller: numberController,
+                        decoration: const InputDecoration(
+                          label: Text("Number of samples"),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
-              ),
-            ],
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: codeController,
+                        decoration: const InputDecoration(
+                          label: Text("Assign a code"),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: formulaController,
+                        decoration: const InputDecoration(
+                          label: Text("Chemical formula"),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: keywordsController,
+                        decoration: const InputDecoration(
+                          label: Text("Keywords"),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    DropdownMenu<String>(
+                      width: MediaQuery.of(context).size.width - 8,
+                      hintText: "Type of Sample",
+                      initialSelection: sampleData["type"],
+                      onSelected: (String? value) {
+                        setState(() {
+                          selectedTypeOfSample = value!;
+                        });
+                      },
+                      dropdownMenuEntries: typeOfsampleList
+                          .map<DropdownMenuEntry<String>>((String value) {
+                        return DropdownMenuEntry<String>(
+                            value: value, label: value);
+                      }).toList(),
+                    ),
+                  ],
+                ),
+                if (selectedTypeOfSample == "Other")
+                  TextField(
+                    controller: otherTypeController,
+                    decoration: const InputDecoration(
+                      label: Text("Type of sample"),
+                    ),
+                  ),
+                Row(
+                  children: [
+                    DropdownMenu<String>(
+                      width: MediaQuery.of(context).size.width - 8,
+                      hintText: "Morphology",
+                      initialSelection: sampleData["morphology"],
+                      onSelected: (String? value) {
+                        setState(() {
+                          selectedMorphology = value!;
+                        });
+                      },
+                      dropdownMenuEntries: morphologyList
+                          .map<DropdownMenuEntry<String>>((String value) {
+                        return DropdownMenuEntry<String>(
+                            value: value, label: value);
+                      }).toList(),
+                    ),
+                  ],
+                ),
+                if (selectedMorphology == "Other")
+                  TextField(
+                    controller: otherMorphologyController,
+                    decoration: const InputDecoration(
+                      label: Text("Morphology"),
+                    ),
+                  )
+              ],
+            ),
           ),
         ),
         SingleChildScrollView(
-          child: Column(
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(12.0),
-                child: Text(
-                  "Suggestions for new measurements",
-                  style: TextStyle(
-                    fontSize: 20,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Column(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(12.0),
+                  child: Text(
+                    "Previous results",
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
                   ),
                 ),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: sugDiffractionController,
-                      decoration: const InputDecoration(
-                        label: Text("Suggestion of diffraction measurements"),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: prevDiffractionController,
+                        decoration: const InputDecoration(
+                          label: Text("Previous diffraction measurements"),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: sugThermalController,
-                      decoration: const InputDecoration(
-                        label: Text("Suggestion of thermal measurements"),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: prevThermalController,
+                        decoration: const InputDecoration(
+                          label: Text("Previous thermal measurements"),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: sugOpticalController,
-                      decoration: const InputDecoration(
-                        label: Text("Suggestion of optical measurements"),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: prevOpticalController,
+                        decoration: const InputDecoration(
+                          label: Text("Previous optical measurements"),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: sugOtherController,
-                      decoration: const InputDecoration(
-                        label: Text("Other suggestion"),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: prevOtherController,
+                        decoration: const InputDecoration(
+                          label: Text("Other previous measurements"),
+                        ),
                       ),
                     ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: doiController,
+                        decoration: const InputDecoration(
+                          label: Text("doi..."),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      imageBytes != null
+                          ? Column(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    debugPrint("Image Clicked");
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      image: DecorationImage(
+                                        image: MemoryImage(imageBytes!),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    width: 200,
+                                    height: 200,
+                                  ),
+                                ),
+                                ElevatedButton(
+                                    onPressed: imagePicker,
+                                    child: const Text("Change Image")),
+                              ],
+                            )
+                          : ElevatedButton(
+                              onPressed: imagePicker,
+                              child: const Text("Add Image")),
+                    ],
                   ),
-                ],
-              ),
-            ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Column(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(12.0),
+                  child: Text(
+                    "Suggestions for new measurements",
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: sugDiffractionController,
+                        decoration: const InputDecoration(
+                          label: Text("Suggestion of diffraction measurements"),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: sugThermalController,
+                        decoration: const InputDecoration(
+                          label: Text("Suggestion of thermal measurements"),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: sugOpticalController,
+                        decoration: const InputDecoration(
+                          label: Text("Suggestion of optical measurements"),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: sugOtherController,
+                        decoration: const InputDecoration(
+                          label: Text("Other suggestion"),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
         SingleChildScrollView(
