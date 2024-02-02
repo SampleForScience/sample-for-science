@@ -131,8 +131,7 @@ class _SamplePageState extends State<SamplePage> {
                             ),
                           ),
                           Text(
-                              sampleData["code"] +
-                                  "testestetasdasdaaushdioahsodhaosudhasdhoasuhdouashdhouasdhuoashuodhouasuhdouas",
+                              sampleData["code"],
                               style: const TextStyle(fontSize: 16)),
                         ],
                       ),
@@ -149,7 +148,8 @@ class _SamplePageState extends State<SamplePage> {
                         ],
                       ),
                       const Divider(),
-                      Row(
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text("Formula: ",
                               style: TextStyle(
@@ -185,7 +185,8 @@ class _SamplePageState extends State<SamplePage> {
                         ],
                       ),
                       const Divider(),
-                      Row(
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text("Keywords: ",
                               style: TextStyle(
@@ -197,7 +198,8 @@ class _SamplePageState extends State<SamplePage> {
                         ],
                       ),
                       const Divider(),
-                      Row(
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text("Previous diffraction measurements: ",
                               style: TextStyle(
@@ -209,7 +211,8 @@ class _SamplePageState extends State<SamplePage> {
                         ],
                       ),
                       const Divider(),
-                      Row(
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text("Previous thermal measurements: ",
                               style: TextStyle(
@@ -221,7 +224,8 @@ class _SamplePageState extends State<SamplePage> {
                         ],
                       ),
                       const Divider(),
-                      Row(
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text("Previous optical measurements: ",
                               style: TextStyle(
@@ -233,7 +237,8 @@ class _SamplePageState extends State<SamplePage> {
                         ],
                       ),
                       const Divider(),
-                      Row(
+                     Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text("Other previous measurements: ",
                               style: TextStyle(
@@ -245,7 +250,8 @@ class _SamplePageState extends State<SamplePage> {
                         ],
                       ),
                       const Divider(),
-                      Row(
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text("DOI: ",
                               style: TextStyle(
@@ -257,7 +263,8 @@ class _SamplePageState extends State<SamplePage> {
                         ],
                       ),
                       const Divider(),
-                      Row(
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text("Suggestion of diffraction measurements: ",
                               style: TextStyle(
@@ -269,7 +276,8 @@ class _SamplePageState extends State<SamplePage> {
                         ],
                       ),
                       const Divider(),
-                      Row(
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text("Suggestion of thermal measurements: ",
                               style: TextStyle(
@@ -281,7 +289,8 @@ class _SamplePageState extends State<SamplePage> {
                         ],
                       ),
                       const Divider(),
-                      Row(
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text("Suggestion of optical measurements: ",
                               style: TextStyle(
@@ -293,7 +302,8 @@ class _SamplePageState extends State<SamplePage> {
                         ],
                       ),
                       const Divider(),
-                      Row(
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text("Other Suggestions: ",
                               style: TextStyle(

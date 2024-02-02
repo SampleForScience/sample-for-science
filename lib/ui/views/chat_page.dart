@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sample/services/chat_service.dart';
 
+
 class ChatPage extends StatefulWidget {
   final String receiverUserEmail;
   final String receiverUserId;
@@ -22,6 +23,7 @@ class _ChatPageState extends State<ChatPage> {
   final FirebaseAuth auth = FirebaseAuth.instance;
   final TextEditingController messageContrtoller = TextEditingController();
   final ChatService chatService = ChatService();
+  
 
   void sendMessage() async {
     if (messageContrtoller.text.isNotEmpty) {
@@ -78,6 +80,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget messageItem(DocumentSnapshot document) {
     Map<String, dynamic> data = document.data() as Map<String, dynamic>;
     DateTime timestamp = (data["timestamp"] as Timestamp).toDate();
+    
     String formattedTimestamp =
         DateFormat('dd/MM/yyyy HH:mm:ss').format(timestamp);
 
@@ -91,6 +94,7 @@ class _ChatPageState extends State<ChatPage> {
 
     Color boxColor =
         isMyMessage ? Colors.blue : Color.fromARGB(99, 58, 108, 245);
+    
 
     return Container(
       padding: const EdgeInsets.all(8.0),
@@ -121,15 +125,19 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 85, 134, 158),
         title: Row(
-          children: [
-            CircleAvatar(),
+          children: [      
+                 
+            
             SizedBox(width: 8),
             Flexible(
               child: Text(
-                '${widget.receiverUserName} (${widget.receiverUserEmail})',
+                '${widget.receiverUserName}',
+                style: TextStyle(color: Colors.white),
                 overflow: TextOverflow.ellipsis,
               ),
             ),

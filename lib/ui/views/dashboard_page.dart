@@ -48,7 +48,7 @@ class _DashboardPageState extends State<DashboardPage> {
           builder: (c) => AlertDialog(
             backgroundColor: Colors.blueGrey,
             content: const Text(
-              "Do youwant to exit the app?",
+              "Do you want to exit the app?",
               style: TextStyle(fontSize: 18, color: Colors.white),
             ),
             actions: [
@@ -103,7 +103,8 @@ class _DashboardPageState extends State<DashboardPage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
                       decoration: BoxDecoration(
-                          color: Colors.white,
+                          
+                          color: Color.fromARGB(255, 213, 227, 246),
                           borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(10),
                               topRight: Radius.circular(10),
@@ -141,17 +142,14 @@ class _DashboardPageState extends State<DashboardPage> {
                                       width: double.infinity,
                                       decoration: BoxDecoration(
                                         color: Colors.white,
-                                        borderRadius: const BorderRadius.only(
-                                            topLeft: Radius.circular(10),
-                                            topRight: Radius.circular(10),
-                                            bottomLeft: Radius.circular(10),
-                                            bottomRight: Radius.circular(10)),
+                                        borderRadius: const BorderRadius.all(Radius.circular(10)
+                                           ),
                                       ),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          const Divider(),
+                                          
                                           const Text(
                                             "Code",
                                             style: TextStyle(
@@ -293,7 +291,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
                       decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Color.fromARGB(255, 219, 240, 239),
                           borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(10),
                               topRight: Radius.circular(10),
@@ -405,7 +403,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
                       decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Color.fromARGB(255, 240, 247, 238),
                           borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(10),
                               topRight: Radius.circular(10),
