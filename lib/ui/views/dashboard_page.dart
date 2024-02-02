@@ -102,14 +102,9 @@ class _DashboardPageState extends State<DashboardPage> {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
-                      decoration: BoxDecoration(
-                          
+                      decoration: BoxDecoration(                          
                           color: Color.fromARGB(255, 213, 227, 246),
-                          borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(10),
-                              topRight: Radius.circular(10),
-                              bottomLeft: Radius.circular(10),
-                              bottomRight: Radius.circular(10)),
+                          borderRadius: const BorderRadius.all(Radius.circular(10)),
                           boxShadow: [
                             BoxShadow(
                                 color: Colors.grey.withOpacity(0.5),
@@ -121,6 +116,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           title: const Row(
                             children: [
                               Icon(Icons.science, color: Colors.black),
+                              SizedBox(width: 12),
                               Text('My Samples'),
                             ],
                           ),
@@ -145,138 +141,129 @@ class _DashboardPageState extends State<DashboardPage> {
                                         borderRadius: const BorderRadius.all(Radius.circular(10)
                                            ),
                                       ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          
-                                          const Text(
-                                            "Code",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(sampleData['code']),
-                                          const Text(
-                                            "Chemical Formula",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(sampleData['formula']),
-                                          const Text(
-                                            "Registration date",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(formatDateWithUserTimezone(
-                                              sampleData["registration"]
-                                                  .toDate())),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                    color: const Color.fromARGB(
-                                                        255, 165, 207, 228),
-                                                    borderRadius:
-                                                        const BorderRadius.only(
-                                                            topLeft:
-                                                                Radius.circular(
-                                                                    20),
-                                                            topRight:
-                                                                Radius.circular(
-                                                                    20),
-                                                            bottomLeft:
-                                                                Radius.circular(
-                                                                    20),
-                                                            bottomRight:
-                                                                Radius.circular(
-                                                                    20)),
-                                                    border: Border.all(
-                                                      color: Color.fromARGB(
-                                                          255, 165, 207, 228),
-                                                      width: 5,
-                                                    )),
-                                                child: Row(
-                                                  children: [
-                                                    PublicationButton(
-                                                        sampleData: sampleData),
-                                                    IconButton(
-                                                      onPressed: () {
-                                                        showDialog(
-                                                          context: context,
-                                                          builder: (BuildContext
-                                                              context) {
-                                                            return AlertDialog(
-                                                              title: const Text(
-                                                                  "Confirm Deletion"),
-                                                              content: const Text(
-                                                                  "Are you sure you want to delete this sample?"),
-                                                              actions: [
-                                                                TextButton(
-                                                                  onPressed:
-                                                                      () {
-                                                                    Navigator.of(
-                                                                            context)
-                                                                        .pop(); // Fecha o diálogo
-                                                                  },
-                                                                  child: const Text(
-                                                                      "Cancel"),
-                                                                ),
-                                                                TextButton(
-                                                                  onPressed:
-                                                                      () {
-                                                                    db
-                                                                        .collection(
-                                                                            "samples")
-                                                                        .doc(sampleData[
-                                                                            "id"])
-                                                                        .delete()
-                                                                        .then(
-                                                                          (doc) =>
-                                                                              debugPrint("Sample deleted"),
-                                                                          onError: (e) =>
-                                                                              debugPrint("Error updating document $e"),
-                                                                        );
-                                                                    provider
-                                                                        .getMySamples();
-                                                                    Navigator.of(
-                                                                            context)
-                                                                        .pop();
-                                                                  },
-                                                                  child: const Text(
-                                                                      "Delete"),
-                                                                ),
-                                                              ],
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Text(
+                                              "Code",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(sampleData['code']),
+                                            const Text(
+                                              "Chemical Formula",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(sampleData['formula']),
+                                            const Text(
+                                              "Registration date",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(formatDateWithUserTimezone(
+                                                sampleData["registration"]
+                                                    .toDate())),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets.only(top:8.0),
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                        color: const Color.fromARGB(255, 213, 227, 246),
+                                                        borderRadius:
+                                                            const BorderRadius.all(Radius.circular(20),),
+                                                        border: Border.all(
+                                                          color: Color.fromARGB(255, 213, 227, 246),
+                                                          width: 5,
+                                                        )),
+                                                    child: Row(
+                                                      children: [
+                                                        PublicationButton(
+                                                            sampleData: sampleData),
+                                                        IconButton(
+                                                          onPressed: () {
+                                                            showDialog(
+                                                              context: context,
+                                                              builder: (BuildContext
+                                                                  context) {
+                                                                return AlertDialog(
+                                                                  title: const Text(
+                                                                      "Confirm Deletion"),
+                                                                  content: const Text(
+                                                                      "Are you sure you want to delete this sample?"),
+                                                                  actions: [
+                                                                    TextButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator.of(
+                                                                                context)
+                                                                            .pop(); // Fecha o diálogo
+                                                                      },
+                                                                      child: const Text(
+                                                                          "Cancel"),
+                                                                    ),
+                                                                    TextButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        db
+                                                                            .collection(
+                                                                                "samples")
+                                                                            .doc(sampleData[
+                                                                                "id"])
+                                                                            .delete()
+                                                                            .then(
+                                                                              (doc) =>
+                                                                                  debugPrint("Sample deleted"),
+                                                                              onError: (e) =>
+                                                                                  debugPrint("Error updating document $e"),
+                                                                            );
+                                                                        provider
+                                                                            .getMySamples();
+                                                                        Navigator.of(
+                                                                                context)
+                                                                            .pop();
+                                                                      },
+                                                                      child: const Text(
+                                                                          "Delete"),
+                                                                    ),
+                                                                  ],
+                                                                );
+                                                              },
                                                             );
                                                           },
-                                                        );
-                                                      },
-                                                      icon: const Icon(
-                                                        Icons.delete,
-                                                        color: Colors.black,
-                                                      ),
+                                                          icon: const Icon(
+                                                            Icons.delete,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                        IconButton(
+                                                          onPressed: () {
+                                                            Navigator.pushNamed(
+                                                              context,
+                                                              "/update-sample",
+                                                              arguments: sampleData,
+                                                            );
+                                                          },
+                                                          icon: const Icon(
+                                                            Icons.edit,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                        SeeSampleButton(sampleData: sampleData),
+                                                      ],
                                                     ),
-                                                    IconButton(
-                                                      onPressed: () {
-                                                        Navigator.pushNamed(
-                                                          context,
-                                                          "/update-sample",
-                                                          arguments: sampleData,
-                                                        );
-                                                      },
-                                                      icon: const Icon(
-                                                        Icons.edit,
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
-                                                    SeeSampleButton(sampleData: sampleData),
-                                                  ],
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   );
@@ -292,11 +279,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     child: Container(
                       decoration: BoxDecoration(
                           color: Color.fromARGB(255, 219, 240, 239),
-                          borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(10),
-                              topRight: Radius.circular(10),
-                              bottomLeft: Radius.circular(10),
-                              bottomRight: Radius.circular(10)),
+                          borderRadius: const BorderRadius.all(Radius.circular(10)),
                           boxShadow: [
                             BoxShadow(
                                 color: Colors.grey.withOpacity(0.5),
@@ -308,6 +291,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           title: const Row(
                             children: [
                               Icon(Icons.star, color: Colors.black),
+                              SizedBox(width:12),
                               Text('Favorite Samples'),
                             ],
                           ),
@@ -321,74 +305,74 @@ class _DashboardPageState extends State<DashboardPage> {
                               : provider.favoriteSamples.map((favSample) {
                                   return ListTile(
                                     // title: Text("${favSample}"),
-                                    title: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const Text(
-                                          "Code",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(favSample["code"]),
-                                        const Text(
-                                          "Chemical Formula",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(favSample["formula"]),
-                                        const Text(
-                                          "Registration date",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(formatDateWithUserTimezone(
-                                            favSample["registration"]
-                                                .toDate())),
-                                       Row(
-                                        mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                         children: [
-                                           Container(
-                                            decoration: BoxDecoration(
-                                              color: const Color.fromARGB(
-                                                        255, 165, 207, 228),
-                                                    borderRadius:
-                                                        const BorderRadius.only(
-                                                            topLeft:
-                                                                Radius.circular(
-                                                                    20),
-                                                            topRight:
-                                                                Radius.circular(
-                                                                    20),
-                                                            bottomLeft:
-                                                                Radius.circular(
-                                                                    20),
-                                                            bottomRight:
-                                                                Radius.circular(
-                                                                    20)),
-                                                    border: Border.all(
-                                                      color: Color.fromARGB(
-                                                          255, 165, 207, 228),
-                                                      width: 5,
-                                                    )
-                                            ),
-                                             child: Row(                                              
-                                                  children: [
-                                                    if (favSample["provider"] !=
-                                                        auth.currentUser!.uid)
-                                                      FavoriteProviderButton(
-                                                          providerData: favSample[
-                                                              "providerData"]),
-                                                    FavoriteSampleButton(
-                                                        sampleData: favSample),
-                                                    SeeSampleButton(sampleData: favSample)
-                                                  ],
-                                                ),
+                                    title: Container(
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: const BorderRadius.all(Radius.circular(10)
                                            ),
-                                         ],
-                                       )
-                                        ],                                        
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Text(
+                                              "Code",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(favSample["code"]),
+                                            const Text(
+                                              "Chemical Formula",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(favSample["formula"]),
+                                            const Text(
+                                              "Registration date",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(formatDateWithUserTimezone(
+                                                favSample["registration"]
+                                                    .toDate())),
+                                           Row(
+                                            mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                             children: [
+                                               Padding(
+                                                 padding: const EdgeInsets.only(top: 8.0),
+                                                 child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: const Color.fromARGB(255, 219, 240, 239),
+                                                          borderRadius:
+                                                              const BorderRadius.all(Radius.circular(20)),
+                                                          border: Border.all(
+                                                            color: Color.fromARGB(255, 219, 240, 239),
+                                                            width: 5,
+                                                          )
+                                                  ),
+                                                   child: Row(                                              
+                                                        children: [
+                                                          if (favSample["provider"] !=
+                                                              auth.currentUser!.uid)
+                                                            FavoriteProviderButton(
+                                                                providerData: favSample[
+                                                                    "providerData"]),
+                                                          FavoriteSampleButton(
+                                                              sampleData: favSample),
+                                                          SeeSampleButton(sampleData: favSample)
+                                                        ],
+                                                      ),
+                                                 ),
+                                               ),
+                                             ],
+                                           )
+                                            ],                                        
+                                        ),
+                                      ),
                                     ),
                                     
                                   );
@@ -432,71 +416,70 @@ class _DashboardPageState extends State<DashboardPage> {
                                 ]
                               : provider.favoriteProviders.map((providerData) {
                                   return ListTile(
-                                    title: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const Text("Provider",
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            )),
-                                        Text(
-                                            "Name: ${providerData['name']}\nEmail: ${providerData['email']}",
-                                            style:
-                                                const TextStyle(fontSize: 16)),
-                                        if (auth.currentUser!.uid !=
-                                            providerData["id"])
-                                          Row(
-                                            mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                            children: [
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                  color: const Color.fromARGB(
-                                                            255, 165, 207, 228),
-                                                        borderRadius:
-                                                            const BorderRadius.only(
-                                                                topLeft:
-                                                                    Radius.circular(
-                                                                        20),
-                                                                topRight:
-                                                                    Radius.circular(
-                                                                        20),
-                                                                bottomLeft:
-                                                                    Radius.circular(
-                                                                        20),
-                                                                bottomRight:
-                                                                    Radius.circular(
-                                                                        20)),
-                                                        border: Border.all(
-                                                          color: Color.fromARGB(
-                                                              255, 165, 207, 228),
-                                                          width: 5,
-                                                        )
-                                                ),
-                                                child: Row(
-                                                                                                      
-                                                  children: [
-                                                    FavoriteProviderButton(
-                                                        providerData: providerData),
-                                                    IconButton(
-                                                      onPressed: () {
-                                                        Navigator.pushNamed(
-                                                          context,
-                                                          "/provider",
-                                                          arguments: providerData,
-                                                        );
-                                                      },
-                                                      icon: const Icon(Icons
-                                                          .sticky_note_2_outlined),
-                                                    )
-                                                  ],
-                                                ),
+                                    title: Container(
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: const BorderRadius.all(Radius.circular(10)
+                                           ),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Text("Provider",
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                )),
+                                            Text(
+                                                "Name: ${providerData['name']}\nEmail: ${providerData['email']}",
+                                                style:
+                                                    const TextStyle(fontSize: 16)),
+                                            if (auth.currentUser!.uid !=
+                                                providerData["id"])
+                                              Row(
+                                                mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                children: [
+                                                  Padding(
+                                                    padding: const EdgeInsets.only(top:8.0),
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                        color: const Color.fromARGB(255, 240, 247, 238),
+                                                              borderRadius:
+                                                                  const BorderRadius.all(Radius.circular(20)),
+                                                              border: Border.all(
+                                                                color: Color.fromARGB(255, 240, 247, 238),
+                                                                width: 5,
+                                                              )
+                                                      ),
+                                                      child: Row(                                                                                                        
+                                                        children: [
+                                                          FavoriteProviderButton(
+                                                              providerData: providerData),
+                                                          IconButton(
+                                                            onPressed: () {
+                                                              Navigator.pushNamed(
+                                                                context,
+                                                                "/provider",
+                                                                arguments: providerData,
+                                                              );
+                                                            },
+                                                            icon: const Icon(Icons
+                                                                .sticky_note_2_outlined),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                            ],
-                                          ),
-                                      ],
+                                          ],
+                                        ),
+                                      ),
                                     ),
                                   );
                                 }).toList()),
