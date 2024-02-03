@@ -1,7 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:sample/providers/sample_provider.dart';
+import "package:cloud_firestore/cloud_firestore.dart";
+import "package:flutter/material.dart";
+import "package:provider/provider.dart";
+import "package:sample/providers/sample_provider.dart";
 
 class PublicationButton extends StatefulWidget {
   final Map<String, dynamic> sampleData;
@@ -21,7 +21,30 @@ class _PublicationButtonState extends State<PublicationButton> {
       builder: (context, provider, child) {
         return IconButton(
           onPressed: () {
-            debugPrint("publicationStatus button clicked..."); // TODO: função para mudar status
+            // TODO: Mostrar popup perguntando se quer tornar a amostra !publicationStatus
+            DocumentReference<Map<String, dynamic>> docRef = FirebaseFirestore.instance.collection("samples").doc(widget.sampleData["id"]);
+
+            // Navigator.pushReplacementNamed(context, "/dashboard");
+
+            if(widget.sampleData["publicationStatus"] == "Public") {
+              docRef.update({"publicationStatus": "Private"}).then((_) {
+                setState(() {
+                  widget.sampleData["publicationStatus"] = "Private";
+                });
+                debugPrint("Updated!");
+              }).catchError((e) {
+                debugPrint("Erro updating: $e");
+              });
+            } else {
+              docRef.update({"publicationStatus": "Public"}).then((_) {
+                setState(() {
+                  widget.sampleData["publicationStatus"] = "Public";
+                });
+                debugPrint("Updated!");
+              }).catchError((e) {
+                debugPrint("Erro updating: $e");
+              });
+            }
           },
           icon: widget.sampleData["publicationStatus"] == "Public"
             ? const Icon(Icons.visibility_rounded, color: Colors.black,)

@@ -19,7 +19,7 @@ class _SamplePageState extends State<SamplePage> {
   final storage = FirebaseStorage.instance;
   final auth = FirebaseAuth.instance;
   late Map<String, dynamic> providerData;
-  late Map<String, dynamic> sampleData;
+  late Map<String, dynamic> sampleData; // TODO: iniciar com valores padrão para não dar erro quando a amostra não carregar
   Uint8List? imageBytes;
 
   Future<void> waitingSampleData() async{
@@ -463,6 +463,29 @@ class _SamplePageState extends State<SamplePage> {
                             },
                             child: const Text("SeeProvider")
                           )
+                        ],
+                      ),
+                      if (auth.currentUser!.uid == providerData["id"])Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                context,
+                                "/update-sample",
+                                arguments: sampleData,
+                              );
+                            },
+                            child: const Row(
+                              children: [
+                                Text("Edit Sample "),
+                                Icon(
+                                  Icons.edit,
+                                  color: Colors.blue,
+                                )
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ],
