@@ -456,12 +456,29 @@ class _SamplePageState extends State<SamplePage> {
                       if (auth.currentUser!.uid != providerData["id"])Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          FavoriteSampleButton(sampleData: sampleData),
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.pushNamed(context, "/provider", arguments: providerData,);
-                            },
-                            child: const Text("SeeProvider")
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.pushNamed(context, "/provider", arguments: providerData,);
+                                },
+                                child: const SizedBox(
+                                  width: 120,
+                                  child: Center(child: Text("See Provider"))
+                                )
+                              ),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.pushNamed(context, "/provider", arguments: providerData,);
+                                  },
+                                  child: const SizedBox(
+                                    width: 120,
+                                    child: Center(child: Text("Contact Provider"))
+                                  )
+                              ),
+                              FavoriteSampleButton(sampleData: sampleData),
+                            ],
                           )
                         ],
                       ),
