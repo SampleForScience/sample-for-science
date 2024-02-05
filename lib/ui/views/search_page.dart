@@ -22,7 +22,7 @@ class _SearchPageState extends State<SearchPage> {
   final db = FirebaseFirestore.instance;
   final auth = FirebaseAuth.instance;
   int page = 1;
-  int limit = 500;
+  int limitPerPage = 10;
   int count = 0;
   bool searching = false;
   List<Map<String, dynamic>> foundSamples = [];
@@ -117,7 +117,6 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
-  // TODO: limitar quantidade de itens listados em 500
   Future<void> searchSamples(String toSearch) async {
     setState(() {
       foundSamples = [];
@@ -296,8 +295,9 @@ class _SearchPageState extends State<SearchPage> {
         }
       }
     }
-    for (int i = 0; i < foundSamples.length; i += 5) {
-      int end = i + 5;
+    // TODO: trocar pelo limitPerPage
+    for (int i = 0; i < foundSamples.length; i += limitPerPage) {
+      int end = i + limitPerPage;
       if (end > foundSamples.length) {
         end = foundSamples.length;
       }
@@ -312,7 +312,7 @@ class _SearchPageState extends State<SearchPage> {
     Provider.of<SampleProvider>(context, listen: false).getMySamples();
     Provider.of<SampleProvider>(context, listen: false).getFavoriteProviders();
     Provider.of<SampleProvider>(context, listen: false).getFavoriteSamples();
-    getSamples(limit);
+    getSamples(500);
   }
 
   @override
@@ -502,8 +502,8 @@ class _SearchPageState extends State<SearchPage> {
                     },
                     child: const Text("<")
                 ),
-                Text("showing  ${limit * (page - 1) + 1} - ${limit * page >= count ? count : limit * page}  of  $count"),
-                ((limit * page) >= count)
+                Text("showing  ${limitPerPage * (page - 1) + 1} - ${limitPerPage * page >= count ? count : limitPerPage * page}  of  $count"),
+                ((limitPerPage * page) >= count)
                     ? const TextButton(
                     onPressed: null,
                     child: Text(">")
