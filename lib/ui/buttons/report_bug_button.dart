@@ -29,7 +29,7 @@ class _ReportBugButtonState extends State<ReportBugButton> {
       title: const Row(
         children: [
           Icon(Icons.bug_report, color: Colors.white70),
-          Text(" Report Bug", style: TextStyle(color: Colors.white70)),
+          Text(" Report a bug", style: TextStyle(color: Colors.white70)),
         ],
       ),
       onTap: () {
@@ -56,7 +56,7 @@ class _ReportBugButtonState extends State<ReportBugButton> {
                       ],
                     ),
                   ],
-                  title: Center(child: const Text('Report a Bug')),
+                  title: const Center(child: Text('Report a bug')),
                   content: Container(
                     height: 150,
                     width: 300,
