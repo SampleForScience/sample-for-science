@@ -21,6 +21,7 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   final db = FirebaseFirestore.instance;
   final auth = FirebaseAuth.instance;
+  String anim = "next";
   int page = 1;
   int limitPerPage = 10;
   int count = 0;
@@ -342,7 +343,20 @@ class _SearchPageState extends State<SearchPage> {
           if (samplesToShow.isNotEmpty)
             Expanded(
               child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 1000),
+                duration: const Duration(milliseconds: 200),
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  return SlideTransition(
+                    position:
+                    Tween<Offset>(
+                      begin: anim == "next"
+                          ? const Offset(2.0, 0.0)
+                          : const Offset(-2.0, 0.0)
+                      ,
+                      end: Offset.zero,
+                    ).animate(animation),
+                    child: child,
+                  );
+                },
                 child: ListView.builder(
                   key: UniqueKey(),
                   itemCount: samplesToShow.length,
@@ -433,6 +447,7 @@ class _SearchPageState extends State<SearchPage> {
                     : TextButton(
                     onPressed: () {
                       setState(() {
+                        anim = "previous";
                         page -= 1;
                         samplesToShow = paginatedSamples[page - 1];
                       });
@@ -448,6 +463,7 @@ class _SearchPageState extends State<SearchPage> {
                     : TextButton(
                     onPressed: () {
                       setState(() {
+                        anim = "next";
                         page += 1;
                         samplesToShow = paginatedSamples[page - 1];
                       });
