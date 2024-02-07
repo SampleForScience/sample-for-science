@@ -29,7 +29,7 @@ class _ReportBugButtonState extends State<ReportBugButton> {
       title: const Row(
         children: [
           Icon(Icons.bug_report, color: Colors.white70),
-          Text(" Report Bug", style: TextStyle(color: Colors.white70)),
+          Text(" Report a bug", style: TextStyle(color: Colors.white70)),
         ],
       ),
       onTap: () {
@@ -39,29 +39,30 @@ class _ReportBugButtonState extends State<ReportBugButton> {
             builder: (context) => AlertDialog(
                   actions: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        TextButton(
+                        ElevatedButton(
                           onPressed: () => {},
                           child: const Text('Send',
                               style: TextStyle(fontSize: 16)),
                         ),
-                        TextButton(
+                        ElevatedButton(
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
-                          child: const Text('Close'),
+                          child: const Text('Close',
+                              style: TextStyle(fontSize: 16)),
                         ),
                       ],
                     ),
                   ],
-                  title: Center(child: const Text('Report a Bug')),
+                  title: const Center(child: Text('Report a bug')),
                   content: Container(
                     height: 150,
                     width: 300,
                     child: Column(
                       children: [
-                        Text("Describe in detail the bug you found"),
+                        Text("Describe in details the bug you found"),
                         Container(
                           width: 280,
                           decoration: BoxDecoration(
