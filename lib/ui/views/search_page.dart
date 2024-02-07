@@ -22,7 +22,7 @@ class _SearchPageState extends State<SearchPage> {
   final db = FirebaseFirestore.instance;
   final auth = FirebaseAuth.instance;
   int page = 1;
-  int limit = 5;
+  int limitPerPage = 10;
   int count = 0;
   bool searching = false;
   List<Map<String, dynamic>> foundSamples = [];
@@ -40,72 +40,75 @@ class _SearchPageState extends State<SearchPage> {
     setState(() {
       foundSamples = [];
     });
-    late Map<String, dynamic> sampleData;
+    // late Map<String, dynamic> sampleData;
     try {
       await db.collection("samples").limit(limit).get().then((querySnapshot) async {
-        final samples = querySnapshot.docs;
-        for (var sample in samples) {
-          Map<String, dynamic> providerData = {};
-          await db
-              .collection("users")
-              .where("id", isEqualTo: sample.data()["provider"])
-              .get()
-              .then((querySnapshot) async {
-            final users = querySnapshot.docs;
-            for (var user in users) {
-              setState(() {
-                providerData = {
-                  "id": user.data()["id"],
-                  "name": user.data()["name"],
-                  "email": user.data()["email"],
-                  "address": user.data()["address"],
-                  "country": user.data()["country"],
-                  "department": user.data()["department"],
-                  "google_scholar": user.data()["google_scholar"],
-                  "institution": user.data()["institution"],
-                  "mobile": user.data()["mobile"],
-                  "orcid": user.data()["orcid"],
-                  "other": user.data()["other"],
-                  "webpage": user.data()["webpage"],
-                };
-              });
-            }
-          }, onError: (e) {
-            debugPrint("Error completing: $e");
-          });
-          sampleData = {
-            "id": sample.data()["id"],
-            "provider": sample.data()["provider"],
-            "number": sample.data()["number"],
-            "code": sample.data()["code"],
-            "formula": sample.data()["formula"],
-            "keywords": sample.data()["keywords"],
-            "type": sample.data()["type"],
-            "morphology": sample.data()["morphology"],
-            "previousDiffraction": sample.data()["previousDiffraction"],
-            "previousThermal": sample.data()["previousThermal"],
-            "previousOptical": sample.data()["previousOptical"],
-            "otherPrevious": sample.data()["otherPrevious"],
-            "doi": sample.data()["doi"],
-            "suggestionDiffraction": sample.data()["suggestionDiffraction"],
-            "suggestionThermal": sample.data()["suggestionThermal"],
-            "suggestionOptical": sample.data()["suggestionOptical"],
-            "otherSuggestions": sample.data()["otherSuggestions"],
-            "hazardous": sample.data()["hazardous"],
-            "animals": sample.data()["animals"],
-            "image": sample.data()["image"],
-            "publicationStatus": sample.data()["publicationStatus"],
-            "search": sample.data()["search"],
-            "registration": sample.data()["registration"],
-            "providerData": providerData,
-          };
-          setState(() {
-            if (sampleData["publicationStatus"] == "Public") {
-              foundSamples.add(sampleData);
-            }
-          });
-        }
-        samplesToShow = foundSamples;
+        processSearchQuerySnapshot(querySnapshot, "");
+
+        // final samples = querySnapshot.docs;
+        //
+        // for (var sample in samples) {
+        //   Map<String, dynamic> providerData = {};
+        //   await db
+        //       .collection("users")
+        //       .where("id", isEqualTo: sample.data()["provider"])
+        //       .get()
+        //       .then((querySnapshot) async {
+        //     final users = querySnapshot.docs;
+        //     for (var user in users) {
+        //       setState(() {
+        //         providerData = {
+        //           "id": user.data()["id"],
+        //           "name": user.data()["name"],
+        //           "email": user.data()["email"],
+        //           "address": user.data()["address"],
+        //           "country": user.data()["country"],
+        //           "department": user.data()["department"],
+        //           "google_scholar": user.data()["google_scholar"],
+        //           "institution": user.data()["institution"],
+        //           "mobile": user.data()["mobile"],
+        //           "orcid": user.data()["orcid"],
+        //           "other": user.data()["other"],
+        //           "webpage": user.data()["webpage"],
+        //         };
+        //       });
+        //     }
+        //   }, onError: (e) {
+        //     debugPrint("Error completing: $e");
+        //   });
+        //   sampleData = {
+        //     "id": sample.data()["id"],
+        //     "provider": sample.data()["provider"],
+        //     "number": sample.data()["number"],
+        //     "code": sample.data()["code"],
+        //     "formula": sample.data()["formula"],
+        //     "keywords": sample.data()["keywords"],
+        //     "type": sample.data()["type"],
+        //     "morphology": sample.data()["morphology"],
+        //     "previousDiffraction": sample.data()["previousDiffraction"],
+        //     "previousThermal": sample.data()["previousThermal"],
+        //     "previousOptical": sample.data()["previousOptical"],
+        //     "otherPrevious": sample.data()["otherPrevious"],
+        //     "doi": sample.data()["doi"],
+        //     "suggestionDiffraction": sample.data()["suggestionDiffraction"],
+        //     "suggestionThermal": sample.data()["suggestionThermal"],
+        //     "suggestionOptical": sample.data()["suggestionOptical"],
+        //     "otherSuggestions": sample.data()["otherSuggestions"],
+        //     "hazardous": sample.data()["hazardous"],
+        //     "animals": sample.data()["animals"],
+        //     "image": sample.data()["image"],
+        //     "publicationStatus": sample.data()["publicationStatus"],
+        //     "search": sample.data()["search"],
+        //     "registration": sample.data()["registration"],
+        //     "providerData": providerData,
+        //   };
+        //   setState(() {
+        //     if (sampleData["publicationStatus"] == "Public") {
+        //       foundSamples.add(sampleData);
+        //     }
+        //   });
+        // }
+        // samplesToShow = foundSamples;
       }, onError: (e) {
         debugPrint("Error completing: $e");
       });
@@ -114,7 +117,6 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
-  // TODO: limitar quantidade de itens listados
   Future<void> searchSamples(String toSearch) async {
     setState(() {
       foundSamples = [];
@@ -131,6 +133,8 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
+
+  // TODO: passar querysnapshot como parâmetro pra não precisar fazer busca extra pra contar amostras encontradas
   Future<void> countFoundSamples(String toSearch) async {
     setState(() {
       count = 0;
@@ -154,14 +158,15 @@ class _SearchPageState extends State<SearchPage> {
 
   // TODO: limitar quantidade de itens listados
   Future<void> processSearchQuerySnapshot(QuerySnapshot<Map<String, dynamic>> querySnapshot, String toSearch) async {
+    setState(() {
+      count = 0;
+    });
+
     final samples = querySnapshot.docs;
     late Map<String, dynamic> sampleData;
 
     for (var sample in samples) {
-      if (sample
-          .data()["search"]
-          .toString()
-          .contains(toSearch.toLowerCase().replaceAll(" ", ""))) {
+      if (toSearch == "") {
         Map<String, dynamic> providerData = {};
         await db
             .collection("users")
@@ -219,21 +224,84 @@ class _SearchPageState extends State<SearchPage> {
         setState(() {
           if (sampleData["publicationStatus"] == "Public") {
             foundSamples.add(sampleData);
+            count += 1;
           }
         });
-        // int start = limit * (page - 1);
-        // int end = limit * page >= count ? count : limit * page;
-        // debugPrint("start: $start | end: $end");
-        // // samplesToShow = foundSamples.sublist(start, end);
-        // samplesToShow = foundSamples;
+      } else {
+        if (sample
+            .data()["search"]
+            .toString()
+            .contains(toSearch.toLowerCase().replaceAll(" ", ""))) {
+          Map<String, dynamic> providerData = {};
+          await db
+              .collection("users")
+              .where("id", isEqualTo: sample.data()["provider"])
+              .get()
+              .then((querySnapshot) async {
+            final users = querySnapshot.docs;
+            for (var user in users) {
+              setState(() {
+                providerData = {
+                  "id": user.data()["id"],
+                  "name": user.data()["name"],
+                  "email": user.data()["email"],
+                  "address": user.data()["address"],
+                  "country": user.data()["country"],
+                  "department": user.data()["department"],
+                  "google_scholar": user.data()["google_scholar"],
+                  "institution": user.data()["institution"],
+                  "mobile": user.data()["mobile"],
+                  "orcid": user.data()["orcid"],
+                  "other": user.data()["other"],
+                  "webpage": user.data()["webpage"],
+                };
+              });
+            }
+          }, onError: (e) {
+            debugPrint("Error completing: $e");
+          });
+          sampleData = {
+            "id": sample.data()["id"],
+            "provider": sample.data()["provider"],
+            "number": sample.data()["number"],
+            "code": sample.data()["code"],
+            "formula": sample.data()["formula"],
+            "keywords": sample.data()["keywords"],
+            "type": sample.data()["type"],
+            "morphology": sample.data()["morphology"],
+            "previousDiffraction": sample.data()["previousDiffraction"],
+            "previousThermal": sample.data()["previousThermal"],
+            "previousOptical": sample.data()["previousOptical"],
+            "otherPrevious": sample.data()["otherPrevious"],
+            "doi": sample.data()["doi"],
+            "suggestionDiffraction": sample.data()["suggestionDiffraction"],
+            "suggestionThermal": sample.data()["suggestionThermal"],
+            "suggestionOptical": sample.data()["suggestionOptical"],
+            "otherSuggestions": sample.data()["otherSuggestions"],
+            "hazardous": sample.data()["hazardous"],
+            "animals": sample.data()["animals"],
+            "image": sample.data()["image"],
+            "publicationStatus": sample.data()["publicationStatus"],
+            "search": sample.data()["search"],
+            "registration": sample.data()["registration"],
+            "providerData": providerData,
+          };
+          setState(() {
+            if (sampleData["publicationStatus"] == "Public") {
+              foundSamples.add(sampleData);
+              count += 1;
+            }
+          });
+        }
       }
     }
-    for (int i = 0; i < foundSamples.length; i += 5) {
-      int fim = i + 5;
-      if (fim > foundSamples.length) {
-        fim = foundSamples.length;
+    // TODO: trocar pelo limitPerPage
+    for (int i = 0; i < foundSamples.length; i += limitPerPage) {
+      int end = i + limitPerPage;
+      if (end > foundSamples.length) {
+        end = foundSamples.length;
       }
-      paginatedSamples.add(foundSamples.sublist(i, fim));
+      paginatedSamples.add(foundSamples.sublist(i, end));
     }
     samplesToShow = paginatedSamples[0];
   }
@@ -244,7 +312,7 @@ class _SearchPageState extends State<SearchPage> {
     Provider.of<SampleProvider>(context, listen: false).getMySamples();
     Provider.of<SampleProvider>(context, listen: false).getFavoriteProviders();
     Provider.of<SampleProvider>(context, listen: false).getFavoriteSamples();
-    getSamples(25);
+    getSamples(500);
   }
 
   @override
@@ -281,7 +349,7 @@ class _SearchPageState extends State<SearchPage> {
                               samplesToShow.clear();
                               paginatedSamples.clear();
                             });
-                            countFoundSamples(searchController.text);
+                            // countFoundSamples(searchController.text);
                             searchSamples(searchController.text);
                           }
                         },
@@ -305,7 +373,7 @@ class _SearchPageState extends State<SearchPage> {
                               paginatedSamples.clear();
                             });
                             if (searchController.text.isNotEmpty) {
-                              countFoundSamples(searchController.text);
+                              // countFoundSamples(searchController.text);
                               searchSamples(searchController.text);
                             }
                           },
@@ -416,7 +484,7 @@ class _SearchPageState extends State<SearchPage> {
                 },
               ),
             ),
-          if (foundSamples.isNotEmpty && searching)
+          if (foundSamples.isNotEmpty)
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -434,8 +502,8 @@ class _SearchPageState extends State<SearchPage> {
                     },
                     child: const Text("<")
                 ),
-                Text("showing  ${limit * (page - 1) + 1} - ${limit * page >= count ? count : limit * page}  of  $count"),
-                ((limit * page) >= count)
+                Text("showing  ${limitPerPage * (page - 1) + 1} - ${limitPerPage * page >= count ? count : limitPerPage * page}  of  $count"),
+                ((limitPerPage * page) >= count)
                     ? const TextButton(
                     onPressed: null,
                     child: Text(">")
