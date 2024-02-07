@@ -19,7 +19,7 @@ class _SamplePageState extends State<SamplePage> {
   final storage = FirebaseStorage.instance;
   final auth = FirebaseAuth.instance;
   late Map<String, dynamic> providerData;
-  late Map<String, dynamic> sampleData;
+  late Map<String, dynamic> sampleData; // TODO: iniciar com valores padrão para não dar erro quando a amostra não carregar
   Uint8List? imageBytes;
 
   Future<void> waitingSampleData() async {
@@ -136,7 +136,8 @@ class _SamplePageState extends State<SamplePage> {
                         ],
                       ),
                       const Divider(),
-                      Row(
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text("Number of samples: ",
                               style: TextStyle(
@@ -379,20 +380,62 @@ class _SamplePageState extends State<SamplePage> {
                       Text(
                           "Name: ${providerData['name']}\nEmail: ${providerData['email']}",
                           style: const TextStyle(fontSize: 16)),
+
+
+                      if (auth.currentUser!.uid == providerData["id"])Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                context,
+                                "/update-sample",
+                                arguments: sampleData,
+                              );
+                            },
+                            child: const Row(
+                              children: [
+                                Text("Edit Sample "),
+                                Icon(
+                                  Icons.edit,
+                                  color: Colors.blue,
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+
+
+
                       if (auth.currentUser!.uid != providerData["id"])
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            FavoriteSampleButton(sampleData: sampleData),
-                            ElevatedButton(
-                                onPressed: () {
-                                  Navigator.pushNamed(
-                                    context,
-                                    "/provider",
-                                    arguments: providerData,
-                                  );
-                                },
-                                child: const Text("SeeProvider"))
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.pushNamed(context, "/provider", arguments: providerData,);
+                                    },
+                                    child: const SizedBox(
+                                        width: 120,
+                                        child: Center(child: Text("See Provider"))
+                                    )
+                                ),
+                                ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.pushNamed(context, "/provider", arguments: providerData,);
+                                    },
+                                    child: const SizedBox(
+                                        width: 120,
+                                        child: Center(child: Text("Contact Provider"))
+                                    )
+                                ),
+                                FavoriteSampleButton(sampleData: sampleData),
+                              ],
+                            )
                           ],
                         ),
                     ],
