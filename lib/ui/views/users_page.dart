@@ -56,7 +56,7 @@ class _UsersPageState extends State<UsersPage> {
         final users = querySnapshot.docs;
         for (var user in users) {
           for (var chatRoom in foundChatRooms) {
-            if (chatRoom.contains(user["id"])) {
+            if (chatRoom.contains(auth.currentUser!.uid) && chatRoom.contains(user["id"])) {
               for (var userToShow in usersToShow) {
                 if (user["id"] == userToShow["id"]) {
                   alreadyFound = true;
