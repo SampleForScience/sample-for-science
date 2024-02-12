@@ -394,8 +394,14 @@ class _SearchPageState extends State<SearchPage> {
                                 "Registration date",
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
-                              Text(formatDateWithUserTimezone(
-                                  samplesToShow[index]["registration"].toDate())),
+                              Text(formatDateWithUserTimezone(samplesToShow[index]["registration"].toDate())),
+                              if (samplesToShow[index]["provider"] != auth.currentUser!.uid)
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.pushNamed(context, "/provider", arguments: samplesToShow[index]["provider"],);
+                                    },
+                                    child: const Center(child: Text("See Provider"))
+                                ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [

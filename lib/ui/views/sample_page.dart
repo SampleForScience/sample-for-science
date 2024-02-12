@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sample/ui/buttons/circular_avatar_button.dart';
 import 'package:sample/ui/buttons/favorite_sample_button.dart';
+import 'package:sample/ui/views/chat_page.dart';
 
 class SamplePage extends StatefulWidget {
   const SamplePage({super.key});
@@ -461,7 +462,7 @@ class _SamplePageState extends State<SamplePage> {
                             children: [
                               ElevatedButton(
                                 onPressed: () {
-                                  Navigator.pushNamed(context, "/provider", arguments: providerData,);
+                                  Navigator.pushNamed(context, "/provider", arguments: providerData["id"],);
                                 },
                                 child: const SizedBox(
                                   width: 120,
@@ -470,11 +471,22 @@ class _SamplePageState extends State<SamplePage> {
                               ),
                               ElevatedButton(
                                   onPressed: () {
-                                    Navigator.pushNamed(context, "/provider", arguments: providerData,);
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ChatPage(
+                                            receiverUserEmail: providerData["email"],
+                                            receiverUserId: providerData["id"],
+                                            receiverUserName: providerData["name"],
+                                          ),
+                                        )
+                                    );
                                   },
-                                  child: const SizedBox(
-                                    width: 120,
-                                    child: Center(child: Text("Contact Provider"))
+                                  child: const Row(
+                                    children: [
+                                      Text("Contact provider "),
+                                      Icon(Icons.send_sharp)
+                                    ],
                                   )
                               ),
                               FavoriteSampleButton(sampleData: sampleData),
