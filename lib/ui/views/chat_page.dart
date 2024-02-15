@@ -51,6 +51,9 @@ class _ChatPageState extends State<ChatPage> {
               ),
             ),
             controller: messageContrtoller,
+            onSubmitted: (value) {
+              sendMessage();
+            },
           ),
         ),
         IconButton(onPressed: sendMessage, icon: const Icon(Icons.send))
