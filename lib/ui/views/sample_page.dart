@@ -413,7 +413,7 @@ class _SamplePageState extends State<SamplePage> {
                               children: [
                                 ElevatedButton(
                                     onPressed: () {
-                                      Navigator.pushNamed(context, "/provider", arguments: providerData,);
+                                      Navigator.pushNamed(context, "/provider", arguments: providerData["id"],);
                                     },
                                     child: const SizedBox(
                                         width: 120,
@@ -422,12 +422,18 @@ class _SamplePageState extends State<SamplePage> {
                                 ),
                                 ElevatedButton(
                                     onPressed: () {
-                                      Navigator.pushNamed(context, "/provider", arguments: providerData,);
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => ChatPage(
+                                              receiverUserEmail: providerData["email"],
+                                              receiverUserId: providerData["id"],
+                                              receiverUserName: providerData["name"],
+                                            ),
+                                          )
+                                      );
                                     },
-                                    child: const SizedBox(
-                                        width: 120,
-                                        child: Center(child: Text("Contact Provider"))
-                                    )
+                                    child: const Text("Contact provider "),
                                 ),
                                 FavoriteSampleButton(sampleData: sampleData),
                               ],
