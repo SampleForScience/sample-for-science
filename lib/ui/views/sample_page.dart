@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sample/ui/buttons/circular_avatar_button.dart';
 import 'package:sample/ui/buttons/favorite_sample_button.dart';
+import 'package:sample/ui/views/chat_page.dart';
 
 class SamplePage extends StatefulWidget {
   const SamplePage({super.key});
@@ -35,28 +36,27 @@ class _SamplePageState extends State<SamplePage> {
     });
   }
 
-  Future<void> getProvider(String provider) async {
-    try {
-      await db.collection("users").where("id", isEqualTo: provider).get().then(
-          (querySnapshot) async {
+  Future<void> getProvider() async {
+    sampleData = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+
+    try{
+      await db.collection("users").where("id", isEqualTo: sampleData["provider"]).get().then((querySnapshot) async {
         final users = querySnapshot.docs;
         for (var user in users) {
-          setState(() {
-            providerData = {
-              "id": user.data()["id"],
-              "name": user.data()["name"],
-              "email": user.data()["email"],
-              "address": user.data()["address"],
-              "country": user.data()["country"],
-              "department": user.data()["department"],
-              "google_scholar": user.data()["google_scholar"],
-              "institution": user.data()["institution"],
-              "mobile": user.data()["mobile"],
-              "orcid": user.data()["orcid"],
-              "other": user.data()["other"],
-              "webpage": user.data()["webpage"],
-            };
-          });
+          providerData = {
+            "id": user.data()["id"],
+            "name": user.data()["name"],
+            "email": user.data()["email"],
+            "address": user.data()["address"],
+            "country": user.data()["country"],
+            "department": user.data()["department"],
+            "google_scholar": user.data()["google_scholar"],
+            "institution": user.data()["institution"],
+            "mobile": user.data()["mobile"],
+            "orcid": user.data()["orcid"],
+            "other": user.data()["other"],
+            "webpage": user.data()["webpage"],
+          };
         }
       }, onError: (e) {
         debugPrint("Error completing: $e");
@@ -74,12 +74,8 @@ class _SamplePageState extends State<SamplePage> {
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
-      setState(() {
-        sampleData =
-            ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-      });
+      Map<String, dynamic> sampleData = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
       loadSampleImage(sampleData["image"]);
-      getProvider(sampleData["provider"]);
     });
     super.initState();
   }
@@ -97,7 +93,7 @@ class _SamplePageState extends State<SamplePage> {
         ],
       ),
       body: FutureBuilder<void>(
-        future: waitingSampleData(),
+        future: getProvider(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Padding(
@@ -417,7 +413,7 @@ class _SamplePageState extends State<SamplePage> {
                               children: [
                                 ElevatedButton(
                                     onPressed: () {
-                                      Navigator.pushNamed(context, "/provider", arguments: providerData,);
+                                      Navigator.pushNamed(context, "/provider", arguments: providerData["id"],);
                                     },
                                     child: const SizedBox(
                                         width: 120,
@@ -426,12 +422,18 @@ class _SamplePageState extends State<SamplePage> {
                                 ),
                                 ElevatedButton(
                                     onPressed: () {
-                                      Navigator.pushNamed(context, "/provider", arguments: providerData,);
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => ChatPage(
+                                              receiverUserEmail: providerData["email"],
+                                              receiverUserId: providerData["id"],
+                                              receiverUserName: providerData["name"],
+                                            ),
+                                          )
+                                      );
                                     },
-                                    child: const SizedBox(
-                                        width: 120,
-                                        child: Center(child: Text("Contact Provider"))
-                                    )
+                                    child: const Text("Contact provider "),
                                 ),
                                 FavoriteSampleButton(sampleData: sampleData),
                               ],
