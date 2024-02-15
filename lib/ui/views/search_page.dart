@@ -18,7 +18,7 @@ class SearchPage extends StatefulWidget {
   State<SearchPage> createState() => _SearchPageState();
 }
 
-class _SearchPageState extends State<SearchPage> {
+class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateMixin {
   final db = FirebaseFirestore.instance;
   final auth = FirebaseAuth.instance;
   String anim = "next";
@@ -35,6 +35,18 @@ class _SearchPageState extends State<SearchPage> {
   String formatDateWithUserTimezone(DateTime dateTime) {
     final formatter = DateFormat('MM/dd/yyyy HH:mm', Intl.getCurrentLocale());
     return formatter.format(dateTime.toLocal());
+  }
+
+  List<Tab> tabs = <Tab>[
+    const Tab(text: "Samples",),
+    const Tab(text: "Users",),
+  ];
+  late TabController _tabController;
+
+  void _handleTabSelection() {
+    setState(() {
+      _tabController.index;
+    });
   }
 
   Future<void> getSamples(int limit) async {
@@ -245,10 +257,18 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(vsync: this, length: tabs.length);
+    _tabController.addListener(_handleTabSelection);
     Provider.of<SampleProvider>(context, listen: false).getMySamples();
     Provider.of<SampleProvider>(context, listen: false).getFavoriteProviders();
     Provider.of<SampleProvider>(context, listen: false).getFavoriteSamples();
     getSamples(500);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   @override
@@ -260,224 +280,452 @@ class _SearchPageState extends State<SearchPage> {
         actions: const [CircularAvatarButton()],
         centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.white),
+        bottom: TabBar(
+          labelColor: Colors.white,
+          controller: _tabController,
+          tabs: tabs,
+        ),
       ),
       drawer: const CustomDrawer(highlight: Highlight.search),
-      body: Column(
+      body: TabBarView(
+        controller: _tabController,
         children: [
-          SizedBox(
-            height: 75,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.white10,
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    border: Border.all(color: Colors.grey)),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: searchController,
-                        onSubmitted: (value) {
-                          if (value.isNotEmpty) {
-                            setState(() {
-                              foundSamples.clear();
-                              samplesToShow.clear();
-                              paginatedSamples.clear();
-                            });
-                            // countFoundSamples(searchController.text);
-                            searchSamples(searchController.text);
-                          }
-                        },
-                        decoration: const InputDecoration(
-                            hintText: ' Type here...',
-                            border: InputBorder.none),
-                      ),
+          Column(
+            children: [
+              SizedBox(
+                height: 75,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white10,
+                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        border: Border.all(color: Colors.grey)),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: searchController,
+                            onSubmitted: (value) {
+                              if (value.isNotEmpty) {
+                                setState(() {
+                                  foundSamples.clear();
+                                  samplesToShow.clear();
+                                  paginatedSamples.clear();
+                                });
+                                // countFoundSamples(searchController.text);
+                                searchSamples(searchController.text);
+                              }
+                            },
+                            decoration: const InputDecoration(
+                                hintText: ' Type here...',
+                                border: InputBorder.none),
+                          ),
+                        ),
+                        Container(
+                          alignment: Alignment.center,
+                          width: 50,
+                          height: 75,
+                          decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 85, 134, 158),
+                              borderRadius: BorderRadius.circular(8.0)),
+                          child: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  foundSamples.clear();
+                                  samplesToShow.clear();
+                                  paginatedSamples.clear();
+                                });
+                                if (searchController.text.isNotEmpty) {
+                                  // countFoundSamples(searchController.text);
+                                  searchSamples(searchController.text);
+                                }
+                              },
+                              icon: const Icon(
+                                Icons.search_rounded,
+                                color: Colors.white,
+                                size: 32,
+                              )),
+                        ),
+                      ],
                     ),
-                    Container(
-                      alignment: Alignment.center,
-                      width: 50,
-                      height: 75,
-                      decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 85, 134, 158),
-                          borderRadius: BorderRadius.circular(8.0)),
-                      child: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              foundSamples.clear();
-                              samplesToShow.clear();
-                              paginatedSamples.clear();
-                            });
-                            if (searchController.text.isNotEmpty) {
-                              // countFoundSamples(searchController.text);
-                              searchSamples(searchController.text);
-                            }
-                          },
-                          icon: const Icon(
-                            Icons.search_rounded,
-                            color: Colors.white,
-                            size: 32,
-                          )),
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ),
-          // if (searching == true)
-          //   Text("${foundSamples.length} ${foundSamples.isNotEmpty && foundSamples.length > 1 ? 'samples' : 'sample'} found"),
-          if (searching == true)
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  searching = false;
-                  searchController.text = "";
-                  count = 0;
-                  foundSamples.clear();
-                  samplesToShow.clear();
-                  paginatedSamples.clear();
-                });
-              },
-              child: const Text("Clear Search"),
-            ),
-          if (samplesToShow.isNotEmpty)
-            Expanded(
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 200),
-                transitionBuilder: (Widget child, Animation<double> animation) {
-                  return SlideTransition(
-                    position:
-                    Tween<Offset>(
-                      begin: anim == "next"
-                          ? const Offset(2.0, 0.0)
-                          : const Offset(-2.0, 0.0)
-                      ,
-                      end: Offset.zero,
-                    ).animate(animation),
-                    child: child,
-                  );
-                },
-                child: ListView.builder(
-                  key: UniqueKey(),
-                  itemCount: samplesToShow.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 5,
-                              blurRadius: 7,
-                              offset: const Offset(4, 8),
-                            ),
-                          ],
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Code",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Text(samplesToShow[index]['code']),
-                              const Text(
-                                "Chemical Formula",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Text(samplesToShow[index]['formula']),
-                              const Text(
-                                "Registration date",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Text(formatDateWithUserTimezone(samplesToShow[index]["registration"].toDate())),
-                              if (samplesToShow[index]["provider"] != auth.currentUser!.uid)
-                                TextButton(
-                                    onPressed: () {
-                                      Navigator.pushNamed(context, "/provider", arguments: samplesToShow[index]["provider"],);
-                                    },
-                                    child: const Center(child: Text("See Provider"))
+              // if (searching == true)
+              //   Text("${foundSamples.length} ${foundSamples.isNotEmpty && foundSamples.length > 1 ? 'samples' : 'sample'} found"),
+              if (searching == true)
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      searching = false;
+                      searchController.text = "";
+                      count = 0;
+                      foundSamples.clear();
+                      samplesToShow.clear();
+                      paginatedSamples.clear();
+                    });
+                  },
+                  child: const Text("Clear Search"),
+                ),
+              if (samplesToShow.isNotEmpty)
+                Expanded(
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 200),
+                    transitionBuilder: (Widget child, Animation<double> animation) {
+                      return SlideTransition(
+                        position:
+                        Tween<Offset>(
+                          begin: anim == "next"
+                              ? const Offset(2.0, 0.0)
+                              : const Offset(-2.0, 0.0)
+                          ,
+                          end: Offset.zero,
+                        ).animate(animation),
+                        child: child,
+                      );
+                    },
+                    child: ListView.builder(
+                      key: UniqueKey(),
+                      itemCount: samplesToShow.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          title: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: const BorderRadius.all(Radius.circular(10)),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 5,
+                                  blurRadius: 7,
+                                  offset: const Offset(4, 8),
                                 ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                              ],
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: const Color.fromARGB(255, 165, 207, 228),
-                                      borderRadius:
-                                      const BorderRadius.all(Radius.circular(20)),
-                                      border: Border.all(
-                                        color: const Color.fromARGB(255, 165, 207, 228),
-                                        width: 5,
+                                  const Text(
+                                    "Code",
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(samplesToShow[index]['code']),
+                                  const Text(
+                                    "Chemical Formula",
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(samplesToShow[index]['formula']),
+                                  const Text(
+                                    "Registration date",
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(formatDateWithUserTimezone(samplesToShow[index]["registration"].toDate())),
+                                  if (samplesToShow[index]["provider"] != auth.currentUser!.uid)
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.pushNamed(context, "/provider", arguments: samplesToShow[index]["provider"],);
+                                        },
+                                        child: const Center(child: Text("See Provider"))
+                                    ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: const Color.fromARGB(255, 165, 207, 228),
+                                          borderRadius:
+                                          const BorderRadius.all(Radius.circular(20)),
+                                          border: Border.all(
+                                            color: const Color.fromARGB(255, 165, 207, 228),
+                                            width: 5,
+                                          ),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            if (samplesToShow[index]["provider"] !=
+                                                auth.currentUser!.uid)
+                                              FavoriteProviderButton(
+                                                  providerData:
+                                                  samplesToShow[index]["providerData"]),
+                                            if (samplesToShow[index]["provider"] !=
+                                                auth.currentUser!.uid)
+                                              FavoriteSampleButton(
+                                                  sampleData: samplesToShow[index]),
+                                            SeeSampleButton(sampleData: samplesToShow[index]),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        if (samplesToShow[index]["provider"] !=
-                                            auth.currentUser!.uid)
-                                          FavoriteProviderButton(
-                                              providerData:
-                                              samplesToShow[index]["providerData"]),
-                                        if (samplesToShow[index]["provider"] !=
-                                            auth.currentUser!.uid)
-                                          FavoriteSampleButton(
-                                              sampleData: samplesToShow[index]),
-                                        SeeSampleButton(sampleData: samplesToShow[index]),
-                                      ],
-                                    ),
+                                    ],
                                   ),
                                 ],
                               ),
-                            ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              if (foundSamples.isNotEmpty)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    page <= 1
+                        ? const TextButton(
+                        onPressed: null,
+                        child: Text("<")
+                    )
+                        : TextButton(
+                        onPressed: () {
+                          setState(() {
+                            anim = "previous";
+                            page -= 1;
+                            samplesToShow = paginatedSamples[page - 1];
+                          });
+                        },
+                        child: const Text("<")
+                    ),
+                    Text("showing  ${limitPerPage * (page - 1) + 1} - ${limitPerPage * page >= count ? count : limitPerPage * page}  of  $count"),
+                    ((limitPerPage * page) >= count)
+                        ? const TextButton(
+                        onPressed: null,
+                        child: Text(">")
+                    )
+                        : TextButton(
+                        onPressed: () {
+                          setState(() {
+                            anim = "next";
+                            page += 1;
+                            samplesToShow = paginatedSamples[page - 1];
+                          });
+                        },
+                        child: const Text(">")
+                    ),
+                  ],
+                ),
+            ],
+          ),
+          Column(
+            children: [
+              SizedBox(
+                height: 75,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white10,
+                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        border: Border.all(color: Colors.grey)),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: searchController,
+                            onSubmitted: (value) {
+                              if (value.isNotEmpty) {
+                                setState(() {
+                                  foundSamples.clear();
+                                  samplesToShow.clear();
+                                  paginatedSamples.clear();
+                                });
+                                // countFoundSamples(searchController.text);
+                                searchSamples(searchController.text);
+                              }
+                            },
+                            decoration: const InputDecoration(
+                                hintText: ' Type here...',
+                                border: InputBorder.none),
                           ),
                         ),
-                      ),
-                    );
-                  },
+                        Container(
+                          alignment: Alignment.center,
+                          width: 50,
+                          height: 75,
+                          decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 85, 134, 158),
+                              borderRadius: BorderRadius.circular(8.0)),
+                          child: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  foundSamples.clear();
+                                  samplesToShow.clear();
+                                  paginatedSamples.clear();
+                                });
+                                if (searchController.text.isNotEmpty) {
+                                  // countFoundSamples(searchController.text);
+                                  searchSamples(searchController.text);
+                                }
+                              },
+                              icon: const Icon(
+                                Icons.search_rounded,
+                                color: Colors.white,
+                                size: 32,
+                              )),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
-          if (foundSamples.isNotEmpty)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                page <= 1
-                    ? const TextButton(
-                    onPressed: null,
-                    child: Text("<")
-                )
-                    : TextButton(
-                    onPressed: () {
-                      setState(() {
-                        anim = "previous";
-                        page -= 1;
-                        samplesToShow = paginatedSamples[page - 1];
-                      });
-                    },
-                    child: const Text("<")
+              // if (searching == true)
+              //   Text("${foundSamples.length} ${foundSamples.isNotEmpty && foundSamples.length > 1 ? 'samples' : 'sample'} found"),
+              if (searching == true)
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      searching = false;
+                      searchController.text = "";
+                      count = 0;
+                      foundSamples.clear();
+                      samplesToShow.clear();
+                      paginatedSamples.clear();
+                    });
+                  },
+                  child: const Text("Clear Search"),
                 ),
-                Text("showing  ${limitPerPage * (page - 1) + 1} - ${limitPerPage * page >= count ? count : limitPerPage * page}  of  $count"),
-                ((limitPerPage * page) >= count)
-                    ? const TextButton(
-                    onPressed: null,
-                    child: Text(">")
-                )
-                    : TextButton(
-                    onPressed: () {
-                      setState(() {
-                        anim = "next";
-                        page += 1;
-                        samplesToShow = paginatedSamples[page - 1];
-                      });
+              if (samplesToShow.isNotEmpty)
+                Expanded(
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 200),
+                    transitionBuilder: (Widget child, Animation<double> animation) {
+                      return SlideTransition(
+                        position:
+                        Tween<Offset>(
+                          begin: anim == "next"
+                              ? const Offset(2.0, 0.0)
+                              : const Offset(-2.0, 0.0)
+                          ,
+                          end: Offset.zero,
+                        ).animate(animation),
+                        child: child,
+                      );
                     },
-                    child: const Text(">")
+                    child: ListView.builder(
+                      key: UniqueKey(),
+                      itemCount: samplesToShow.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          title: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: const BorderRadius.all(Radius.circular(10)),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 5,
+                                  blurRadius: 7,
+                                  offset: const Offset(4, 8),
+                                ),
+                              ],
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    "Code",
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(samplesToShow[index]['code']),
+                                  const Text(
+                                    "Chemical Formula",
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(samplesToShow[index]['formula']),
+                                  const Text(
+                                    "Registration date",
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(formatDateWithUserTimezone(samplesToShow[index]["registration"].toDate())),
+                                  if (samplesToShow[index]["provider"] != auth.currentUser!.uid)
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.pushNamed(context, "/provider", arguments: samplesToShow[index]["provider"],);
+                                        },
+                                        child: const Center(child: Text("See Provider"))
+                                    ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: const Color.fromARGB(255, 165, 207, 228),
+                                          borderRadius:
+                                          const BorderRadius.all(Radius.circular(20)),
+                                          border: Border.all(
+                                            color: const Color.fromARGB(255, 165, 207, 228),
+                                            width: 5,
+                                          ),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            if (samplesToShow[index]["provider"] !=
+                                                auth.currentUser!.uid)
+                                              FavoriteProviderButton(
+                                                  providerData:
+                                                  samplesToShow[index]["providerData"]),
+                                            if (samplesToShow[index]["provider"] !=
+                                                auth.currentUser!.uid)
+                                              FavoriteSampleButton(
+                                                  sampleData: samplesToShow[index]),
+                                            SeeSampleButton(sampleData: samplesToShow[index]),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                 ),
-              ],
-            ),
+              if (foundSamples.isNotEmpty)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    page <= 1
+                        ? const TextButton(
+                        onPressed: null,
+                        child: Text("<")
+                    )
+                        : TextButton(
+                        onPressed: () {
+                          setState(() {
+                            anim = "previous";
+                            page -= 1;
+                            samplesToShow = paginatedSamples[page - 1];
+                          });
+                        },
+                        child: const Text("<")
+                    ),
+                    Text("showing  ${limitPerPage * (page - 1) + 1} - ${limitPerPage * page >= count ? count : limitPerPage * page}  of  $count"),
+                    ((limitPerPage * page) >= count)
+                        ? const TextButton(
+                        onPressed: null,
+                        child: Text(">")
+                    )
+                        : TextButton(
+                        onPressed: () {
+                          setState(() {
+                            anim = "next";
+                            page += 1;
+                            samplesToShow = paginatedSamples[page - 1];
+                          });
+                        },
+                        child: const Text(">")
+                    ),
+                  ],
+                ),
+            ],
+          ),
         ],
       ),
     );
