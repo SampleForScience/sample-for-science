@@ -472,6 +472,7 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
                             onSubmitted: (value) {
                               if (value.isNotEmpty) {
                                 setState(() {
+                                  page = 1;
                                   foundSamples.clear();
                                   samplesToShow.clear();
                                   paginatedSamples.clear();
@@ -495,6 +496,7 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
                           child: IconButton(
                               onPressed: () {
                                 setState(() {
+                                  page = 1;
                                   foundSamples.clear();
                                   samplesToShow.clear();
                                   paginatedSamples.clear();
@@ -690,6 +692,7 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
                             onSubmitted: (value) {
                               if (value.isNotEmpty) {
                                 setState(() {
+                                  usersPage = 1;
                                   foundUsers.clear();
                                   usersToShow.clear();
                                   paginatedUsers.clear();
@@ -713,6 +716,7 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
                           child: IconButton(
                               onPressed: () {
                                 setState(() {
+                                  usersPage = 1;
                                   foundUsers.clear();
                                   usersToShow.clear();
                                   paginatedUsers.clear();
@@ -829,7 +833,7 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    page <= 1
+                    usersPage <= 1
                         ? const TextButton(
                         onPressed: null,
                         child: Text("<")
@@ -838,14 +842,14 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
                         onPressed: () {
                           setState(() {
                             anim = "previous";
-                            page -= 1;
-                            usersToShow = paginatedUsers[page - 1];
+                            usersPage -= 1;
+                            usersToShow = paginatedUsers[usersPage - 1];
                           });
                         },
                         child: const Text("<")
                     ),
-                    Text("showing  ${limitPerPage * (page - 1) + 1} - ${limitPerPage * page >= usersCount ? usersCount : limitPerPage * page}  of  $usersCount"),
-                    ((limitPerPage * page) >= usersCount)
+                    Text("showing  ${limitPerPage * (usersPage - 1) + 1} - ${limitPerPage * usersPage >= usersCount ? usersCount : limitPerPage * usersPage}  of  $usersCount"),
+                    ((limitPerPage * usersPage) >= usersCount)
                         ? const TextButton(
                         onPressed: null,
                         child: Text(">")
@@ -854,8 +858,8 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
                         onPressed: () {
                           setState(() {
                             anim = "next";
-                            page += 1;
-                            usersToShow = paginatedUsers[page - 1];
+                            usersPage += 1;
+                            usersToShow = paginatedUsers[usersPage - 1];
                           });
                         },
                         child: const Text(">")
