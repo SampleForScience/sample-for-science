@@ -68,19 +68,25 @@ class _ProviderPageState extends State<ProviderPage> {
         future: getProvider(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                "Loading Sample",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            );
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(20.0),
+                  child: Text("An error occurred trying to load provider information, try again later.\nSorry 😕"),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text("Back"),
+                )
+              ],
+            );
+          }
+          else {
             return Scaffold(
               body: SingleChildScrollView(
                 child: Padding(

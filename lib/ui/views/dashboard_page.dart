@@ -465,7 +465,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                                               Navigator.pushNamed(
                                                                 context,
                                                                 "/provider",
-                                                                arguments: providerData,
+                                                                arguments: providerData["id"],
                                                               );
                                                             },
                                                             icon: const Icon(Icons
