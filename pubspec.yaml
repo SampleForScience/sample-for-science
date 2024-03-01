@@ -50,6 +50,7 @@ dependencies:
   package_info_plus: ^4.2.0
   provider: ^6.1.1
   collection: ^1.17.2
+  cached_network_image: ^3.3.1
 
 flutter_launcher_icons:
   image_path: "assets/icon.png"
