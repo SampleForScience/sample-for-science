@@ -47,7 +47,7 @@ class _ReportBugButtonState extends State<ReportBugButton> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           backgroundColor: Colors.red,
-          content: Text('Nenhum texto inserido'),
+          content: Text('Please, insert a text explaing the bug.'),
         ),
       );
       return;
@@ -72,7 +72,7 @@ class _ReportBugButtonState extends State<ReportBugButton> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         backgroundColor: Colors.green,
-        content: Text('Obrigado! Seu relatório foi enviado.'),
+        content: Text('Thanks! Your report has been sent.'),
       ),
     );
 
@@ -104,11 +104,12 @@ class _ReportBugButtonState extends State<ReportBugButton> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TextButton(
+                  ElevatedButton(
                     onPressed: (){_sendReport(); Navigator.of(context).pop();},
                     child: const Text('Send', style: TextStyle(fontSize: 16)),
                   ),
-                  TextButton(
+                  SizedBox(width:20),
+                  ElevatedButton(
                     onPressed: () => Navigator.of(context).pop(),
                     child: const Text('Close', style: TextStyle(fontSize: 16)),
                   ),
@@ -116,7 +117,7 @@ class _ReportBugButtonState extends State<ReportBugButton> {
                 ],
               ),
               Row(mainAxisAlignment: MainAxisAlignment.center,
-                children: [TextButton(
+                children: [ElevatedButton(
                     onPressed: _getImage,
                     child: const Text('Upload Image'),
                   )],),
@@ -127,7 +128,7 @@ class _ReportBugButtonState extends State<ReportBugButton> {
               width: 300,
               child: Column(
                 children: [
-                  Text("Por favor, detalhe o bug que você encontrou"),
+                  Text("Describe in details the bug you found"),
                   Container(
                     width: 280,
                     decoration: BoxDecoration(
