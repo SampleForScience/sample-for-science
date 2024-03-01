@@ -47,7 +47,7 @@ class _ReportBugButtonState extends State<ReportBugButton> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           backgroundColor: Colors.red,
-          content: Text('Por favor, descreva o bug que você encontrou.'),
+          content: Text('Nenhum texto inserido'),
         ),
       );
       return;
@@ -105,7 +105,7 @@ class _ReportBugButtonState extends State<ReportBugButton> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextButton(
-                    onPressed: _sendReport,
+                    onPressed: (){_sendReport(); Navigator.of(context).pop();},
                     child: const Text('Send', style: TextStyle(fontSize: 16)),
                   ),
                   TextButton(
