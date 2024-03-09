@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:sample/services/apple_sign_in.dart';
 
 class AppleLoginButton extends StatefulWidget {
   const AppleLoginButton({super.key});
@@ -9,6 +10,14 @@ class AppleLoginButton extends StatefulWidget {
 }
 
 class _LoginButtonState extends State<AppleLoginButton> {
+  late AppleSignInHandler _appleSignInHandler;
+
+  @override
+  void initState() {
+    super.initState();
+    _appleSignInHandler = AppleSignInHandler(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
@@ -18,7 +27,7 @@ class _LoginButtonState extends State<AppleLoginButton> {
           borderRadius: BorderRadius.circular(8.0), // Define o raio das bordas
         ),
       ),
-      onPressed: null,
+      onPressed: _appleSignInHandler.signInWithApple,
       child: const SizedBox(
         height: 50,
         width: double.infinity,

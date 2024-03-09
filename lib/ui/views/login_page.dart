@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sample/ui/buttons/apple_login_button.dart';
 import 'package:sample/ui/buttons/google_login_button.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -61,9 +62,40 @@ class _LoginPageState extends State<LoginPage> {
                           padding: EdgeInsets.only(top: 16.0),
                           child: GoogleLoginButton(),
                         ),
-                        // const Padding(
-                        //   padding: EdgeInsets.symmetric(vertical: 16.0),
-                        //   child: AppleLoginButton(),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16.0),
+                          child: AppleLoginButton(),
+                        ),
+                        // SignInWithAppleButton(
+                        //   onPressed: () async {
+                        //     // final credential = await SignInWithApple.getAppleIDCredential(
+                        //     //scopes: [
+                        //     //AppleIDAuthorizationScopes.email,
+                        //     //AppleIDAuthorizationScopes.fullName,
+                        //     //],
+                        //     //);
+                        //
+                        //     // print(credential);
+                        //     final appleProvider = AppleAuthProvider();
+                        //     UserCredential auth = await FirebaseAuth.instance.signInWithProvider(appleProvider);
+                        //
+                        //     if (auth.user != null) {
+                        //       String? displayName = auth.user?.displayName;
+                        //       String? email = auth.user?.email;
+                        //       String? uid = auth.user?.uid;
+                        //       String? photoUrl = auth.user?.photoURL??"";
+                        //       print("$displayName");
+                        //       print("$email");
+                        //       print("$uid");
+                        //       print("Logado");
+                        //     }
+                        //     else {
+                        //       FirebaseAuth.instance.signOut();
+                        //       print("Deslogado");
+                        //     }
+                        //     // Now send the credential (especially `credential.authorizationCode`) to your server to create a session
+                        //     // after they have been validated with Apple (see `Integration` section for more information on how to do this)
+                        //   },
                         // )
                       ]
                     ),
