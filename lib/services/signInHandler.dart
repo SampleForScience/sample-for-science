@@ -103,18 +103,51 @@ class SignInHandler {
         String? photoUrl = auth.user?.photoURL??"";
 
         print("=====================================================================");
-
         print("displayName: $displayName");
         print("email: $email");
         print("uid: $uid");
         print("photoUrl: $photoUrl");
         print("Logado");
-
         print("=====================================================================");
 
+        // TODO: se o email for apple..., mandar pra outra página e remover usuário sem email
+        if (email!.endsWith("privaterelay.appleid.com")) {
+          await auth.user!.delete();
+          Navigator.pushNamedAndRemoveUntil(context, '/instructions', (route) => false);
+        } else {
+          registered = await userFound();
 
-        // TODO: se o email for apple..., mandar pra outra página
-        Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
+          if (!registered) {
+            await db.collection("users").doc(auth.user!.uid)
+                .set(
+                {
+                  "id": auth.user!.uid,
+                  "name": auth.user!.displayName,
+                  "email": auth.user!.email,
+                  "institution": "",
+                  "department": "",
+                  "country": "",
+                  "address": "",
+                  "mobile": "",
+                  "webpage": "",
+                  "orcid": "",
+                  "google_scholar": "",
+                  "other": "",
+                  "favoriteProviders": [],
+                  "favoriteSamples": [],
+                }
+            ).then((_) {
+              debugPrint("New user saved");
+              Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
+            }
+            ).onError((e, _) {
+              debugPrint("Error saving user: $e");
+            });
+          } else {
+            debugPrint("User already registered");
+            Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
+          }
+        }
       }
       else {
         FirebaseAuth.instance.signOut();

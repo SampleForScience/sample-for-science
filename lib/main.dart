@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:sample/firebase_options.dart';
 import 'package:sample/providers/sample_provider.dart';
 import 'package:sample/ui/views/dashboard_page.dart';
+import 'package:sample/ui/views/intructions_page.dart';
 import 'package:sample/ui/views/login_page.dart';
 import 'package:sample/ui/views/new_sample_page.dart';
 import 'package:sample/ui/views/provider_page.dart';
@@ -48,6 +49,7 @@ class MyApp extends StatelessWidget {
         '/search': (context) => const SearchPage(),
         '/messages': (context) => const UsersPage(),
         '/provider': (context) => const ProviderPage(),
+        '/instructions': (context) => const InstructionsPage(),
       },
     );
   }
