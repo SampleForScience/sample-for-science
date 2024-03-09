@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class GoogleSignInHandler {
+class SignInHandler {
   BuildContext context;
-  GoogleSignInHandler(this.context);
+  SignInHandler(this.context);
 
   final auth = FirebaseAuth.instance;
   final db = FirebaseFirestore.instance;
@@ -88,6 +88,40 @@ class GoogleSignInHandler {
         debugPrint("User already registered");
         Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
       }
+    }
+  }
+
+  Future<void> signInWithApple() async {
+    try{
+      final appleProvider = AppleAuthProvider();
+      UserCredential auth = await FirebaseAuth.instance.signInWithProvider(appleProvider);
+
+      if (auth.user != null) {
+        String? displayName = auth.user?.displayName;
+        String? email = auth.user?.email;
+        String? uid = auth.user?.uid;
+        String? photoUrl = auth.user?.photoURL??"";
+
+        print("=====================================================================");
+
+        print("displayName: $displayName");
+        print("email: $email");
+        print("uid: $uid");
+        print("photoUrl: $photoUrl");
+        print("Logado");
+
+        print("=====================================================================");
+
+
+        // TODO: se o email for apple..., mandar pra outra página
+        Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
+      }
+      else {
+        FirebaseAuth.instance.signOut();
+        print("Deslogado");
+      }
+    } catch (e) {
+      print(e);
     }
   }
 

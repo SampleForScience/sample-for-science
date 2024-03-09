@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sample/services/google_sign_in.dart';
+import 'package:sample/services/signInHandler.dart';
 
 // Itens do popMenuButton
 enum MenuItem { login,registration }
@@ -12,13 +12,13 @@ class CircularAvatarButton extends StatefulWidget {
 }
 
 class _CircularAvatarButtonState extends State<CircularAvatarButton> {
-  late GoogleSignInHandler _googleSignInHandler;
+  late SignInHandler _googleSignInHandler;
   late bool isLogged;
 
   @override
   void initState() {
     super.initState();
-    _googleSignInHandler = GoogleSignInHandler(context);
+    _googleSignInHandler = SignInHandler(context);
     setState(() {
       if (_googleSignInHandler.auth.currentUser != null) {
         isLogged = true;
