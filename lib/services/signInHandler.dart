@@ -110,7 +110,6 @@ class SignInHandler {
         print("Logado");
         print("=====================================================================");
 
-        // TODO: se o email for apple..., mandar pra outra página e remover usuário sem email
         if (email!.endsWith("privaterelay.appleid.com")) {
           await auth.user!.delete();
           Navigator.pushNamedAndRemoveUntil(context, '/instructions', (route) => false);
