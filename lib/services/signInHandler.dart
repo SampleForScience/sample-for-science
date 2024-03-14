@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -100,102 +101,179 @@ class SignInHandler {
     final db = FirebaseFirestore.instance;
     late bool registered;
 
-    String generateNonce([int length = 32]) {
-      const charset =
-          '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
-      final random = Random.secure();
-      return List.generate(length, (_) =>
-      charset[random.nextInt(charset.length)]).join();
-    }
+    if (Platform.isIOS) {
+      String generateNonce([int length = 32]) {
+        const charset =
+            '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
+        final random = Random.secure();
+        return List.generate(length, (_) =>
+        charset[random.nextInt(charset.length)]).join();
+      }
 
-    String sha256ofString(String input) {
-      final bytes = utf8.encode(input);
-      final digest = sha256.convert(bytes);
-      return digest.toString();
-    }
+      String sha256ofString(String input) {
+        final bytes = utf8.encode(input);
+        final digest = sha256.convert(bytes);
+        return digest.toString();
+      }
 
-    try{
-      final rawNonce = generateNonce();
-      final nonce = sha256ofString(rawNonce);
+      try{
+        final rawNonce = generateNonce();
+        final nonce = sha256ofString(rawNonce);
 
-      final credential = await SignInWithApple.getAppleIDCredential(
-          scopes: [
-            AppleIDAuthorizationScopes.email,
-            AppleIDAuthorizationScopes.fullName,
-          ],
-          webAuthenticationOptions: WebAuthenticationOptions(
-              clientId: "br.uff.sampleforscienceid",
-              redirectUri: Uri.parse("https://sampletest-4273e.firebaseapp.com/__/auth/handler")
-          ),
-          nonce: nonce
-      );
+        final credential = await SignInWithApple.getAppleIDCredential(
+            scopes: [
+              AppleIDAuthorizationScopes.email,
+              AppleIDAuthorizationScopes.fullName,
+            ],
+            webAuthenticationOptions: WebAuthenticationOptions(
+                clientId: "br.uff.sampleforscienceid",
+                redirectUri: Uri.parse("https://sampletest-4273e.firebaseapp.com/__/auth/handler")
+            ),
+            nonce: nonce
+        );
 
-      print("=====================================================================");
-      print(credential);
-      print("=====================================================================");
+        print("=================================== credential ===================================");
+        print(credential);
+        print("=================================== credential ===================================");
 
+        final appleProvider = AppleAuthProvider();
+        UserCredential auth = await FirebaseAuth.instance.signInWithProvider(appleProvider);
+        if (auth.user != null) {
+          if (auth.user != null) {
+            if (auth.user?.email == null &&
+                credential.email != null) {
+              await auth.user?.updateEmail(credential.email!);
+            }
 
+            if (auth.user?.displayName == null &&
+                credential.givenName != null &&
+                credential.familyName != null) {
+              await auth.user?.updateDisplayName(
+                  '${credential.givenName} ${credential.familyName}');
+            }
+          }
 
-      // final appleProvider = AppleAuthProvider();
-      // UserCredential auth = await FirebaseAuth.instance.signInWithProvider(appleProvider);
-      // if (auth.user != null) {
-      //   String? displayName = auth.user?.displayName;
-      //   String? email = auth.user?.email;
-      //   String? uid = auth.user?.uid;
-      //   String? photoUrl = auth.user?.photoURL??"";
-      //
-      //   print("=====================================================================");
-      //   print("displayName: $displayName");
-      //   print("email: $email");
-      //   print("uid: $uid");
-      //   print("photoUrl: $photoUrl");
-      //   print("Logado");
-      //   print("=====================================================================");
-      //
-      //   if (email!.endsWith("privaterelay.appleid.com")) {
-      //     await auth.user!.delete();
-      //     Navigator.pushNamedAndRemoveUntil(context, '/instructions', (route) => false);
-      //   } else {
-      //     registered = await userFound();
-      //
-      //     if (!registered) {
-      //       await db.collection("users").doc(auth.user!.uid)
-      //           .set(
-      //           {
-      //             "id": auth.user!.uid,
-      //             "name": auth.user!.displayName,
-      //             "email": auth.user!.email,
-      //             "institution": "",
-      //             "department": "",
-      //             "country": "",
-      //             "address": "",
-      //             "mobile": "",
-      //             "webpage": "",
-      //             "orcid": "",
-      //             "google_scholar": "",
-      //             "other": "",
-      //             "favoriteProviders": [],
-      //             "favoriteSamples": [],
-      //           }
-      //       ).then((_) {
-      //         debugPrint("New user saved");
-      //         Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
-      //       }
-      //       ).onError((e, _) {
-      //         debugPrint("Error saving user: $e");
-      //       });
-      //     } else {
-      //       debugPrint("User already registered");
-      //       Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
-      //     }
-      //   }
-      // }
-      // else {
-      //   FirebaseAuth.instance.signOut();
-      //   print("Deslogado");
-      // }
-    } catch (e) {
-      print(e);
+          String? displayName = auth.user?.displayName;
+          String? email = auth.user?.email;
+          String? uid = auth.user?.uid;
+          String? photoUrl = auth.user?.photoURL??"";
+
+          print("=================================== user ===================================");
+          print("displayName: $displayName");
+          print("email: $email");
+          print("uid: $uid");
+          print("photoUrl: $photoUrl");
+          print("Logado");
+          print("=================================== user ===================================");
+
+          if (email!.endsWith("privaterelay.appleid.com")) {
+            await auth.user!.delete();
+            Navigator.pushNamedAndRemoveUntil(context, '/instructions', (route) => false);
+          } else {
+            registered = await userFound();
+
+            if (!registered) {
+              await db.collection("users").doc(auth.user!.uid)
+                  .set(
+                  {
+                    "id": auth.user!.uid,
+                    "name": auth.user!.displayName,
+                    "email": auth.user!.email,
+                    "institution": "",
+                    "department": "",
+                    "country": "",
+                    "address": "",
+                    "mobile": "",
+                    "webpage": "",
+                    "orcid": "",
+                    "google_scholar": "",
+                    "other": "",
+                    "favoriteProviders": [],
+                    "favoriteSamples": [],
+                  }
+              ).then((_) {
+                debugPrint("New user saved");
+                Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
+              }
+              ).onError((e, _) {
+                debugPrint("Error saving user: $e");
+              });
+            } else {
+              debugPrint("User already registered");
+              Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
+            }
+          }
+        }
+        else {
+          FirebaseAuth.instance.signOut();
+          print("Deslogado");
+        }
+      } catch (e) {
+        print(e);
+      }
+    } else {
+      try{
+        final appleProvider = AppleAuthProvider();
+        UserCredential auth = await FirebaseAuth.instance.signInWithProvider(appleProvider);
+        if (auth.user != null) {
+          String? displayName = auth.user?.displayName;
+          String? email = auth.user?.email;
+          String? uid = auth.user?.uid;
+          String? photoUrl = auth.user?.photoURL??"";
+
+          print("=====================================================================");
+          print("displayName: $displayName");
+          print("email: $email");
+          print("uid: $uid");
+          print("photoUrl: $photoUrl");
+          print("Logado");
+          print("=====================================================================");
+
+          if (email!.endsWith("privaterelay.appleid.com")) {
+            await auth.user!.delete();
+            Navigator.pushNamedAndRemoveUntil(context, '/instructions', (route) => false);
+          } else {
+            registered = await userFound();
+
+            if (!registered) {
+              await db.collection("users").doc(auth.user!.uid)
+                  .set(
+                  {
+                    "id": auth.user!.uid,
+                    "name": auth.user!.displayName,
+                    "email": auth.user!.email,
+                    "institution": "",
+                    "department": "",
+                    "country": "",
+                    "address": "",
+                    "mobile": "",
+                    "webpage": "",
+                    "orcid": "",
+                    "google_scholar": "",
+                    "other": "",
+                    "favoriteProviders": [],
+                    "favoriteSamples": [],
+                  }
+              ).then((_) {
+                debugPrint("New user saved");
+                Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
+              }
+              ).onError((e, _) {
+                debugPrint("Error saving user: $e");
+              });
+            } else {
+              debugPrint("User already registered");
+              Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
+            }
+          }
+        }
+        else {
+          FirebaseAuth.instance.signOut();
+          print("Deslogado");
+        }
+      } catch (e) {
+        print(e);
+      }
     }
   }
 
