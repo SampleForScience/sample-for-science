@@ -136,8 +136,22 @@ class SignInHandler {
         print(credential);
         print("=================================== credential ===================================");
 
-        final appleProvider = AppleAuthProvider();
-        UserCredential auth = await FirebaseAuth.instance.signInWithProvider(appleProvider);
+        // Create an `OAuthCredential` from the credential returned by Apple.
+        final appleOauthProvider = OAuthProvider(
+          "apple.com",
+        );
+
+        appleOauthProvider.setScopes([
+          'email',
+          'name',
+        ]);
+
+        final oauthCredential = appleOauthProvider.credential(
+          idToken: credential.identityToken,
+          rawNonce: rawNonce,
+        );
+
+        UserCredential auth = await FirebaseAuth.instance.signInWithCredential(oauthCredential);
         if (auth.user != null) {
           if (auth.user != null) {
             if (auth.user?.email == null &&
@@ -173,12 +187,12 @@ class SignInHandler {
             registered = await userFound();
 
             if (!registered) {
-              await db.collection("users").doc(auth.user!.uid)
+              await db.collection("users").doc(uid)
                   .set(
                   {
-                    "id": auth.user!.uid,
-                    "name": auth.user!.displayName,
-                    "email": auth.user!.email,
+                    "id": uid,
+                    "name": displayName,
+                    "email": email,
                     "institution": "",
                     "department": "",
                     "country": "",
