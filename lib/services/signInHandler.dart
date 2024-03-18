@@ -7,6 +7,7 @@ import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sample/utils/test_emails.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class SignInHandler {
@@ -18,6 +19,7 @@ class SignInHandler {
   late bool registered;
   final GoogleSignIn googleSignIn = GoogleSignIn();
   UserCredential? userCredential;
+  List<String> testEmails = [];
 
   Future<bool> userFound() async {
     late bool found;
@@ -47,52 +49,58 @@ class SignInHandler {
         debugPrint("ERRO deslogando:\n$e");
       }
     } else {
-      // Trigger the authentication flow
-      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+      testEmails = emails;
 
-      // Obtain the auth details from the request
-      final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+      if (testEmails.contains(auth.currentUser!.email)) {
+        // Trigger the authentication flow
+        final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
-      // Create a new credential
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
-      );
-      debugPrint('googleUser: $googleUser');
-      debugPrint('googleAuth: $googleAuth');
-      userCredential = await auth.signInWithCredential(credential);
+        // Obtain the auth details from the request
+        final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
 
-      registered = await userFound();
+        // Create a new credential
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth?.accessToken,
+          idToken: googleAuth?.idToken,
+        );
+        debugPrint('googleUser: $googleUser');
+        debugPrint('googleAuth: $googleAuth');
+        userCredential = await auth.signInWithCredential(credential);
 
-      if (!registered) {
-        await db.collection("users").doc(auth.currentUser!.uid)
-            .set(
-            {
-              "id": auth.currentUser!.uid,
-              "name": auth.currentUser!.displayName,
-              "email": auth.currentUser!.email,
-              "institution": "",
-              "department": "",
-              "country": "",
-              "address": "",
-              "mobile": "",
-              "webpage": "",
-              "orcid": "",
-              "google_scholar": "",
-              "other": "",
-              "favoriteProviders": [],
-              "favoriteSamples": [],
-            }
-        ).then((_) {
-          debugPrint("New user saved");
+        registered = await userFound();
+
+        if (!registered) {
+          await db.collection("users").doc(auth.currentUser!.uid)
+              .set(
+              {
+                "id": auth.currentUser!.uid,
+                "name": auth.currentUser!.displayName,
+                "email": auth.currentUser!.email,
+                "institution": "",
+                "department": "",
+                "country": "",
+                "address": "",
+                "mobile": "",
+                "webpage": "",
+                "orcid": "",
+                "google_scholar": "",
+                "other": "",
+                "favoriteProviders": [],
+                "favoriteSamples": [],
+              }
+          ).then((_) {
+            debugPrint("New user saved");
+            Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
+          }
+          ).onError((e, _) {
+            debugPrint("Error saving user: $e");
+          });
+        } else {
+          debugPrint("User already registered");
           Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
         }
-        ).onError((e, _) {
-          debugPrint("Error saving user: $e");
-        });
       } else {
-        debugPrint("User already registered");
-        Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
+        Navigator.pushNamed(context, '/testing');
       }
     }
   }
@@ -184,37 +192,43 @@ class SignInHandler {
             await auth.user!.delete();
             Navigator.pushNamedAndRemoveUntil(context, '/instructions', (route) => false);
           } else {
-            registered = await userFound();
+            testEmails = emails;
 
-            if (!registered) {
-              await db.collection("users").doc(uid)
-                  .set(
-                  {
-                    "id": uid,
-                    "name": displayName,
-                    "email": email,
-                    "institution": "",
-                    "department": "",
-                    "country": "",
-                    "address": "",
-                    "mobile": "",
-                    "webpage": "",
-                    "orcid": "",
-                    "google_scholar": "",
-                    "other": "",
-                    "favoriteProviders": [],
-                    "favoriteSamples": [],
-                  }
-              ).then((_) {
-                debugPrint("New user saved");
+            if (testEmails.contains(email)) {
+              registered = await userFound();
+
+              if (!registered) {
+                await db.collection("users").doc(uid)
+                    .set(
+                    {
+                      "id": uid,
+                      "name": displayName,
+                      "email": email,
+                      "institution": "",
+                      "department": "",
+                      "country": "",
+                      "address": "",
+                      "mobile": "",
+                      "webpage": "",
+                      "orcid": "",
+                      "google_scholar": "",
+                      "other": "",
+                      "favoriteProviders": [],
+                      "favoriteSamples": [],
+                    }
+                ).then((_) {
+                  debugPrint("New user saved");
+                  Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
+                }
+                ).onError((e, _) {
+                  debugPrint("Error saving user: $e");
+                });
+              } else {
+                debugPrint("User already registered");
                 Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
               }
-              ).onError((e, _) {
-                debugPrint("Error saving user: $e");
-              });
             } else {
-              debugPrint("User already registered");
-              Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
+              Navigator.pushNamed(context, '/testing');
             }
           }
         }
@@ -247,37 +261,43 @@ class SignInHandler {
             await auth.user!.delete();
             Navigator.pushNamedAndRemoveUntil(context, '/instructions', (route) => false);
           } else {
-            registered = await userFound();
+            testEmails = emails;
 
-            if (!registered) {
-              await db.collection("users").doc(auth.user!.uid)
-                  .set(
-                  {
-                    "id": auth.user!.uid,
-                    "name": auth.user!.displayName,
-                    "email": auth.user!.email,
-                    "institution": "",
-                    "department": "",
-                    "country": "",
-                    "address": "",
-                    "mobile": "",
-                    "webpage": "",
-                    "orcid": "",
-                    "google_scholar": "",
-                    "other": "",
-                    "favoriteProviders": [],
-                    "favoriteSamples": [],
-                  }
-              ).then((_) {
-                debugPrint("New user saved");
+            if (testEmails.contains(email)) {
+              registered = await userFound();
+
+              if (!registered) {
+                await db.collection("users").doc(auth.user!.uid)
+                    .set(
+                    {
+                      "id": auth.user!.uid,
+                      "name": auth.user!.displayName,
+                      "email": auth.user!.email,
+                      "institution": "",
+                      "department": "",
+                      "country": "",
+                      "address": "",
+                      "mobile": "",
+                      "webpage": "",
+                      "orcid": "",
+                      "google_scholar": "",
+                      "other": "",
+                      "favoriteProviders": [],
+                      "favoriteSamples": [],
+                    }
+                ).then((_) {
+                  debugPrint("New user saved");
+                  Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
+                }
+                ).onError((e, _) {
+                  debugPrint("Error saving user: $e");
+                });
+              } else {
+                debugPrint("User already registered");
                 Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
               }
-              ).onError((e, _) {
-                debugPrint("Error saving user: $e");
-              });
             } else {
-              debugPrint("User already registered");
-              Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
+              Navigator.pushNamed(context, '/testing');
             }
           }
         }

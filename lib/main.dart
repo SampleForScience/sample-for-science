@@ -11,6 +11,7 @@ import 'package:sample/ui/views/provider_page.dart';
 import 'package:sample/ui/views/registration_page.dart';
 import 'package:sample/ui/views/sample_page.dart';
 import 'package:sample/ui/views/search_page.dart';
+import 'package:sample/ui/views/testing_period.dart';
 import 'package:sample/ui/views/update_sample_page.dart';
 import 'package:sample/ui/views/users_page.dart';
 
@@ -50,6 +51,7 @@ class MyApp extends StatelessWidget {
         '/messages': (context) => const UsersPage(),
         '/provider': (context) => const ProviderPage(),
         '/instructions': (context) => const InstructionsPage(),
+        '/testing': (context) => const TestingPeriodPage(),
       },
     );
   }

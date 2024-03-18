@@ -2,8 +2,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class InstructionsPage extends StatelessWidget {
-  const InstructionsPage({super.key});
+class TestingPeriodPage extends StatelessWidget {
+  const TestingPeriodPage({super.key});
 
   @override
   Widget build(BuildContext context) {

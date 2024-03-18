@@ -29,7 +29,7 @@ class _LoginButtonState extends State<AppleLoginButton> {
           builder: (BuildContext context) {
             return AlertDialog(
               title: const Text("Email Sharing"),
-              content: const Text("For your account to be successfully created, we need you to agree to share your email on the first login"),
+              content: const Text("For your account to be successfully created, you need to share your email on the first login"),
               actions: [
                 TextButton(
                   child: const Text("OK"),
