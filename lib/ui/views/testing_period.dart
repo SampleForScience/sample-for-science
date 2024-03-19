@@ -19,7 +19,7 @@ class TestingPeriodPage extends StatelessWidget {
                     text: TextSpan(
                       children: [
                         const TextSpan(
-                          text: 'We are in a testing period and only registered emails can access the "Sample For Science" app, find out more at',
+                          text: 'We are in a testing period and only registered emails can access the "Sample For Science" app, find out more at ',
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 16

@@ -24,15 +24,15 @@ class SignInHandler {
   Future<bool> userFound() async {
     late bool found;
     await db.collection("users")
-      .doc(auth.currentUser!.uid)
-      .get()
-      .then((docSnapshot) {
-        if(docSnapshot.exists) {
-          found = true;
-        } else {
-          found = false;
-        }
-      },
+        .doc(auth.currentUser!.uid)
+        .get()
+        .then((docSnapshot) {
+      if(docSnapshot.exists) {
+        found = true;
+      } else {
+        found = false;
+      }
+    },
       onError: (e) => debugPrint("Error completing: $e"),
     );
     return found;
@@ -51,22 +51,22 @@ class SignInHandler {
     } else {
       testEmails = emails;
 
+      // Trigger the authentication flow
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+      // Create a new credential
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+      debugPrint('googleUser: $googleUser');
+      debugPrint('googleAuth: $googleAuth');
+      userCredential = await auth.signInWithCredential(credential);
+
       if (testEmails.contains(auth.currentUser!.email)) {
-        // Trigger the authentication flow
-        final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-
-        // Obtain the auth details from the request
-        final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
-
-        // Create a new credential
-        final credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth?.accessToken,
-          idToken: googleAuth?.idToken,
-        );
-        debugPrint('googleUser: $googleUser');
-        debugPrint('googleAuth: $googleAuth');
-        userCredential = await auth.signInWithCredential(credential);
-
         registered = await userFound();
 
         if (!registered) {
@@ -100,6 +100,7 @@ class SignInHandler {
           Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
         }
       } else {
+        await FirebaseAuth.instance.signOut();
         Navigator.pushNamed(context, '/testing');
       }
     }
@@ -188,7 +189,7 @@ class SignInHandler {
           print("Logado");
           print("=================================== user ===================================");
 
-          if (email!.endsWith("privaterelay.appleid.com")) {
+          if (email != null && email.endsWith("privaterelay.appleid.com")) {
             await auth.user!.delete();
             Navigator.pushNamedAndRemoveUntil(context, '/instructions', (route) => false);
           } else {
@@ -228,6 +229,7 @@ class SignInHandler {
                 Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
               }
             } else {
+              await FirebaseAuth.instance.signOut();
               Navigator.pushNamed(context, '/testing');
             }
           }
@@ -257,7 +259,7 @@ class SignInHandler {
           print("Logado");
           print("=====================================================================");
 
-          if (email!.endsWith("privaterelay.appleid.com")) {
+          if (email != null && email.endsWith("privaterelay.appleid.com")) {
             await auth.user!.delete();
             Navigator.pushNamedAndRemoveUntil(context, '/instructions', (route) => false);
           } else {
@@ -297,6 +299,7 @@ class SignInHandler {
                 Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
               }
             } else {
+              await FirebaseAuth.instance.signOut();
               Navigator.pushNamed(context, '/testing');
             }
           }
