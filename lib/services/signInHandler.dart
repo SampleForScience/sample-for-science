@@ -101,6 +101,7 @@ class SignInHandler {
         }
       } else {
         await FirebaseAuth.instance.signOut();
+        await googleSignIn.signOut();
         Navigator.pushNamed(context, '/testing');
       }
     }
@@ -230,6 +231,7 @@ class SignInHandler {
               }
             } else {
               await FirebaseAuth.instance.signOut();
+              await googleSignIn.signOut();
               Navigator.pushNamed(context, '/testing');
             }
           }
@@ -300,6 +302,7 @@ class SignInHandler {
               }
             } else {
               await FirebaseAuth.instance.signOut();
+              await googleSignIn.signOut();
               Navigator.pushNamed(context, '/testing');
             }
           }
