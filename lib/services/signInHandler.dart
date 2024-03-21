@@ -66,44 +66,77 @@ class SignInHandler {
       debugPrint('googleAuth: $googleAuth');
       userCredential = await auth.signInWithCredential(credential);
 
-      if (testEmails.contains(auth.currentUser!.email)) {
-        registered = await userFound();
+      registered = await userFound();
 
-        if (!registered) {
-          await db.collection("users").doc(auth.currentUser!.uid)
-              .set(
-              {
-                "id": auth.currentUser!.uid,
-                "name": auth.currentUser!.displayName,
-                "email": auth.currentUser!.email,
-                "institution": "",
-                "department": "",
-                "country": "",
-                "address": "",
-                "mobile": "",
-                "webpage": "",
-                "orcid": "",
-                "google_scholar": "",
-                "other": "",
-                "favoriteProviders": [],
-                "favoriteSamples": [],
-              }
-          ).then((_) {
-            debugPrint("New user saved");
-            Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
-          }
-          ).onError((e, _) {
-            debugPrint("Error saving user: $e");
-          });
-        } else {
-          debugPrint("User already registered");
+      if (!registered) {
+        await db.collection("users").doc(auth.currentUser!.uid)
+            .set(
+            {
+              "id": auth.currentUser!.uid,
+              "name": auth.currentUser!.displayName,
+              "email": auth.currentUser!.email,
+              "institution": "",
+              "department": "",
+              "country": "",
+              "address": "",
+              "mobile": "",
+              "webpage": "",
+              "orcid": "",
+              "google_scholar": "",
+              "other": "",
+              "favoriteProviders": [],
+              "favoriteSamples": [],
+            }
+        ).then((_) {
+          debugPrint("New user saved");
           Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
         }
+        ).onError((e, _) {
+          debugPrint("Error saving user: $e");
+        });
       } else {
-        await FirebaseAuth.instance.signOut();
-        await googleSignIn.signOut();
-        Navigator.pushNamed(context, '/testing');
+        debugPrint("User already registered");
+        Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
       }
+
+      // if (testEmails.contains(auth.currentUser!.email)) {
+      //   registered = await userFound();
+      //
+      //   if (!registered) {
+      //     await db.collection("users").doc(auth.currentUser!.uid)
+      //         .set(
+      //         {
+      //           "id": auth.currentUser!.uid,
+      //           "name": auth.currentUser!.displayName,
+      //           "email": auth.currentUser!.email,
+      //           "institution": "",
+      //           "department": "",
+      //           "country": "",
+      //           "address": "",
+      //           "mobile": "",
+      //           "webpage": "",
+      //           "orcid": "",
+      //           "google_scholar": "",
+      //           "other": "",
+      //           "favoriteProviders": [],
+      //           "favoriteSamples": [],
+      //         }
+      //     ).then((_) {
+      //       debugPrint("New user saved");
+      //       Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
+      //     }
+      //     ).onError((e, _) {
+      //       debugPrint("Error saving user: $e");
+      //     });
+      //   } else {
+      //     debugPrint("User already registered");
+      //     Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
+      //   }
+      // } else {
+      //   await FirebaseAuth.instance.signOut();
+      //   await googleSignIn.signOut();
+      //   Navigator.pushNamed(context, '/testing');
+      // }
     }
   }
 
