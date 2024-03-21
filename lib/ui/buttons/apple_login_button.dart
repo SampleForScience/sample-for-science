@@ -24,23 +24,23 @@ class _LoginButtonState extends State<AppleLoginButton> {
       Buttons.appleDark,
       text: "Login with Apple",
       onPressed: () async {
-        await showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text("Email Sharing"),
-              content: const Text("For your account to be successfully created, you need to share your email on the first login"),
-              actions: [
-                TextButton(
-                  child: const Text("OK"),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          },
-        );
+        // await showDialog(
+        //   context: context,
+        //   builder: (BuildContext context) {
+        //     return AlertDialog(
+        //       title: const Text("Email Sharing"),
+        //       content: const Text("For your account to be successfully created, you need to share your email on the first login"),
+        //       actions: [
+        //         TextButton(
+        //           child: const Text("OK"),
+        //           onPressed: () {
+        //             Navigator.of(context).pop();
+        //           },
+        //         ),
+        //       ],
+        //     );
+        //   },
+        // );
 
         _signInHandler.signInWithApple();
       },

@@ -190,51 +190,84 @@ class SignInHandler {
           print("Logado");
           print("=================================== user ===================================");
 
-          if (email != null && email.endsWith("privaterelay.appleid.com")) {
-            await auth.user!.delete();
-            Navigator.pushNamedAndRemoveUntil(context, '/instructions', (route) => false);
-          } else {
-            testEmails = emails;
+          registered = await userFound();
 
-            if (testEmails.contains(email)) {
-              registered = await userFound();
-
-              if (!registered) {
-                await db.collection("users").doc(uid)
-                    .set(
-                    {
-                      "id": uid,
-                      "name": displayName,
-                      "email": email,
-                      "institution": "",
-                      "department": "",
-                      "country": "",
-                      "address": "",
-                      "mobile": "",
-                      "webpage": "",
-                      "orcid": "",
-                      "google_scholar": "",
-                      "other": "",
-                      "favoriteProviders": [],
-                      "favoriteSamples": [],
-                    }
-                ).then((_) {
-                  debugPrint("New user saved");
-                  Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
+          if (!registered) {
+            await db.collection("users").doc(uid)
+                .set(
+                {
+                  "id": uid,
+                  "name": displayName,
+                  "email": email,
+                  "institution": "",
+                  "department": "",
+                  "country": "",
+                  "address": "",
+                  "mobile": "",
+                  "webpage": "",
+                  "orcid": "",
+                  "google_scholar": "",
+                  "other": "",
+                  "favoriteProviders": [],
+                  "favoriteSamples": [],
                 }
-                ).onError((e, _) {
-                  debugPrint("Error saving user: $e");
-                });
-              } else {
-                debugPrint("User already registered");
-                Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
-              }
-            } else {
-              await FirebaseAuth.instance.signOut();
-              await googleSignIn.signOut();
-              Navigator.pushNamed(context, '/testing');
+            ).then((_) {
+              debugPrint("New user saved");
+              Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
             }
+            ).onError((e, _) {
+              debugPrint("Error saving user: $e");
+            });
+          } else {
+            debugPrint("User already registered");
+            Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
           }
+
+          // if (email != null && email.endsWith("privaterelay.appleid.com")) {
+          //   await auth.user!.delete();
+          //   Navigator.pushNamedAndRemoveUntil(context, '/instructions', (route) => false);
+          // } else {
+          //   testEmails = emails;
+          //
+          //   if (testEmails.contains(email)) {
+          //     registered = await userFound();
+          //
+          //     if (!registered) {
+          //       await db.collection("users").doc(uid)
+          //           .set(
+          //           {
+          //             "id": uid,
+          //             "name": displayName,
+          //             "email": email,
+          //             "institution": "",
+          //             "department": "",
+          //             "country": "",
+          //             "address": "",
+          //             "mobile": "",
+          //             "webpage": "",
+          //             "orcid": "",
+          //             "google_scholar": "",
+          //             "other": "",
+          //             "favoriteProviders": [],
+          //             "favoriteSamples": [],
+          //           }
+          //       ).then((_) {
+          //         debugPrint("New user saved");
+          //         Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
+          //       }
+          //       ).onError((e, _) {
+          //         debugPrint("Error saving user: $e");
+          //       });
+          //     } else {
+          //       debugPrint("User already registered");
+          //       Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
+          //     }
+          //   } else {
+          //     await FirebaseAuth.instance.signOut();
+          //     await googleSignIn.signOut();
+          //     Navigator.pushNamed(context, '/testing');
+          //   }
+          // }
         }
         else {
           FirebaseAuth.instance.signOut();
@@ -261,51 +294,84 @@ class SignInHandler {
           print("Logado");
           print("=====================================================================");
 
-          if (email != null && email.endsWith("privaterelay.appleid.com")) {
-            await auth.user!.delete();
-            Navigator.pushNamedAndRemoveUntil(context, '/instructions', (route) => false);
-          } else {
-            testEmails = emails;
+          registered = await userFound();
 
-            if (testEmails.contains(email)) {
-              registered = await userFound();
-
-              if (!registered) {
-                await db.collection("users").doc(auth.user!.uid)
-                    .set(
-                    {
-                      "id": auth.user!.uid,
-                      "name": auth.user!.displayName,
-                      "email": auth.user!.email,
-                      "institution": "",
-                      "department": "",
-                      "country": "",
-                      "address": "",
-                      "mobile": "",
-                      "webpage": "",
-                      "orcid": "",
-                      "google_scholar": "",
-                      "other": "",
-                      "favoriteProviders": [],
-                      "favoriteSamples": [],
-                    }
-                ).then((_) {
-                  debugPrint("New user saved");
-                  Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
+          if (!registered) {
+            await db.collection("users").doc(auth.user!.uid)
+                .set(
+                {
+                  "id": auth.user!.uid,
+                  "name": auth.user!.displayName,
+                  "email": auth.user!.email,
+                  "institution": "",
+                  "department": "",
+                  "country": "",
+                  "address": "",
+                  "mobile": "",
+                  "webpage": "",
+                  "orcid": "",
+                  "google_scholar": "",
+                  "other": "",
+                  "favoriteProviders": [],
+                  "favoriteSamples": [],
                 }
-                ).onError((e, _) {
-                  debugPrint("Error saving user: $e");
-                });
-              } else {
-                debugPrint("User already registered");
-                Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
-              }
-            } else {
-              await FirebaseAuth.instance.signOut();
-              await googleSignIn.signOut();
-              Navigator.pushNamed(context, '/testing');
+            ).then((_) {
+              debugPrint("New user saved");
+              Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
             }
+            ).onError((e, _) {
+              debugPrint("Error saving user: $e");
+            });
+          } else {
+            debugPrint("User already registered");
+            Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
           }
+
+          // if (email != null && email.endsWith("privaterelay.appleid.com")) {
+          //   await auth.user!.delete();
+          //   Navigator.pushNamedAndRemoveUntil(context, '/instructions', (route) => false);
+          // } else {
+          //   testEmails = emails;
+          //
+          //   if (testEmails.contains(email)) {
+          //     registered = await userFound();
+          //
+          //     if (!registered) {
+          //       await db.collection("users").doc(auth.user!.uid)
+          //           .set(
+          //           {
+          //             "id": auth.user!.uid,
+          //             "name": auth.user!.displayName,
+          //             "email": auth.user!.email,
+          //             "institution": "",
+          //             "department": "",
+          //             "country": "",
+          //             "address": "",
+          //             "mobile": "",
+          //             "webpage": "",
+          //             "orcid": "",
+          //             "google_scholar": "",
+          //             "other": "",
+          //             "favoriteProviders": [],
+          //             "favoriteSamples": [],
+          //           }
+          //       ).then((_) {
+          //         debugPrint("New user saved");
+          //         Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
+          //       }
+          //       ).onError((e, _) {
+          //         debugPrint("Error saving user: $e");
+          //       });
+          //     } else {
+          //       debugPrint("User already registered");
+          //       Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
+          //     }
+          //   } else {
+          //     await FirebaseAuth.instance.signOut();
+          //     await googleSignIn.signOut();
+          //     Navigator.pushNamed(context, '/testing');
+          //   }
+          // }
         }
         else {
           FirebaseAuth.instance.signOut();
