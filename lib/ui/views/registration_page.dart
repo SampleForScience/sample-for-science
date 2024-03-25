@@ -5,6 +5,7 @@ import 'package:country_picker/country_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sample/ui/buttons/circular_avatar_button.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -22,6 +23,7 @@ class RegistrationPage extends StatefulWidget {
 class _RegistrationPageState extends State<RegistrationPage> {
   final db = FirebaseFirestore.instance;
   final auth = FirebaseAuth.instance;
+  final GoogleSignIn googleSignIn = GoogleSignIn();
   Map<String, dynamic> user = {};
   String selectedCountry = "Select country";
   List favoriteProviders = [];
@@ -250,7 +252,46 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         },
                         child: const Text("Cancel")),
                   ),
-                ])
+                ]),
+                const SizedBox(height: 24,),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                          onPressed: () async {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text("Are you sure you want to delete your account?"),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () async {
+                                        // await auth.signOut();
+                                        // await googleSignIn.signOut();
+                                        await auth.currentUser!.delete();
+                                        Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+                                      },
+                                      child: const Text("Delete"),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text("Cancel"),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          child: const Text(
+                            "Delete Account",
+                            style: TextStyle(color: Colors.red),
+                          )),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
