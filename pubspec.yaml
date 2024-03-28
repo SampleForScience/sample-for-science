@@ -52,7 +52,7 @@ dependencies:
   collection: ^1.17.2
   sign_in_button: ^3.2.0
   crypto: ^3.0.3
-  sign_in_with_apple: ^6.0.0
+  sign_in_with_apple: 5.0.0
 
 flutter_launcher_icons:
   image_path: "assets/icon.png"
