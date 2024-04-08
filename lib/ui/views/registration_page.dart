@@ -64,7 +64,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     user = await getUser();
     setState(() {
       nameController.text = user["name"];
-      emailController.text = user["email"];
+      // emailController.text = user["email"];
       institutionController.text = user["institution"];
       departmentController.text = user["department"];
       selectedCountry = user["country"];
@@ -140,12 +140,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     label: Text("Name"),
                   ),
                 ),
-                TextField(
-                  controller: emailController,
-                  decoration: const InputDecoration(
-                    label: Text("Email"),
-                  ),
-                ),
+                // TextField(
+                //   controller: emailController,
+                //   decoration: const InputDecoration(
+                //     label: Text("Email"),
+                //   ),
+                // ),
                 TextField(
                   controller: institutionController,
                   decoration: const InputDecoration(
