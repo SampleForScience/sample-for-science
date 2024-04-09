@@ -160,8 +160,16 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
                     ElevatedButton(
                       child: const Text('Save'),
                       onPressed: () {
-                        saveUser(user);
-                        Navigator.of(context).pop();
+                        if (nameController.text == "" || institutionController.text == "" || selectedCountry == "") {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Please fill in all fields'),
+                            ),
+                          );
+                        } else {
+                          saveUser(user);
+                          Navigator.of(context).pop();
+                        }
                       },
                     ),
                   ],
