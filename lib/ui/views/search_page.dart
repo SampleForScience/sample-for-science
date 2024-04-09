@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sample/providers/sample_provider.dart';
@@ -153,12 +154,13 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
                     ElevatedButton(
                       child: const Text('Exit'),
                       onPressed: () {
-                        Navigator.of(context).pop();
+                        SystemNavigator.pop();
                       },
                     ),
                     ElevatedButton(
                       child: const Text('Save'),
                       onPressed: () {
+                        saveUser(user);
                         Navigator.of(context).pop();
                       },
                     ),
@@ -177,10 +179,25 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
   saveUser(Map<String, dynamic> user) async {
     String fileName = auth.currentUser!.uid;
 
-    await db.collection("users").doc(fileName).set(user).then((_) {
+    Map<String, dynamic> updatedUser = {
+      "id": auth.currentUser!.uid,
+      "name": nameController.text,
+      "email": user["email"],
+      "institution": institutionController.text,
+      "department": user["department"],
+      "country": selectedCountry,
+      "address": user["address"],
+      "mobile": user["mobile"],
+      "webpage": user["webpage"],
+      "orcid": user["orcid"],
+      "google_scholar": user["google_scholar"],
+      "other": user["other"],
+      "favoriteProviders": user["favoriteProviders"],
+      "favoriteSamples": user["favoriteSamples"]
+    };
+
+    await db.collection("users").doc(fileName).set(updatedUser).then((_) {
       debugPrint("User saved");
-      Navigator.pushNamedAndRemoveUntil(
-          context, '/dashboard', (route) => false);
     }).onError((e, _) {
       debugPrint("Error saving user: $e");
     });
