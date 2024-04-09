@@ -52,9 +52,9 @@ class _LoginButtonState extends State<GoogleLoginButton> {
               Text(
                 "Login with Google",
                 style: TextStyle(
-                    fontSize: 24,
-                    color: Color.fromRGBO(202, 207, 203, 1),
-                    fontFamily: 'AvenirRoman'),
+                  fontSize: 24,
+                  color: Colors.white,
+                ),
               ),
             ],
           ),

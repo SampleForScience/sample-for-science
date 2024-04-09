@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sample/services/signInHandler.dart';
-import 'package:sign_in_button/sign_in_button.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class AppleLoginButton extends StatefulWidget {
@@ -54,7 +53,7 @@ class _LoginButtonState extends State<AppleLoginButton> {
                 "Login with Apple",
                 style: TextStyle(
                   fontSize: 24,
-                  color: Color.fromRGBO(202, 207, 203, 1),
+                  color: Colors.white,
                 ),
               ),
             ],
