@@ -290,7 +290,10 @@ class _DashboardPageState extends State<DashboardPage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
                       decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 219, 240, 239),
+                          color: MediaQuery.of(context).platformBrightness ==
+                                  Brightness.dark
+                              ? const Color.fromARGB(255, 219, 240, 239)
+                              : const Color.fromARGB(255, 219, 240, 239),
                           borderRadius:
                               const BorderRadius.all(Radius.circular(10)),
                           boxShadow: [
