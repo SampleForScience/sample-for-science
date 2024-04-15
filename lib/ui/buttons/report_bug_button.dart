@@ -29,18 +29,19 @@ class _ReportBugButtonState extends State<ReportBugButton> {
     setState(() {
       packageVersion = packageInfo.version;
     });
-    _username = FirebaseAuth.instance.currentUser?.displayName ?? 'Usuário Anônimo';
+    _username =
+        FirebaseAuth.instance.currentUser?.displayName ?? 'Usuário Anônimo';
   }
 
   Future<void> _getImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
         _imageFile = File(pickedFile.path);
       });
     }
   }
-
 
   Future<void> _sendReport() async {
     if (_messageController.text.isEmpty) {
@@ -55,8 +56,10 @@ class _ReportBugButtonState extends State<ReportBugButton> {
 
     String? imageUrl;
     if (_imageFile != null) {
-      final ref = _storage.ref().child('bugs/${DateTime.now().millisecondsSinceEpoch}');
-      await ref.putFile(_imageFile!,SettableMetadata(contentType: 'image/jpeg'));
+      final ref =
+          _storage.ref().child('bugs/${DateTime.now().millisecondsSinceEpoch}');
+      await ref.putFile(
+          _imageFile!, SettableMetadata(contentType: 'image/jpeg'));
       imageUrl = await ref.getDownloadURL();
     }
 
@@ -105,22 +108,58 @@ class _ReportBugButtonState extends State<ReportBugButton> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
-                    onPressed: (){_sendReport(); Navigator.of(context).pop();},
+                    onPressed: () {
+                      _sendReport();
+                      Navigator.of(context).pop();
+                    },
                     child: const Text('Send', style: TextStyle(fontSize: 16)),
                   ),
-                  SizedBox(width:20),
+                  SizedBox(width: 20),
                   ElevatedButton(
                     onPressed: () => Navigator.of(context).pop(),
                     child: const Text('Close', style: TextStyle(fontSize: 16)),
                   ),
-                  
                 ],
               ),
-              Row(mainAxisAlignment: MainAxisAlignment.center,
-                children: [ElevatedButton(
+              _imageUrl.isNotEmpty
+                  ? Container(
+                      width: 100,
+                      alignment: Alignment.center,
+                      child: ClipRRect(
+                        // Adiciona bordas arredondadas
+                        borderRadius: BorderRadius.circular(
+                            10), // Define o raio das bordas arredondadas
+                        child: Image.network(
+                          _imageUrl,
+                          width: 200, // Define a largura máxima da imagem
+                        ),
+                      ),
+                    )
+                  : _imageFile != null
+                      ? Container(
+                          width: 100, // Define a largura máxima da imagem
+                          alignment:
+                              Alignment.center, // Alinha a imagem ao centro
+                          child: ClipRRect(
+                            // Adiciona bordas arredondadas
+                            borderRadius: BorderRadius.circular(
+                                10), // Define o raio das bordas arredondadas
+                            child: Image.file(
+                              _imageFile!,
+                              width: 200, // Define a largura máxima da imagem
+                            ),
+                          ),
+                        )
+                      : SizedBox(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
                     onPressed: _getImage,
                     child: const Text('Upload Image'),
-                  )],),
+                  )
+                ],
+              ),
             ],
             title: Center(child: const Text('Report a bug')),
             content: Container(
@@ -143,17 +182,11 @@ class _ReportBugButtonState extends State<ReportBugButton> {
                       maxLines: 6,
                     ),
                   ),
-                 
-                  _imageUrl.isNotEmpty
-                      ? Image.network(_imageUrl)
-                      : _imageFile != null
-                          ? Image.file(_imageFile!)
-                          : SizedBox(),
                 ],
               ),
             ),
           ),
-        );  
+        );
       },
     );
   }
