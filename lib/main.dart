@@ -33,17 +33,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Brightness platformBrightness = MediaQuery.of(context).platformBrightness;
+    //Brightness platformBrightness = MediaQuery.of(context).platformBrightness;
 
     return MaterialApp(
       title: 'Sample',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-            brightness: platformBrightness,
+            //brightness: platformBrightness,
             seedColor: const Color.fromARGB(255, 55, 98, 118)),
       ),
-      home: const LoginPage(),
+      home: const DashboardPage(),
       routes: {
         '/login': (context) => const LoginPage(),
         '/dashboard': (context) => const DashboardPage(),
