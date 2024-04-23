@@ -569,11 +569,7 @@ class _SearchPageState extends State<SearchPage>
                         return ListTile(
                           title: Container(
                             decoration: BoxDecoration(
-                              color:
-                                  MediaQuery.of(context).platformBrightness ==
-                                          Brightness.dark
-                                      ? Colors.black
-                                      : Colors.white,
+                              color: Color.fromARGB(255, 250, 250, 250),
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(10)),
                               boxShadow: [

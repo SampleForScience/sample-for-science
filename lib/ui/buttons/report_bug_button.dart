@@ -23,6 +23,14 @@ class _ReportBugButtonState extends State<ReportBugButton> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
+  @override
+  void initState() {
+    super.initState();
+    _init();
+    _messageController = TextEditingController();
+    _imageUrl = '';
+  }
+
   Future<void> _init() async {
     await Firebase.initializeApp();
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -33,14 +41,14 @@ class _ReportBugButtonState extends State<ReportBugButton> {
         FirebaseAuth.instance.currentUser?.displayName ?? 'Usuário Anônimo';
   }
 
-  Future<void> _getImage() async {
+  Future<File?> _getImage() async {
+    print('Get Image function called');
     final pickedFile =
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
-      setState(() {
-        _imageFile = File(pickedFile.path);
-      });
+      return File(pickedFile.path);
     }
+    return null;
   }
 
   Future<void> _sendReport() async {
@@ -83,12 +91,81 @@ class _ReportBugButtonState extends State<ReportBugButton> {
     Navigator.of(context).pop();
   }
 
-  @override
-  void initState() {
-    _init();
-    _messageController = TextEditingController();
-    _imageUrl = '';
-    super.initState();
+  Widget _buildDialog(BuildContext context) {
+    return AlertDialog(
+      title: Center(child: const Text('Report a bug')),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text("Describe in details the bug you found"),
+          SizedBox(height: 8),
+          Container(
+            width: 280,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: TextField(
+              controller: _messageController,
+              decoration: const InputDecoration(
+                filled: false,
+              ),
+              maxLines: 6,
+            ),
+          ),
+          SizedBox(height: 8),
+          Column(
+            children: [
+              ElevatedButton(
+                onPressed: _getImageAndRefreshDialog,
+                child: const Text('Upload Image'),
+              ),
+              SizedBox(width: 20),
+            ],
+          ),
+          SizedBox(height: 8),
+          _imageFile != null ? Image.file(_imageFile!, height: 95) : SizedBox(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  _sendReport();
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Send', style: TextStyle(fontSize: 16)),
+              ),
+              SizedBox(width: 10),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    _imageFile = null;
+                  });
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Close', style: TextStyle(fontSize: 16)),
+              )
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _getImageAndRefreshDialog() async {
+    final File? imageFile = await _getImage();
+    if (imageFile != null) {
+      setState(() {
+        _imageFile = imageFile;
+      });
+      Navigator.pop(context);
+      showDialog(
+        context: context,
+        builder: (context) => _buildDialog(context),
+      );
+    }
   }
 
   @override
@@ -103,67 +180,7 @@ class _ReportBugButtonState extends State<ReportBugButton> {
       onTap: () {
         showDialog(
           context: context,
-          builder: (context) => AlertDialog(
-            actions: [
-              Column(
-                children: [
-                  SizedBox(height: 10),
-                  Text("Describe in details the bug you found"),
-                  SizedBox(height: 10),
-                  Container(
-                    width: 280,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: TextField(
-                      controller: _messageController,
-                      decoration: const InputDecoration(
-                        filled: false,
-                      ),
-                      maxLines: 6,
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          _sendReport();
-                          Navigator.of(context).pop();
-                        },
-                        child:
-                            const Text('Send', style: TextStyle(fontSize: 16)),
-                      ),
-                      SizedBox(width: 20),
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            _imageFile = null;
-                          });
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop();
-                        },
-                        child:
-                            const Text('Close', style: TextStyle(fontSize: 16)),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: _getImage,
-                    child: const Text('Upload Image'),
-                  ),
-                  SizedBox(height: 10),
-                  _imageFile != null
-                      ? Image.file(_imageFile!, height: 100)
-                      : SizedBox(),
-                ],
-              ),
-            ],
-            title: Center(child: const Text('Report a bug')),
-          ),
+          builder: (context) => _buildDialog(context),
         );
       },
     );
