@@ -156,7 +156,9 @@ class _ReportBugButtonState extends State<ReportBugButton> {
                     child: const Text('Upload Image'),
                   ),
                   SizedBox(height: 10),
-                  _imageFile != null ? Image.file(_imageFile!) : SizedBox(),
+                  _imageFile != null
+                      ? Image.file(_imageFile!, height: 100)
+                      : SizedBox(),
                 ],
               ),
             ],

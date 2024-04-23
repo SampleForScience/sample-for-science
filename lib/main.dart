@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
             //brightness: platformBrightness,
             seedColor: const Color.fromARGB(255, 55, 98, 118)),
       ),
-      home: const DashboardPage(),
+      home: const LoginPage(),
       routes: {
         '/login': (context) => const LoginPage(),
         '/dashboard': (context) => const DashboardPage(),
