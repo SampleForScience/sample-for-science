@@ -100,19 +100,42 @@ class _ReportBugButtonState extends State<ReportBugButton> {
         children: [
           Text("Describe in details the bug you found"),
           SizedBox(height: 8),
-          Container(
-            width: 280,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: TextField(
-              controller: _messageController,
-              decoration: const InputDecoration(
-                filled: false,
+          Row(
+            children: [
+              Container(
+                width: 200,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: TextField(
+                  controller: _messageController,
+                  decoration: const InputDecoration(
+                    filled: false,
+                  ),
+                  maxLines: 6,
+                ),
               ),
-              maxLines: 6,
-            ),
+              SizedBox(width: 8),
+              _imageFile != null
+                  ? Image.file(_imageFile!, height: 150)
+                  : Container(
+                      height: 160,
+                      width: 64,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                            color: Color.fromARGB(255, 85, 138, 163)),
+                      ),
+                      child: Center(
+                        child: Icon(
+                          Icons.image,
+                          color: Color.fromARGB(255, 85, 138, 163),
+                          size: 24,
+                        ),
+                      ),
+                    ),
+            ],
           ),
           SizedBox(height: 8),
           Column(
@@ -125,7 +148,6 @@ class _ReportBugButtonState extends State<ReportBugButton> {
             ],
           ),
           SizedBox(height: 8),
-          _imageFile != null ? Image.file(_imageFile!, height: 95) : SizedBox(),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
