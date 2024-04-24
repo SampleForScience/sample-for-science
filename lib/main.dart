@@ -4,12 +4,14 @@ import 'package:provider/provider.dart';
 import 'package:sample/firebase_options.dart';
 import 'package:sample/providers/sample_provider.dart';
 import 'package:sample/ui/views/dashboard_page.dart';
+import 'package:sample/ui/views/intructions_page.dart';
 import 'package:sample/ui/views/login_page.dart';
 import 'package:sample/ui/views/new_sample_page.dart';
 import 'package:sample/ui/views/provider_page.dart';
 import 'package:sample/ui/views/registration_page.dart';
 import 'package:sample/ui/views/sample_page.dart';
 import 'package:sample/ui/views/search_page.dart';
+import 'package:sample/ui/views/testing_period.dart';
 import 'package:sample/ui/views/update_sample_page.dart';
 import 'package:sample/ui/views/users_page.dart';
 
@@ -33,7 +35,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Sample',
-      debugShowCheckedModeBanner: true,
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255,55,98,118)),
       ),
@@ -48,6 +50,8 @@ class MyApp extends StatelessWidget {
         '/search': (context) => const SearchPage(),
         '/messages': (context) => const UsersPage(),
         '/provider': (context) => const ProviderPage(),
+        '/instructions': (context) => const InstructionsPage(),
+        '/testing': (context) => const TestingPeriodPage(),
       },
     );
   }

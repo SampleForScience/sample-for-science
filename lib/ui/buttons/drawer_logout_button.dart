@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sample/services/google_sign_in.dart';
+import 'package:sample/services/signInHandler.dart';
 
 class DrawerLogoutButton extends StatefulWidget {
   const DrawerLogoutButton({Key? key});
@@ -9,12 +9,12 @@ class DrawerLogoutButton extends StatefulWidget {
 }
 
 class _LoginButtonState extends State<DrawerLogoutButton> {
-  late GoogleSignInHandler _googleSignInHandler;
+  late SignInHandler _googleSignInHandler;
 
   @override
   void initState() {
     super.initState();
-    _googleSignInHandler = GoogleSignInHandler(context);
+    _googleSignInHandler = SignInHandler(context);
   }
 
   @override

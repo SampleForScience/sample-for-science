@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:sample/services/signInHandler.dart';
+import 'package:sign_in_button/sign_in_button.dart';
 
 class AppleLoginButton extends StatefulWidget {
   const AppleLoginButton({super.key});
@@ -9,34 +10,40 @@ class AppleLoginButton extends StatefulWidget {
 }
 
 class _LoginButtonState extends State<AppleLoginButton> {
+  late SignInHandler _signInHandler;
+
+  @override
+  void initState() {
+    super.initState();
+    _signInHandler = SignInHandler(context);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.blue,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0), // Define o raio das bordas
-        ),
-      ),
-      onPressed: null,
-      child: const SizedBox(
-        height: 50,
-        width: double.infinity,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Icon(FontAwesomeIcons.apple),
-            SizedBox(width: 15,),
-            Text("Login with Apple",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 15,
-                fontWeight: FontWeight.w500
-              )
-            ),
-          ],
-        ),
-      ),
+    return SignInButton(
+      Buttons.appleDark,
+      text: "Login with Apple",
+      onPressed: () async {
+        // await showDialog(
+        //   context: context,
+        //   builder: (BuildContext context) {
+        //     return AlertDialog(
+        //       title: const Text("Email Sharing"),
+        //       content: const Text("For your account to be successfully created, you need to share your email on the first login"),
+        //       actions: [
+        //         TextButton(
+        //           child: const Text("OK"),
+        //           onPressed: () {
+        //             Navigator.of(context).pop();
+        //           },
+        //         ),
+        //       ],
+        //     );
+        //   },
+        // );
+
+        _signInHandler.signInWithApple();
+      },
     );
   }
 }

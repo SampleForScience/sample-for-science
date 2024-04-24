@@ -141,7 +141,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
               },
             ),
           ),
-          const DrawerLogoutButton(),
           const AboutButton(),
           const ReportBugButton()
 

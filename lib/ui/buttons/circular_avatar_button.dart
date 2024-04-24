@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sample/services/google_sign_in.dart';
+import 'package:sample/services/signInHandler.dart';
 
 // Itens do popMenuButton
 enum MenuItem { login,registration }
@@ -12,13 +12,13 @@ class CircularAvatarButton extends StatefulWidget {
 }
 
 class _CircularAvatarButtonState extends State<CircularAvatarButton> {
-  late GoogleSignInHandler _googleSignInHandler;
+  late SignInHandler _googleSignInHandler;
   late bool isLogged;
 
   @override
   void initState() {
     super.initState();
-    _googleSignInHandler = GoogleSignInHandler(context);
+    _googleSignInHandler = SignInHandler(context);
     setState(() {
       if (_googleSignInHandler.auth.currentUser != null) {
         isLogged = true;
@@ -66,21 +66,30 @@ class _CircularAvatarButtonState extends State<CircularAvatarButton> {
       ],
       child: Padding(
         padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-        child: isLogged
-          ? CircleAvatar(
-            backgroundImage: NetworkImage(
-              _googleSignInHandler.auth.currentUser!.photoURL!,
-            ),
-          )
-          : IconButton(
-            onPressed: null,
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0),),),
-            ),
-            icon: const Icon(
-              Icons.person_rounded, color: Colors.white,),
+        child: IconButton(
+          onPressed: null,
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0),),),
           ),
+          icon: const Icon(
+            Icons.person_rounded, color: Colors.white,),
+        ),
+        // child: isLogged
+        //   ? CircleAvatar(
+        //     backgroundImage: NetworkImage(
+        //       _googleSignInHandler.auth.currentUser!.photoURL!,
+        //     ),
+        //   )
+        //   : IconButton(
+        //     onPressed: null,
+        //     style: ButtonStyle(
+        //       backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+        //       shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0),),),
+        //     ),
+        //     icon: const Icon(
+        //       Icons.person_rounded, color: Colors.white,),
+        //   ),
       )
     );
   }
