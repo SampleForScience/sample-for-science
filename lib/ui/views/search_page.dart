@@ -21,7 +21,8 @@ class SearchPage extends StatefulWidget {
   State<SearchPage> createState() => _SearchPageState();
 }
 
-class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateMixin {
+class _SearchPageState extends State<SearchPage>
+    with SingleTickerProviderStateMixin {
   final db = FirebaseFirestore.instance;
   final auth = FirebaseAuth.instance;
   String anim = "next";
@@ -52,8 +53,12 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
   }
 
   List<Tab> tabs = <Tab>[
-    const Tab(text: "Samples",),
-    const Tab(text: "Users",),
+    const Tab(
+      text: "Samples",
+    ),
+    const Tab(
+      text: "Users",
+    ),
   ];
   late TabController _tabController;
 
@@ -218,7 +223,8 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
     });
     // late Map<String, dynamic> sampleData;
     try {
-      await db.collection("samples").limit(limit).get().then((querySnapshot) async {
+      await db.collection("samples").limit(limit).get().then(
+          (querySnapshot) async {
         processSearchQuerySnapshot(querySnapshot, "");
       }, onError: (e) {
         debugPrint("Error completing: $e");
@@ -266,7 +272,9 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
   }
 
   // TODO: limitar quantidade de itens listados
-  Future<void> processSearchQuerySnapshot(QuerySnapshot<Map<String, dynamic>> querySnapshot, String toSearch) async {
+  Future<void> processSearchQuerySnapshot(
+      QuerySnapshot<Map<String, dynamic>> querySnapshot,
+      String toSearch) async {
     setState(() {
       count = 0;
     });
@@ -421,7 +429,8 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
     });
     // late Map<String, dynamic> sampleData;
     try {
-      await db.collection("users").limit(limit).get().then((querySnapshot) async {
+      await db.collection("users").limit(limit).get().then(
+          (querySnapshot) async {
         processUserSearchQuerySnapshot(querySnapshot, "");
       }, onError: (e) {
         debugPrint("Error completing: $e");
@@ -447,7 +456,9 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
     }
   }
 
-  Future<void> processUserSearchQuerySnapshot(QuerySnapshot<Map<String, dynamic>> querySnapshot, String toSearch) async {
+  Future<void> processUserSearchQuerySnapshot(
+      QuerySnapshot<Map<String, dynamic>> querySnapshot,
+      String toSearch) async {
     setState(() {
       usersCount = 0;
     });
@@ -463,7 +474,11 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
           }
         });
       } else {
-        if (user.data()["name"].toString().toLowerCase().replaceAll(" ", "")
+        if (user
+            .data()["name"]
+            .toString()
+            .toLowerCase()
+            .replaceAll(" ", "")
             .contains(toSearch.toLowerCase().replaceAll(" ", ""))) {
           setState(() {
             if (user.id != auth.currentUser!.uid) {
@@ -483,7 +498,6 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
     }
     usersToShow = paginatedUsers[0];
   }
-
 
   Widget usersList() {
     return StreamBuilder<QuerySnapshot>(
@@ -524,7 +538,8 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
                 children: [
                   CircleAvatar(
                     minRadius: 25,
-                    child: Text("${initials[0][0]} ${initials[initials.length - 1][0]}"),
+                    child: Text(
+                        "${initials[0][0]} ${initials[initials.length - 1][0]}"),
                   ),
                   const SizedBox(width: 8),
                   Flexible(
@@ -556,20 +571,17 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
           onTap: () {
             Navigator.push(
                 context,
-                MaterialPageRoute( builder: (context) =>
-                    ChatPage(
-                      receiverUserEmail: data["email"],
-                      receiverUserId: data["id"],
-                      receiverUserName: data["name"],
-                    )
-                )
-            );
+                MaterialPageRoute(
+                    builder: (context) => ChatPage(
+                          receiverUserEmail: data["email"],
+                          receiverUserId: data["id"],
+                          receiverUserName: data["name"],
+                        )));
           });
     } else {
       return Container();
     }
   }
-
 
   @override
   void initState() {
@@ -618,7 +630,8 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
                   child: Container(
                     decoration: BoxDecoration(
                         color: Colors.white10,
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
                         border: Border.all(color: Colors.grey)),
                     child: Row(
                       children: [
@@ -693,14 +706,13 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
                 Expanded(
                   child: AnimatedSwitcher(
                     duration: const Duration(milliseconds: 200),
-                    transitionBuilder: (Widget child, Animation<double> animation) {
+                    transitionBuilder:
+                        (Widget child, Animation<double> animation) {
                       return SlideTransition(
-                        position:
-                        Tween<Offset>(
+                        position: Tween<Offset>(
                           begin: anim == "next"
                               ? const Offset(2.0, 0.0)
-                              : const Offset(-2.0, 0.0)
-                          ,
+                              : const Offset(-2.0, 0.0),
                           end: Offset.zero,
                         ).animate(animation),
                         child: child,
@@ -713,8 +725,9 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
                         return ListTile(
                           title: Container(
                             decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: const BorderRadius.all(Radius.circular(10)),
+                              color: Color.fromARGB(255, 250, 250, 250),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10)),
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.grey.withOpacity(0.5),
@@ -731,51 +744,79 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
                                 children: [
                                   const Text(
                                     "Code",
-                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   Text(samplesToShow[index]['code']),
                                   const Text(
                                     "Chemical Formula",
-                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   Text(samplesToShow[index]['formula']),
                                   const Text(
                                     "Registration date",
-                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
-                                  Text(formatDateWithUserTimezone(samplesToShow[index]["registration"].toDate())),
-                                  if (samplesToShow[index]["provider"] != auth.currentUser!.uid)
+                                  Text(formatDateWithUserTimezone(
+                                      samplesToShow[index]["registration"]
+                                          .toDate())),
+                                  if (samplesToShow[index]["provider"] !=
+                                      auth.currentUser!.uid)
                                     TextButton(
                                         onPressed: () {
-                                          Navigator.pushNamed(context, "/provider", arguments: samplesToShow[index]["provider"],);
+                                          Navigator.pushNamed(
+                                            context,
+                                            "/provider",
+                                            arguments: samplesToShow[index]
+                                                ["provider"],
+                                          );
                                         },
-                                        child: const Center(child: Text("See Provider"))
-                                    ),
+                                        child: const Center(
+                                            child: Text("See Provider"))),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Container(
                                         decoration: BoxDecoration(
-                                          color: const Color.fromARGB(255, 165, 207, 228),
-                                          borderRadius:
-                                          const BorderRadius.all(Radius.circular(20)),
+                                          color: MediaQuery.of(context)
+                                                      .platformBrightness ==
+                                                  Brightness.dark
+                                              ? Color.fromARGB(255, 58, 93, 110)
+                                              : const Color.fromARGB(
+                                                  255, 165, 207, 228),
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(20)),
                                           border: Border.all(
-                                            color: const Color.fromARGB(255, 165, 207, 228),
+                                            color: MediaQuery.of(context)
+                                                        .platformBrightness ==
+                                                    Brightness.dark
+                                                ? Color.fromARGB(
+                                                    255, 58, 93, 110)
+                                                : const Color.fromARGB(
+                                                    255, 165, 207, 228),
                                             width: 5,
                                           ),
                                         ),
                                         child: Row(
                                           children: [
-                                            if (samplesToShow[index]["provider"] !=
+                                            if (samplesToShow[index]
+                                                    ["provider"] !=
                                                 auth.currentUser!.uid)
                                               FavoriteProviderButton(
                                                   providerData:
-                                                  samplesToShow[index]["providerData"]),
-                                            if (samplesToShow[index]["provider"] !=
+                                                      samplesToShow[index]
+                                                          ["providerData"]),
+                                            if (samplesToShow[index]
+                                                    ["provider"] !=
                                                 auth.currentUser!.uid)
                                               FavoriteSampleButton(
-                                                  sampleData: samplesToShow[index]),
-                                            SeeSampleButton(sampleData: samplesToShow[index]),
+                                                  sampleData:
+                                                      samplesToShow[index]),
+                                            SeeSampleButton(
+                                                sampleData:
+                                                    samplesToShow[index]),
                                           ],
                                         ),
                                       ),
@@ -795,36 +836,29 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     page <= 1
-                        ? const TextButton(
-                        onPressed: null,
-                        child: Text("<")
-                    )
+                        ? const TextButton(onPressed: null, child: Text("<"))
                         : TextButton(
-                        onPressed: () {
-                          setState(() {
-                            anim = "previous";
-                            page -= 1;
-                            samplesToShow = paginatedSamples[page - 1];
-                          });
-                        },
-                        child: const Text("<")
-                    ),
-                    Text("showing  ${limitPerPage * (page - 1) + 1} - ${limitPerPage * page >= count ? count : limitPerPage * page}  of  $count"),
+                            onPressed: () {
+                              setState(() {
+                                anim = "previous";
+                                page -= 1;
+                                samplesToShow = paginatedSamples[page - 1];
+                              });
+                            },
+                            child: const Text("<")),
+                    Text(
+                        "showing  ${limitPerPage * (page - 1) + 1} - ${limitPerPage * page >= count ? count : limitPerPage * page}  of  $count"),
                     ((limitPerPage * page) >= count)
-                        ? const TextButton(
-                        onPressed: null,
-                        child: Text(">")
-                    )
+                        ? const TextButton(onPressed: null, child: Text(">"))
                         : TextButton(
-                        onPressed: () {
-                          setState(() {
-                            anim = "next";
-                            page += 1;
-                            samplesToShow = paginatedSamples[page - 1];
-                          });
-                        },
-                        child: const Text(">")
-                    ),
+                            onPressed: () {
+                              setState(() {
+                                anim = "next";
+                                page += 1;
+                                samplesToShow = paginatedSamples[page - 1];
+                              });
+                            },
+                            child: const Text(">")),
                   ],
                 ),
             ],
@@ -838,7 +872,8 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
                   child: Container(
                     decoration: BoxDecoration(
                         color: Colors.white10,
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
                         border: Border.all(color: Colors.grey)),
                     child: Row(
                       children: [
@@ -854,7 +889,8 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
                                   paginatedUsers.clear();
                                 });
                                 // countFoundSamples(searchController.text);
-                                searchUsers(searchUsersController.text); // TODO: searchUser
+                                searchUsers(searchUsersController
+                                    .text); // TODO: searchUser
                               }
                             },
                             decoration: const InputDecoration(
@@ -879,7 +915,8 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
                                 });
                                 if (searchUsersController.text.isNotEmpty) {
                                   // countFoundSamples(searchController.text);
-                                  searchUsers(searchUsersController.text); // TODO: searchUser
+                                  searchUsers(searchUsersController
+                                      .text); // TODO: searchUser
                                 }
                               },
                               icon: const Icon(
@@ -913,14 +950,13 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
                 Expanded(
                   child: AnimatedSwitcher(
                     duration: const Duration(milliseconds: 200),
-                    transitionBuilder: (Widget child, Animation<double> animation) {
+                    transitionBuilder:
+                        (Widget child, Animation<double> animation) {
                       return SlideTransition(
-                        position:
-                        Tween<Offset>(
+                        position: Tween<Offset>(
                           begin: anim == "next"
                               ? const Offset(2.0, 0.0)
-                              : const Offset(-2.0, 0.0)
-                          ,
+                              : const Offset(-2.0, 0.0),
                           end: Offset.zero,
                         ).animate(animation),
                         child: child,
@@ -931,56 +967,64 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
                       itemCount: usersToShow.length,
                       itemBuilder: (context, index) {
                         return ListTile(
-                            title: Column(
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Flexible(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            '${usersToShow[index]["name"]}',
-                                            // overflow: TextOverflow.ellipsis,
-                                          ),
-                                          Text(
-                                            '(${usersToShow[index]["email"]})',
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                          TextButton(
-                                              onPressed: () {
-                                                Navigator.pushNamed(context, "/provider", arguments: usersToShow[index]["id"],);
-                                              },
-                                              child: const Center(child: Text("See Provider"))
-                                          ),
-                                          Row(
-                                            children: [
-                                              const Spacer(),
-                                              FavoriteProviderButton(providerData: usersToShow[index])
-                                            ],
-                                          ),
-                                        ],
-                                      ),
+                          title: Column(
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Flexible(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          '${usersToShow[index]["name"]}',
+                                          // overflow: TextOverflow.ellipsis,
+                                        ),
+                                        Text(
+                                          '(${usersToShow[index]["email"]})',
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.pushNamed(
+                                                context,
+                                                "/provider",
+                                                arguments: usersToShow[index]
+                                                    ["id"],
+                                              );
+                                            },
+                                            child: const Center(
+                                                child: Text("See Provider"))),
+                                        Row(
+                                          children: [
+                                            const Spacer(),
+                                            FavoriteProviderButton(
+                                                providerData:
+                                                    usersToShow[index])
+                                          ],
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                                const Divider(),
-                              ],
-                            ),
-                            // onTap: () {
-                            //   Navigator.push(
-                            //       context,
-                            //       MaterialPageRoute( builder: (context) =>
-                            //           ChatPage(
-                            //             receiverUserEmail: usersToShow[index]["email"],
-                            //             receiverUserId: usersToShow[index]["id"],
-                            //             receiverUserName: usersToShow[index]["name"],
-                            //           )
-                            //       )
-                            //   );
-                            // }
-                          );
+                                  ),
+                                ],
+                              ),
+                              const Divider(),
+                            ],
+                          ),
+                          // onTap: () {
+                          //   Navigator.push(
+                          //       context,
+                          //       MaterialPageRoute( builder: (context) =>
+                          //           ChatPage(
+                          //             receiverUserEmail: usersToShow[index]["email"],
+                          //             receiverUserId: usersToShow[index]["id"],
+                          //             receiverUserName: usersToShow[index]["name"],
+                          //           )
+                          //       )
+                          //   );
+                          // }
+                        );
                       },
                     ),
                   ),
@@ -990,36 +1034,29 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     usersPage <= 1
-                        ? const TextButton(
-                        onPressed: null,
-                        child: Text("<")
-                    )
+                        ? const TextButton(onPressed: null, child: Text("<"))
                         : TextButton(
-                        onPressed: () {
-                          setState(() {
-                            anim = "previous";
-                            usersPage -= 1;
-                            usersToShow = paginatedUsers[usersPage - 1];
-                          });
-                        },
-                        child: const Text("<")
-                    ),
-                    Text("showing  ${limitPerPage * (usersPage - 1) + 1} - ${limitPerPage * usersPage >= usersCount ? usersCount : limitPerPage * usersPage}  of  $usersCount"),
+                            onPressed: () {
+                              setState(() {
+                                anim = "previous";
+                                usersPage -= 1;
+                                usersToShow = paginatedUsers[usersPage - 1];
+                              });
+                            },
+                            child: const Text("<")),
+                    Text(
+                        "showing  ${limitPerPage * (usersPage - 1) + 1} - ${limitPerPage * usersPage >= usersCount ? usersCount : limitPerPage * usersPage}  of  $usersCount"),
                     ((limitPerPage * usersPage) >= usersCount)
-                        ? const TextButton(
-                        onPressed: null,
-                        child: Text(">")
-                    )
+                        ? const TextButton(onPressed: null, child: Text(">"))
                         : TextButton(
-                        onPressed: () {
-                          setState(() {
-                            anim = "next";
-                            usersPage += 1;
-                            usersToShow = paginatedUsers[usersPage - 1];
-                          });
-                        },
-                        child: const Text(">")
-                    ),
+                            onPressed: () {
+                              setState(() {
+                                anim = "next";
+                                usersPage += 1;
+                                usersToShow = paginatedUsers[usersPage - 1];
+                              });
+                            },
+                            child: const Text(">")),
                   ],
                 ),
             ],

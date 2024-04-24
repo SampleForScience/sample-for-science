@@ -30,28 +30,35 @@ class _LoginPageState extends State<LoginPage> {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (snapshot.data == true) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              Navigator.pushNamedAndRemoveUntil(context, '/search', (route) => false);
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/search', (route) => false);
             });
             return Container();
           } else {
-            return
-              Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      color: Colors.white,
-                      child: SvgPicture.asset(
-                        "assets/logo.svg",
-                        width: 225
-                      )
+            return Container(
+              decoration: BoxDecoration(
+                  gradient: RadialGradient(colors: [
+                Color.fromARGB(255, 255, 255, 255),
+                Color.fromARGB(255, 61, 61, 206),
+              ], center: Alignment.center, radius: 1.6)),
+              child: Center(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                    const SizedBox(
+                      height: 48,
                     ),
-                    const SizedBox(height: 24,),
+                    Container(
+                        child: SvgPicture.asset("assets/logo.svg", width: 325)),
+                    const SizedBox(
+                      height: 48,
+                    ),
                     const GoogleLoginButton(),
-                    const SizedBox(height: 8,),
+                    const SizedBox(
+                      height: 16,
+                    ),
                     const AppleLoginButton(),
-                  ]
-                )
+                  ])),
             );
           }
         },
