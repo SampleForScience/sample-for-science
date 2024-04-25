@@ -228,7 +228,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           user = {
                             "id": auth.currentUser!.uid,
                             "name": nameController.text,
-                            "email": emailController.text,
+                            // "email": emailController.text,
+                            "email": user["email"],
                             "institution": institutionController.text,
                             "department": departmentController.text,
                             "country": selectedCountry,
