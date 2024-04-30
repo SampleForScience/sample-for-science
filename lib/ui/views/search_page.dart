@@ -468,7 +468,11 @@ class _SearchPageState extends State<SearchPage>
     for (var user in users) {
       if (toSearch == "") {
         setState(() {
-          if (user.id != auth.currentUser!.uid) {
+          if (
+              user.id != auth.currentUser!.uid
+              && user["name"] != null
+              && user["name"] != ""
+          ) {
             foundUsers.add(user.data());
             usersCount += 1;
           }
@@ -981,10 +985,10 @@ class _SearchPageState extends State<SearchPage>
                                           '${usersToShow[index]["name"]}',
                                           // overflow: TextOverflow.ellipsis,
                                         ),
-                                        Text(
-                                          '(${usersToShow[index]["email"]})',
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
+                                        // Text(
+                                        //   '(${usersToShow[index]["email"]})',
+                                        //   overflow: TextOverflow.ellipsis,
+                                        // ),
                                         TextButton(
                                             onPressed: () {
                                               Navigator.pushNamed(
