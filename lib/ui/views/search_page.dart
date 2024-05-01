@@ -982,13 +982,21 @@ class _SearchPageState extends State<SearchPage>
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          '${usersToShow[index]["name"]}',
+                                          'Name: ${usersToShow[index]["name"]}',
                                           // overflow: TextOverflow.ellipsis,
                                         ),
                                         // Text(
                                         //   '(${usersToShow[index]["email"]})',
                                         //   overflow: TextOverflow.ellipsis,
                                         // ),
+                                        Text(
+                                          'Country: ${usersToShow[index]["country"]}',
+                                          // overflow: TextOverflow.ellipsis,
+                                        ),
+                                        Text(
+                                          'Institution: ${usersToShow[index]["institution"]}',
+                                          // overflow: TextOverflow.ellipsis,
+                                        ),
                                         TextButton(
                                             onPressed: () {
                                               Navigator.pushNamed(
