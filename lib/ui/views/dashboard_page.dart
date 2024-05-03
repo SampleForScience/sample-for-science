@@ -466,9 +466,21 @@ class _DashboardPageState extends State<DashboardPage> {
                                                   fontWeight: FontWeight.bold,
                                                 )),
                                             Text(
-                                                "Name: ${providerData['name']}\nEmail: ${providerData['email']}",
-                                                style: const TextStyle(
-                                                    fontSize: 16)),
+                                              'Name: ${providerData["name"]}',
+                                              // overflow: TextOverflow.ellipsis,
+                                            ),
+                                            // Text(
+                                            //   '(${providerData["email"]})',
+                                            //   overflow: TextOverflow.ellipsis,
+                                            // ),
+                                            Text(
+                                              'Country: ${providerData["country"]}',
+                                              // overflow: TextOverflow.ellipsis,
+                                            ),
+                                            Text(
+                                              'Institution: ${providerData["institution"]}',
+                                              // overflow: TextOverflow.ellipsis,
+                                            ),
                                             if (auth.currentUser!.uid !=
                                                 providerData["id"])
                                               Row(
