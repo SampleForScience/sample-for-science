@@ -57,7 +57,7 @@ class _ReportBugButtonState extends State<ReportBugButton> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           backgroundColor: Colors.red,
-          content: Text('Please, insert a text explaing the bug.'),
+          content: Text('Please, insert a text explaining the bug.'),
         ),
       );
       return;
@@ -92,86 +92,88 @@ class _ReportBugButtonState extends State<ReportBugButton> {
   }
 
   Widget _buildDialog(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final imageWidth = screenSize.width * 0.6;
+
     return AlertDialog(
       title: Center(child: const Text('Report a bug')),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text("Describe in details the bug you found"),
-          SizedBox(height: 8),
-          Row(
-            children: [
-              Container(
-                width: 200,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: TextField(
-                  controller: _messageController,
-                  decoration: const InputDecoration(
-                    filled: false,
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text("Describe in details the bug you found"),
+            SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: Container(
+                    width: screenSize.width * 0.5,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: TextField(
+                      controller: _messageController,
+                      decoration: const InputDecoration(
+                        filled: false,
+                      ),
+                      maxLines: 6,
+                    ),
                   ),
-                  maxLines: 6,
                 ),
-              ),
-              SizedBox(width: 8),
-              _imageFile != null
-                  ? Image.file(_imageFile!, height: 150)
-                  : Container(
-                      height: 160,
-                      width: 64,
+                SizedBox(width: 8),
+                Expanded(
+                  flex: 2,
+                  child: GestureDetector(
+                    onTap: _getImageAndRefreshDialog,
+                    child: Container(
+                      height: 150,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
                             color: Color.fromARGB(255, 85, 138, 163)),
                       ),
                       child: Center(
-                        child: Icon(
-                          Icons.image,
-                          color: Color.fromARGB(255, 85, 138, 163),
-                          size: 24,
-                        ),
+                        child: _imageFile != null
+                            ? Image.file(_imageFile!, width: imageWidth)
+                            : Icon(
+                                Icons.image,
+                                color: Color.fromARGB(255, 85, 138, 163),
+                                size: 48,
+                              ),
                       ),
                     ),
-            ],
-          ),
-          SizedBox(height: 8),
-          Column(
-            children: [
-              ElevatedButton(
-                onPressed: _getImageAndRefreshDialog,
-                child: const Text('Upload Image'),
-              ),
-              SizedBox(width: 20),
-            ],
-          ),
-          SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  _sendReport();
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Send', style: TextStyle(fontSize: 16)),
-              ),
-              SizedBox(width: 10),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    _imageFile = null;
-                  });
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Close', style: TextStyle(fontSize: 16)),
-              )
-            ],
-          ),
-        ],
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    _sendReport();
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Send', style: TextStyle(fontSize: 16)),
+                ),
+                SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _imageFile = null;
+                    });
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Close', style: TextStyle(fontSize: 16)),
+                )
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

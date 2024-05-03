@@ -627,7 +627,8 @@ class _SearchPageState extends State<SearchPage>
                                           color: MediaQuery.of(context)
                                                       .platformBrightness ==
                                                   Brightness.dark
-                                              ? Color.fromARGB(255, 58, 93, 110)
+                                              ? const Color.fromARGB(
+                                                  255, 165, 207, 228)
                                               : const Color.fromARGB(
                                                   255, 165, 207, 228),
                                           borderRadius: const BorderRadius.all(
@@ -636,8 +637,8 @@ class _SearchPageState extends State<SearchPage>
                                             color: MediaQuery.of(context)
                                                         .platformBrightness ==
                                                     Brightness.dark
-                                                ? Color.fromARGB(
-                                                    255, 58, 93, 110)
+                                                ? const Color.fromARGB(
+                                                    255, 165, 207, 228)
                                                 : const Color.fromARGB(
                                                     255, 165, 207, 228),
                                             width: 5,
