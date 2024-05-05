@@ -47,12 +47,12 @@ class _LoginButtonState extends State<AppleLoginButton> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              FaIcon(FontAwesomeIcons.apple),
+              FaIcon(FontAwesomeIcons.apple, color: Colors.white),
               SizedBox(width: 24),
               Text(
                 "Login with Apple",
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 18,
                   color: Colors.white,
                 ),
               ),

@@ -47,12 +47,12 @@ class _LoginButtonState extends State<GoogleLoginButton> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              FaIcon(FontAwesomeIcons.google),
+              FaIcon(FontAwesomeIcons.google, color: Colors.white),
               SizedBox(width: 24),
               Text(
                 "Login with Google",
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 18,
                   color: Colors.white,
                 ),
               ),

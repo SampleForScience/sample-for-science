@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,6 +14,7 @@ import 'package:sample/ui/views/registration_page.dart';
 import 'package:sample/ui/views/sample_page.dart';
 import 'package:sample/ui/views/search_page.dart';
 import 'package:sample/ui/views/testing_period.dart';
+import 'package:sample/ui/views/terms_of_use.dart';
 import 'package:sample/ui/views/update_sample_page.dart';
 import 'package:sample/ui/views/users_page.dart';
 
@@ -29,19 +32,17 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    //Brightness platformBrightness = MediaQuery.of(context).platformBrightness;
-
     return MaterialApp(
       title: 'Sample',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-            //brightness: platformBrightness,
-            seedColor: const Color.fromARGB(255, 55, 98, 118)),
+          seedColor: const Color.fromARGB(255, 55, 98, 118),
+        ),
       ),
       home: const LoginPage(),
       routes: {
@@ -51,12 +52,48 @@ class MyApp extends StatelessWidget {
         '/sample': (context) => const SamplePage(),
         '/new-sample': (context) => const NewSamplePage(),
         '/update-sample': (context) => const UpdateSamplePage(),
-        '/search': (context) => const SearchPage(),
         '/messages': (context) => const UsersPage(),
         '/provider': (context) => const ProviderPage(),
         '/instructions': (context) => const InstructionsPage(),
         '/testing': (context) => const TestingPeriodPage(),
+        '/terms': (context) => const TermsOfUsePage(),
+        '/search': (context) {
+          return FutureBuilder<bool>(
+            future: checkTermsAccepted(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Scaffold(
+                    body: Center(child: CircularProgressIndicator()));
+              } else if (snapshot.hasError) {
+                return const Scaffold(body: Center(child: Text('Error')));
+              } else {
+                final accepted = snapshot.data ?? false;
+                // Mensagem de depuração
+                return accepted ? const SearchPage() : const TermsOfUsePage();
+              }
+            },
+          );
+        },
       },
     );
   }
+}
+
+Future<bool> checkTermsAccepted() async {
+  final currentUser = FirebaseAuth.instance.currentUser;
+  if (currentUser != null) {
+    final docSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUser.uid)
+        .get();
+    if (docSnapshot.exists) {
+      final data = docSnapshot.data() as Map<String, dynamic>;
+      return data['termsAccepted'] ?? false;
+    } else {
+      // Se o documento não existe, trata como se os termos não tivessem sido aceitos
+      return false;
+    }
+  }
+  // Se não houver usuário logado, também retorna false
+  return false;
 }
