@@ -13,6 +13,13 @@ class TermsOfUsePage extends StatefulWidget {
 class _TermsOfUsePageState extends State<TermsOfUsePage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   bool _termsAccepted = false;
+  late SignInHandler _signInHandler;
+
+  @override
+  void initState() {
+    super.initState();
+    _signInHandler = SignInHandler(context);
+  }
 
   Future<void> _acceptTerms() async {
     final currentUser = FirebaseAuth.instance.currentUser;
@@ -88,7 +95,10 @@ class _TermsOfUsePageState extends State<TermsOfUsePage> {
                       child:
                           Text(_termsAccepted ? 'Terms Accepted' : 'I Agree'),
                     ),
-                    ElevatedButton(onPressed: null, child: const Text('Logout'))
+                    ElevatedButton(
+                        onPressed: _signInHandler.signInWithGoogle,
+                        child: const Text('Logout')
+                    )
                   ],
                 ),
               ],
