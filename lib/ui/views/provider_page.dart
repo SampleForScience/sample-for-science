@@ -101,7 +101,7 @@ class _ProviderPageState extends State<ProviderPage> {
                           fontWeight: FontWeight.bold,
                         )
                       ),
-                      Text(providerData["name"],
+                      Text(providerData["name"] ?? "",
                         style: const TextStyle(
                           fontSize: 16
                         )

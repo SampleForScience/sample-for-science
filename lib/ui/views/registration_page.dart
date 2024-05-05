@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:sample/providers/sample_provider.dart';
 import 'package:sample/ui/buttons/circular_avatar_button.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -64,7 +66,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     user = await getUser();
     setState(() {
       nameController.text = user["name"];
-      emailController.text = user["email"];
+      // emailController.text = user["email"];
       institutionController.text = user["institution"];
       departmentController.text = user["department"];
       selectedCountry = user["country"];
@@ -140,12 +142,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     label: Text("Name"),
                   ),
                 ),
-                TextField(
-                  controller: emailController,
-                  decoration: const InputDecoration(
-                    label: Text("Email"),
-                  ),
-                ),
+                // TextField(
+                //   controller: emailController,
+                //   decoration: const InputDecoration(
+                //     label: Text("Email"),
+                //   ),
+                // ),
                 TextField(
                   controller: institutionController,
                   decoration: const InputDecoration(
@@ -269,7 +271,43 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                       onPressed: () async {
                                         // await auth.signOut();
                                         // await googleSignIn.signOut();
-                                        await auth.currentUser!.delete();
+
+                                        try {
+                                          for (var sample in Provider.of<SampleProvider>(context, listen: false).mySamples) {
+                                            await db.collection("samples").doc(sample["id"]).delete().then((doc) => debugPrint("Sample deleted"),
+                                              onError: (e) => debugPrint("Error updating document $e"),
+                                            );
+                                          }
+                                        } catch(e) {
+                                          debugPrint("Error deleting sample: $e");
+                                        }
+
+                                        try {
+                                          await db.collection("users").doc(auth.currentUser!.uid).delete().then((doc) => debugPrint("User data deleted"),
+                                            onError: (e) => debugPrint("Error updating document $e"),
+                                          );
+                                        } catch(e) {
+                                          debugPrint("Error deleting user data: $e");
+                                        }
+
+                                        try {
+                                          await auth.currentUser!.delete();
+                                        } catch(e) {
+                                          debugPrint("Error in auth.currentUser!.delete(): $e");
+                                        }
+
+                                        try {
+                                          await googleSignIn.signOut();
+                                        } catch(e) {
+                                          debugPrint("Error in googleSignIn.signOut(): $e");
+                                        }
+
+                                        try {
+                                          await auth.signOut();
+                                        } catch(e) {
+                                          debugPrint("Error ina uth.signOut();: $e");
+                                        }
+                                        
                                         Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
                                       },
                                       child: const Text("Delete"),

@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:country_picker/country_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sample/providers/sample_provider.dart';
@@ -37,9 +39,13 @@ class _SearchPageState extends State<SearchPage>
   List<Map<String, dynamic>> usersToShow = [];
   List<List<Map<String, dynamic>>> paginatedSamples = [];
   List<List<Map<String, dynamic>>> paginatedUsers = [];
+  Map<String, dynamic> user = {};
+  String selectedCountry = "Select country";
 
   TextEditingController searchController = TextEditingController();
   TextEditingController searchUsersController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController institutionController = TextEditingController();
 
   String formatDateWithUserTimezone(DateTime dateTime) {
     final formatter = DateFormat('MM/dd/yyyy HH:mm', Intl.getCurrentLocale());
@@ -61,6 +67,155 @@ class _SearchPageState extends State<SearchPage>
       _tabController.index;
     });
   }
+
+  Future<Map<String, dynamic>> getUser() async {
+    Map<String, dynamic> userData = {};
+    await db
+        .collection("users")
+        .where("id", isEqualTo: auth.currentUser!.uid)
+        .get()
+        .then(
+          (querySnapshot) {
+        debugPrint("Successfully completed");
+        for (var docSnapshot in querySnapshot.docs) {
+          debugPrint('ID: ${docSnapshot.id}; Data:${docSnapshot.data()}');
+          userData = docSnapshot.data();
+        }
+      },
+      onError: (e) => debugPrint("Error completing: $e"),
+    );
+    debugPrint(userData.toString());
+    return userData;
+  }
+
+  Future<bool> loadUserDataAndAskForCompletion() async {
+    user = await getUser();
+    setState(() {
+      nameController.text = user["name"] ?? "";
+      institutionController.text = user["institution"] ?? "";
+      selectedCountry = user["country"] ?? "";
+    });
+
+    if (user["name"] == null
+      || user["name"] == ""
+      || user["institution"] == null
+      || user["institution"] == ""
+      || user["country"] == null
+      || user["country"] == "") {
+
+      debugPrint("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return WillPopScope(
+            onWillPop: () async => false,  // Sobrescreve o método onWillPop
+            child: StatefulBuilder(
+              builder: (context, setState) {
+                return AlertDialog(
+                  title: const Text('Complete your registration'),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextField(
+                        controller: nameController,
+                        decoration: const InputDecoration(
+                          label: Text("Name"),
+                        ),
+                      ),
+                      TextField(
+                        controller: institutionController,
+                        decoration: const InputDecoration(
+                          label: Text("Institution"),
+                        ),
+                      ),
+                      const SizedBox(height: 12,),
+                      const Text("Country"),
+                      ElevatedButton(
+                        onPressed: () {
+                          showCountryPicker(
+                            context: context,
+                            onSelect: (Country country) {
+                              setState(() {
+                                selectedCountry = country.name;
+                              });
+                              debugPrint('===============\n$selectedCountry\n===============');
+                              debugPrint('Country code: ${country.countryCode}; Phone code: ${country.phoneCode}');
+                            },
+                          );
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(selectedCountry),
+                            const Icon(Icons.arrow_drop_down)
+                          ],
+                        )
+                      ),
+                    ],
+                  ),
+                  actions: <Widget>[
+                    ElevatedButton(
+                      child: const Text('Exit'),
+                      onPressed: () {
+                        SystemNavigator.pop();
+                      },
+                    ),
+                    ElevatedButton(
+                      child: const Text('Save'),
+                      onPressed: () {
+                        if (nameController.text == "" || institutionController.text == "" || selectedCountry == "") {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Please fill in all fields'),
+                            ),
+                          );
+                        } else {
+                          saveUser(user);
+                          Navigator.of(context).pop();
+                        }
+                      },
+                    ),
+                  ],
+                );
+              },
+            ),
+          );
+        },
+      );
+    }
+
+    return true;
+  }
+
+  saveUser(Map<String, dynamic> user) async {
+    String fileName = auth.currentUser!.uid;
+
+    Map<String, dynamic> updatedUser = {
+      "id": auth.currentUser!.uid,
+      "name": nameController.text,
+      "email": user["email"],
+      "institution": institutionController.text,
+      "department": user["department"],
+      "country": selectedCountry,
+      "address": user["address"],
+      "mobile": user["mobile"],
+      "webpage": user["webpage"],
+      "orcid": user["orcid"],
+      "google_scholar": user["google_scholar"],
+      "other": user["other"],
+      "favoriteProviders": user["favoriteProviders"],
+      "favoriteSamples": user["favoriteSamples"]
+    };
+
+    await db.collection("users").doc(fileName).set(updatedUser).then((_) {
+      debugPrint("User saved");
+    }).onError((e, _) {
+      debugPrint("Error saving user: $e");
+    });
+  }
+
 
   Future<void> getSamples(int limit) async {
     setState(() {
@@ -313,7 +468,11 @@ class _SearchPageState extends State<SearchPage>
     for (var user in users) {
       if (toSearch == "") {
         setState(() {
-          if (user.id != auth.currentUser!.uid) {
+          if (
+              user.id != auth.currentUser!.uid
+              && user["name"] != null
+              && user["name"] != ""
+          ) {
             foundUsers.add(user.data());
             usersCount += 1;
           }
@@ -433,6 +592,7 @@ class _SearchPageState extends State<SearchPage>
     super.initState();
     _tabController = TabController(vsync: this, length: tabs.length);
     _tabController.addListener(_handleTabSelection);
+    loadUserDataAndAskForCompletion();
     Provider.of<SampleProvider>(context, listen: false).getMySamples();
     Provider.of<SampleProvider>(context, listen: false).getFavoriteProviders();
     Provider.of<SampleProvider>(context, listen: false).getFavoriteSamples();
@@ -826,10 +986,10 @@ class _SearchPageState extends State<SearchPage>
                                           '${usersToShow[index]["name"]}',
                                           // overflow: TextOverflow.ellipsis,
                                         ),
-                                        Text(
-                                          '(${usersToShow[index]["email"]})',
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
+                                        // Text(
+                                        //   '(${usersToShow[index]["email"]})',
+                                        //   overflow: TextOverflow.ellipsis,
+                                        // ),
                                         TextButton(
                                             onPressed: () {
                                               Navigator.pushNamed(
