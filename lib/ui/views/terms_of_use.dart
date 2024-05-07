@@ -24,6 +24,7 @@ class _TermsOfUsePageState extends State<TermsOfUsePage> {
         print('Usuário atual: ${currentUser.uid}');
         await _firestore.collection('users').doc(currentUser.uid).update({
           'termsAccepted': true,
+          'appVersion': packageVersion,
         });
         setState(() {
           _termsAccepted = true;
