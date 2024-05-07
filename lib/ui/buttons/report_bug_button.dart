@@ -18,7 +18,6 @@ class _ReportBugButtonState extends State<ReportBugButton> {
   late String packageVersion;
   late TextEditingController _messageController;
   late String _username;
-  late String _imageUrl;
   File? _imageFile;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
@@ -28,7 +27,6 @@ class _ReportBugButtonState extends State<ReportBugButton> {
     super.initState();
     _init();
     _messageController = TextEditingController();
-    _imageUrl = '';
   }
 
   Future<void> _init() async {
@@ -78,8 +76,6 @@ class _ReportBugButtonState extends State<ReportBugButton> {
       'message': _messageController.text,
       'image': imageUrl,
     });
-
-    _imageUrl = imageUrl ?? '';
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
