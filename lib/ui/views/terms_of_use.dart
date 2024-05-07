@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sample/services/signInHandler.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class TermsOfUsePage extends StatefulWidget {
   const TermsOfUsePage({Key? key}) : super(key: key);
@@ -11,6 +13,7 @@ class TermsOfUsePage extends StatefulWidget {
 }
 
 class _TermsOfUsePageState extends State<TermsOfUsePage> {
+  late String packageVersion;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   bool _termsAccepted = false;
   late SignInHandler _signInHandler;
@@ -28,6 +31,7 @@ class _TermsOfUsePageState extends State<TermsOfUsePage> {
         print('Usuário atual: ${currentUser.uid}');
         await _firestore.collection('users').doc(currentUser.uid).update({
           'termsAccepted': true,
+          'appVersion': packageVersion,
         });
         setState(() {
           _termsAccepted = true;
@@ -43,10 +47,18 @@ class _TermsOfUsePageState extends State<TermsOfUsePage> {
     }
   }
 
+  Future<void> _init() async {
+    await Firebase.initializeApp();
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    setState(() {
+      packageVersion = packageInfo.version;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
+    return SingleChildScrollView(
+      child: Padding(
         padding: const EdgeInsets.all(0),
         child: Container(
           decoration: BoxDecoration(
