@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:sample/providers/sample_provider.dart';
 import 'package:sample/ui/buttons/circular_avatar_button.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -22,6 +23,7 @@ class RegistrationPage extends StatefulWidget {
 
 class _RegistrationPageState extends State<RegistrationPage> {
   final db = FirebaseFirestore.instance;
+  late bool termsAccepted;
   final auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
   Map<String, dynamic> user = {};
@@ -76,6 +78,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       otherController.text = user["other"];
       favoriteProviders = user["favoriteProviders"];
       favoriteSamples = user["favoriteSamples"];
+      termsAccepted = user["termsAccepted"];
     });
     return true;
   }
@@ -119,7 +122,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: const Color.fromARGB(255, 85, 134, 158),
-          title: const Text('Registration', style: TextStyle(color: Colors.white)),
+          title:
+              const Text('Registration', style: TextStyle(color: Colors.white)),
           iconTheme: const IconThemeData(color: Colors.white),
           centerTitle: true,
           actions: const [
@@ -141,11 +145,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                 ),
                 TextField(
+                  enabled: false,
                   controller: emailController,
                   decoration: const InputDecoration(
                     label: Text("Email"),
                   ),
                 ),
+                // TextField(
+                //   controller: emailController,
+                //   decoration: const InputDecoration(
+                //     label: Text("Email"),
+                //   ),
+                // ),
                 TextField(
                   controller: institutionController,
                   decoration: const InputDecoration(
@@ -158,7 +169,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     label: Text("Department"),
                   ),
                 ),
-                const SizedBox(height: 8,),
+                const SizedBox(
+                  height: 8,
+                ),
                 const Text("Country"),
                 ElevatedButton(
                     onPressed: () {
@@ -220,7 +233,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   Expanded(
                     child: ElevatedButton(
                         onPressed: () {
-
                           debugPrint(favoriteSamples.toString());
 
                           user = {
@@ -237,7 +249,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             "google_scholar": scholarController.text,
                             "other": otherController.text,
                             "favoriteProviders": favoriteProviders,
-                            "favoriteSamples": favoriteSamples
+                            "favoriteSamples": favoriteSamples,
+                            'termsAccepted': termsAccepted
                           };
 
                           saveUser(user);
@@ -253,7 +266,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         child: const Text("Cancel")),
                   ),
                 ]),
-                const SizedBox(height: 24,),
+                const SizedBox(
+                  height: 24,
+                ),
                 Row(
                   children: [
                     Expanded(
@@ -263,14 +278,77 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: const Text("Are you sure you want to delete your account?"),
+                                  title: const Text(
+                                      "Are you sure you want to delete your account?"),
                                   actions: [
                                     TextButton(
                                       onPressed: () async {
                                         // await auth.signOut();
                                         // await googleSignIn.signOut();
-                                        await auth.currentUser!.delete();
-                                        Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+
+                                        try {
+                                          for (var sample
+                                              in Provider.of<SampleProvider>(
+                                                      context,
+                                                      listen: false)
+                                                  .mySamples) {
+                                            await db
+                                                .collection("samples")
+                                                .doc(sample["id"])
+                                                .delete()
+                                                .then(
+                                                  (doc) => debugPrint(
+                                                      "Sample deleted"),
+                                                  onError: (e) => debugPrint(
+                                                      "Error updating document $e"),
+                                                );
+                                          }
+                                        } catch (e) {
+                                          debugPrint(
+                                              "Error deleting sample: $e");
+                                        }
+
+                                        try {
+                                          await db
+                                              .collection("users")
+                                              .doc(auth.currentUser!.uid)
+                                              .delete()
+                                              .then(
+                                                (doc) => debugPrint(
+                                                    "User data deleted"),
+                                                onError: (e) => debugPrint(
+                                                    "Error updating document $e"),
+                                              );
+                                        } catch (e) {
+                                          debugPrint(
+                                              "Error deleting user data: $e");
+                                        }
+
+                                        try {
+                                          await auth.currentUser!.delete();
+                                        } catch (e) {
+                                          debugPrint(
+                                              "Error in auth.currentUser!.delete(): $e");
+                                        }
+
+                                        try {
+                                          await googleSignIn.signOut();
+                                        } catch (e) {
+                                          debugPrint(
+                                              "Error in googleSignIn.signOut(): $e");
+                                        }
+
+                                        try {
+                                          await auth.signOut();
+                                        } catch (e) {
+                                          debugPrint(
+                                              "Error ina uth.signOut();: $e");
+                                        }
+
+                                        Navigator.pushNamedAndRemoveUntil(
+                                            context,
+                                            '/login',
+                                            (route) => false);
                                       },
                                       child: const Text("Delete"),
                                     ),
