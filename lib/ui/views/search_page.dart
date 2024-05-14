@@ -206,7 +206,8 @@ class _SearchPageState extends State<SearchPage>
       "google_scholar": user["google_scholar"],
       "other": user["other"],
       "favoriteProviders": user["favoriteProviders"],
-      "favoriteSamples": user["favoriteSamples"]
+      "favoriteSamples": user["favoriteSamples"],
+      "termsAccepted": user["termsAccepted"],
     };
 
     await db.collection("users").doc(fileName).set(updatedUser).then((_) {
