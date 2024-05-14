@@ -30,6 +30,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   String selectedCountry = "Select country";
   List favoriteProviders = [];
   List favoriteSamples = [];
+  bool? termsAccepted;
 
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -78,6 +79,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       otherController.text = user["other"];
       favoriteProviders = user["favoriteProviders"];
       favoriteSamples = user["favoriteSamples"];
+      termsAccepted = user["termsAccepted"];
     });
     return true;
   }
@@ -246,7 +248,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             "google_scholar": scholarController.text,
                             "other": otherController.text,
                             "favoriteProviders": favoriteProviders,
-                            "favoriteSamples": favoriteSamples
+                            "favoriteSamples": favoriteSamples,
+                            "termsAccepted": termsAccepted ?? false,
                           };
 
                           saveUser(user);
