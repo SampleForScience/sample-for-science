@@ -41,24 +41,46 @@ class _LoginPageState extends State<LoginPage> {
                 Color.fromARGB(255, 255, 255, 255),
                 Color.fromARGB(255, 61, 61, 206),
               ], center: Alignment.center, radius: 1.6)),
-              child: Center(
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                    const SizedBox(
-                      height: 48,
+              child: Stack(
+                children: [
+                  Positioned(
+                    top: 0.0,
+                    right: 0.0,
+                    child: Container(
+                      color: Colors.red,
+                      child: const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text(
+                          'BETA TEST',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ),
-                    Container(
-                        child: SvgPicture.asset("assets/logo.svg", width: 325)),
-                    const SizedBox(
-                      height: 48,
-                    ),
-                    const GoogleLoginButton(),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    const AppleLoginButton(),
-                  ])),
+                  ),
+                  Center(
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                        const SizedBox(
+                          height: 48,
+                        ),
+                        Container(
+                            child: SvgPicture.asset("assets/logo.svg", width: 325)),
+                        const SizedBox(
+                          height: 48,
+                        ),
+                        const GoogleLoginButton(),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        const AppleLoginButton(),
+                      ])),
+                ],
+              ),
             );
           }
         },

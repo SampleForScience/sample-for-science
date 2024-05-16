@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sample/ui/buttons/circular_avatar_button.dart';
+import 'package:sample/ui/widgets/beta_banner.dart';
 import 'package:sample/ui/widgets/custom_drawer.dart';
 
 class NewSamplePage extends StatefulWidget {
@@ -144,7 +145,7 @@ class _NewSamplePageState extends State<NewSamplePage>
             const Text("Provide Sample", style: TextStyle(color: Colors.white)),
         iconTheme: const IconThemeData(color: Colors.white),
         centerTitle: true,
-        actions: const [CircularAvatarButton()],
+        actions: const [BetaBanner()],
         bottom: TabBar(
           labelColor: Colors.white,
           controller: _tabController,

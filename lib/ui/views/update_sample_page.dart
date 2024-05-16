@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sample/ui/buttons/circular_avatar_button.dart';
+import 'package:sample/ui/widgets/beta_banner.dart';
 
 class UpdateSamplePage extends StatefulWidget {
   const UpdateSamplePage({super.key});
@@ -184,7 +185,7 @@ class _UpdateSamplePageState extends State<UpdateSamplePage>
             const Text('Update Sample', style: TextStyle(color: Colors.white)),
         iconTheme: const IconThemeData(color: Colors.white),
         centerTitle: true,
-        actions: const [CircularAvatarButton()],
+        actions: const [BetaBanner()],
         bottom: TabBar(
           labelColor: Colors.white,
           controller: _tabController,

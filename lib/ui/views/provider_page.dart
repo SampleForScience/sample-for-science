@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sample/ui/buttons/circular_avatar_button.dart';
 import 'package:sample/ui/buttons/favorite_provider_button.dart';
 import 'package:sample/ui/views/chat_page.dart';
+import 'package:sample/ui/widgets/beta_banner.dart';
 
 class ProviderPage extends StatefulWidget {
   const ProviderPage({super.key});
@@ -61,7 +62,7 @@ class _ProviderPageState extends State<ProviderPage> {
           
         centerTitle: true,
         actions: const [
-          CircularAvatarButton(),
+          BetaBanner(),
         ],
       ),
       body: FutureBuilder<void>(

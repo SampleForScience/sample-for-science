@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sample/services/chat_service.dart';
+import 'package:sample/ui/widgets/beta_banner.dart';
 
 
 class ChatPage extends StatefulWidget {
@@ -132,6 +133,7 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 85, 134, 158),
+        actions: [BetaBanner()],
         title: Row(
           children: [      
                  

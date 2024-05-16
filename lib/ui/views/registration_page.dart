@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:sample/providers/sample_provider.dart';
 import 'package:sample/ui/buttons/circular_avatar_button.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:sample/ui/widgets/beta_banner.dart';
 
 // Itens do popMenuButton
 enum MenuItem { logIn }
@@ -127,7 +128,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           iconTheme: const IconThemeData(color: Colors.white),
           centerTitle: true,
           actions: const [
-            CircularAvatarButton(),
+            BetaBanner(),
           ],
         ),
         body: Padding(

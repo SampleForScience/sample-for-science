@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:sample/ui/buttons/circular_avatar_button.dart';
 import 'package:sample/ui/buttons/favorite_sample_button.dart';
 import 'package:sample/ui/views/chat_page.dart';
+import 'package:sample/ui/widgets/beta_banner.dart';
 
 class SamplePage extends StatefulWidget {
   const SamplePage({super.key});
@@ -89,7 +90,7 @@ class _SamplePageState extends State<SamplePage> {
         iconTheme: const IconThemeData(color: Colors.white),
         centerTitle: true,
         actions: const [
-          CircularAvatarButton(),
+          BetaBanner(),
         ],
       ),
       body: FutureBuilder<void>(

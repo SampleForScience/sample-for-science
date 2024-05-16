@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:sample/providers/sample_provider.dart';
 import 'package:sample/ui/buttons/favorite_provider_button.dart';
 import 'package:sample/ui/views/chat_page.dart';
+import 'package:sample/ui/widgets/beta_banner.dart';
 import 'package:sample/ui/widgets/custom_drawer.dart';
 
 import 'package:sample/ui/buttons/circular_avatar_button.dart';
@@ -178,7 +179,7 @@ class _UsersPageState extends State<UsersPage> {
       drawer: const CustomDrawer(highlight: Highlight.messages),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 85, 134, 158),
-        actions: [CircularAvatarButton()],
+        actions: [BetaBanner()],
         title: const Text("Messages", style: TextStyle(color: Colors.white)),
         iconTheme: const IconThemeData(color: Colors.white),
       ),

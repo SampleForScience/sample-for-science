@@ -2,8 +2,10 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sample/providers/sample_provider.dart';
@@ -12,6 +14,7 @@ import 'package:sample/ui/buttons/favorite_provider_button.dart';
 import 'package:sample/ui/buttons/favorite_sample_button.dart';
 import 'package:sample/ui/buttons/see_sample_button.dart';
 import 'package:sample/ui/views/chat_page.dart';
+import 'package:sample/ui/widgets/beta_banner.dart';
 import 'package:sample/ui/widgets/custom_drawer.dart';
 
 class SearchPage extends StatefulWidget {
@@ -613,7 +616,9 @@ class _SearchPageState extends State<SearchPage>
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 85, 134, 158),
         title: const Text("Search", style: TextStyle(color: Colors.white)),
-        actions: const [CircularAvatarButton()],
+        actions: const [
+          BetaBanner()
+        ],
         centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.white),
         bottom: TabBar(
@@ -730,7 +735,7 @@ class _SearchPageState extends State<SearchPage>
                         return ListTile(
                           title: Container(
                             decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 250, 250, 250),
+                              color: const Color.fromARGB(255, 250, 250, 250),
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(10)),
                               boxShadow: [
