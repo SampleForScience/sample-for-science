@@ -31,7 +31,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
   String selectedCountry = "Select country";
   List favoriteProviders = [];
   List favoriteSamples = [];
-  bool? termsAccepted;
 
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
