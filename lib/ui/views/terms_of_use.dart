@@ -110,6 +110,7 @@ class _TermsOfUsePageState extends State<TermsOfUsePage> {
                       ElevatedButton(
                           onPressed: _signInHandler.signInWithGoogle,
                           child: const Text('Logout'))
+
                     ],
                   ),
                 ],

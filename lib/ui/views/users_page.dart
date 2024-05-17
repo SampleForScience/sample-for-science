@@ -131,10 +131,10 @@ class _UsersPageState extends State<UsersPage> {
                         '${data["name"]}',
                         overflow: TextOverflow.ellipsis,
                       ),
-                      Text(
-                        '(${data["email"]})',
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      // Text(
+                      //   '(${data["email"]})',
+                      //   overflow: TextOverflow.ellipsis,
+                      // ),
                       Row(
                         children: [
                           const Spacer(),

@@ -101,37 +101,37 @@ class _ProviderPageState extends State<ProviderPage> {
                           fontWeight: FontWeight.bold,
                         )
                       ),
-                      Text(providerData["name"],
+                      Text(providerData["name"] ?? "",
                         style: const TextStyle(
                           fontSize: 16
                         )
                       ),
-                      const Divider(),
-                      const Text(
-                          "Email",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          )
-                      ),
-                      Text(providerData["email"],
-                          style: const TextStyle(
-                              fontSize: 16
-                          )
-                      ),
-                      const Divider(),
-                      const Text(
-                          "Adress",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          )
-                      ),
-                      Text(providerData["address"],
-                          style: const TextStyle(
-                              fontSize: 16
-                          )
-                      ),
+                      // const Divider(),
+                      // const Text(
+                      //     "Email",
+                      //     style: TextStyle(
+                      //       fontSize: 16,
+                      //       fontWeight: FontWeight.bold,
+                      //     )
+                      // ),
+                      // Text(providerData["email"],
+                      //     style: const TextStyle(
+                      //         fontSize: 16
+                      //     )
+                      // ),
+                      // const Divider(),
+                      // const Text(
+                      //     "Adress",
+                      //     style: TextStyle(
+                      //       fontSize: 16,
+                      //       fontWeight: FontWeight.bold,
+                      //     )
+                      // ),
+                      // Text(providerData["address"],
+                      //     style: const TextStyle(
+                      //         fontSize: 16
+                      //     )
+                      // ),
                       const Divider(),
                       const Text(
                           "Country",
