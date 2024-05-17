@@ -13,6 +13,7 @@ import 'package:sample/ui/buttons/favorite_sample_button.dart';
 import 'package:sample/ui/buttons/see_sample_button.dart';
 import 'package:sample/ui/views/chat_page.dart';
 import 'package:sample/ui/widgets/custom_drawer.dart';
+import 'package:super_banners/super_banners.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -75,7 +76,7 @@ class _SearchPageState extends State<SearchPage>
         .where("id", isEqualTo: auth.currentUser!.uid)
         .get()
         .then(
-          (querySnapshot) {
+      (querySnapshot) {
         debugPrint("Successfully completed");
         for (var docSnapshot in querySnapshot.docs) {
           debugPrint('ID: ${docSnapshot.id}; Data:${docSnapshot.data()}');
@@ -96,21 +97,21 @@ class _SearchPageState extends State<SearchPage>
       selectedCountry = user["country"] ?? "";
     });
 
-    if (user["name"] == null
-      || user["name"] == ""
-      || user["institution"] == null
-      || user["institution"] == ""
-      || user["country"] == null
-      || user["country"] == "") {
-
-      debugPrint("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+    if (user["name"] == null ||
+        user["name"] == "" ||
+        user["institution"] == null ||
+        user["institution"] == "" ||
+        user["country"] == null ||
+        user["country"] == "") {
+      debugPrint(
+          "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
       showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
           return WillPopScope(
-            onWillPop: () async => false,  // Sobrescreve o método onWillPop
+            onWillPop: () async => false, // Sobrescreve o método onWillPop
             child: StatefulBuilder(
               builder: (context, setState) {
                 return AlertDialog(
@@ -130,29 +131,32 @@ class _SearchPageState extends State<SearchPage>
                           label: Text("Institution"),
                         ),
                       ),
-                      const SizedBox(height: 12,),
+                      const SizedBox(
+                        height: 12,
+                      ),
                       const Text("Country"),
                       ElevatedButton(
-                        onPressed: () {
-                          showCountryPicker(
-                            context: context,
-                            onSelect: (Country country) {
-                              setState(() {
-                                selectedCountry = country.name;
-                              });
-                              debugPrint('===============\n$selectedCountry\n===============');
-                              debugPrint('Country code: ${country.countryCode}; Phone code: ${country.phoneCode}');
-                            },
-                          );
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(selectedCountry),
-                            const Icon(Icons.arrow_drop_down)
-                          ],
-                        )
-                      ),
+                          onPressed: () {
+                            showCountryPicker(
+                              context: context,
+                              onSelect: (Country country) {
+                                setState(() {
+                                  selectedCountry = country.name;
+                                });
+                                debugPrint(
+                                    '===============\n$selectedCountry\n===============');
+                                debugPrint(
+                                    'Country code: ${country.countryCode}; Phone code: ${country.phoneCode}');
+                              },
+                            );
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(selectedCountry),
+                              const Icon(Icons.arrow_drop_down)
+                            ],
+                          )),
                     ],
                   ),
                   actions: <Widget>[
@@ -165,7 +169,9 @@ class _SearchPageState extends State<SearchPage>
                     ElevatedButton(
                       child: const Text('Save'),
                       onPressed: () {
-                        if (nameController.text == "" || institutionController.text == "" || selectedCountry == "") {
+                        if (nameController.text == "" ||
+                            institutionController.text == "" ||
+                            selectedCountry == "") {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text('Please fill in all fields'),
@@ -216,7 +222,6 @@ class _SearchPageState extends State<SearchPage>
       debugPrint("Error saving user: $e");
     });
   }
-
 
   Future<void> getSamples(int limit) async {
     setState(() {
@@ -469,11 +474,9 @@ class _SearchPageState extends State<SearchPage>
     for (var user in users) {
       if (toSearch == "") {
         setState(() {
-          if (
-              user.id != auth.currentUser!.uid
-              && user["name"] != null
-              && user["name"] != ""
-          ) {
+          if (user.id != auth.currentUser!.uid &&
+              user["name"] != null &&
+              user["name"] != "") {
             foundUsers.add(user.data());
             usersCount += 1;
           }
@@ -613,7 +616,18 @@ class _SearchPageState extends State<SearchPage>
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 85, 134, 158),
         title: const Text("Search", style: TextStyle(color: Colors.white)),
-        actions: const [CircularAvatarButton()],
+        actions: const [
+          Stack(children: [
+            CircularAvatarButton(),
+            CornerBanner(
+              bannerPosition: CornerBannerPosition.topRight,
+              bannerColor: Colors.red,
+              child: Text("Beta",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.white)),
+            ),
+          ])
+        ],
         centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.white),
         bottom: TabBar(

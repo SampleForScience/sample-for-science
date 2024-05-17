@@ -95,7 +95,7 @@ class _DashboardPageState extends State<DashboardPage> {
               CircularAvatarButton(),
               CornerBanner(
                 bannerPosition: CornerBannerPosition.topRight,
-                bannerColor: Color.fromARGB(255, 85, 134, 158),
+                bannerColor: Colors.red,
                 child: Text("Beta",
                     style: TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.white)),

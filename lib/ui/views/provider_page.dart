@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sample/ui/buttons/circular_avatar_button.dart';
 import 'package:sample/ui/buttons/favorite_provider_button.dart';
 import 'package:sample/ui/views/chat_page.dart';
+import 'package:super_banners/super_banners.dart';
 
 class ProviderPage extends StatefulWidget {
   const ProviderPage({super.key});
@@ -17,15 +18,19 @@ class _ProviderPageState extends State<ProviderPage> {
   final auth = FirebaseAuth.instance;
   late Map<String, dynamic> providerData;
 
-  Future<void> waitingProviderData() async{
+  Future<void> waitingProviderData() async {
     await Future.delayed(const Duration(milliseconds: 100), () {});
   }
 
   Future<void> getProvider() async {
     String providerId = ModalRoute.of(context)!.settings.arguments as String;
 
-    try{
-      await db.collection("users").where("id", isEqualTo: providerId).get().then((querySnapshot) async {
+    try {
+      await db
+          .collection("users")
+          .where("id", isEqualTo: providerId)
+          .get()
+          .then((querySnapshot) async {
         final users = querySnapshot.docs;
         for (var user in users) {
           providerData = {
@@ -46,7 +51,7 @@ class _ProviderPageState extends State<ProviderPage> {
       }, onError: (e) {
         debugPrint("Error completing: $e");
       });
-    } catch(e) {
+    } catch (e) {
       debugPrint('Error in getUser(): $e');
     }
   }
@@ -55,13 +60,22 @@ class _ProviderPageState extends State<ProviderPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-         backgroundColor: const Color.fromARGB(255, 85, 134, 158),
-          title: const Text('Sample provider', style: TextStyle(color: Colors.white)),
-           iconTheme: const IconThemeData(color: Colors.white),
-          
+        backgroundColor: Colors.red,
+        title: const Text('Sample provider',
+            style: TextStyle(color: Colors.white)),
+        iconTheme: const IconThemeData(color: Colors.white),
         centerTitle: true,
         actions: const [
-          CircularAvatarButton(),
+          Stack(children: [
+            CircularAvatarButton(),
+            CornerBanner(
+              bannerPosition: CornerBannerPosition.topRight,
+              bannerColor: Colors.red,
+              child: Text("Beta",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.white)),
+            ),
+          ])
         ],
       ),
       body: FutureBuilder<void>(
@@ -75,7 +89,8 @@ class _ProviderPageState extends State<ProviderPage> {
               children: [
                 const Padding(
                   padding: EdgeInsets.all(20.0),
-                  child: Text("An error occurred trying to load provider information, try again later.\nSorry 😕"),
+                  child: Text(
+                      "An error occurred trying to load provider information, try again later.\nSorry 😕"),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -85,8 +100,7 @@ class _ProviderPageState extends State<ProviderPage> {
                 )
               ],
             );
-          }
-          else {
+          } else {
             return Scaffold(
               body: SingleChildScrollView(
                 child: Padding(
@@ -94,18 +108,13 @@ class _ProviderPageState extends State<ProviderPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        "Name",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        )
-                      ),
+                      const Text("Name",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          )),
                       Text(providerData["name"] ?? "",
-                        style: const TextStyle(
-                          fontSize: 16
-                        )
-                      ),
+                          style: const TextStyle(fontSize: 16)),
                       // const Divider(),
                       // const Text(
                       //     "Email",
@@ -133,128 +142,87 @@ class _ProviderPageState extends State<ProviderPage> {
                       //     )
                       // ),
                       const Divider(),
-                      const Text(
-                          "Country",
+                      const Text("Country",
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                          )
-                      ),
+                          )),
                       Text(providerData["country"],
-                          style: const TextStyle(
-                              fontSize: 16
-                          )
-                      ),
+                          style: const TextStyle(fontSize: 16)),
                       const Divider(),
-                      const Text(
-                          "Department",
+                      const Text("Department",
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                          )
-                      ),
+                          )),
                       Text(providerData["department"],
-                          style: const TextStyle(
-                              fontSize: 16
-                          )
-                      ),
+                          style: const TextStyle(fontSize: 16)),
                       const Divider(),
-                      const Text(
-                        "Google scholar",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        )
-                      ),
+                      const Text("Google scholar",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          )),
                       Text(providerData["google_scholar"],
-                        style: const TextStyle(
-                          fontSize: 16
-                        )
-                      ),
+                          style: const TextStyle(fontSize: 16)),
                       const Divider(),
-                      const Text(
-                          "Institution",
+                      const Text("Institution",
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                          )
-                      ),
+                          )),
                       Text(providerData["institution"],
-                          style: const TextStyle(
-                              fontSize: 16
-                          )
-                      ),
-                      const Text(
-                          "Mobile",
+                          style: const TextStyle(fontSize: 16)),
+                      const Text("Mobile",
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                          )
-                      ),
+                          )),
                       Text(providerData["mobile"],
-                          style: const TextStyle(
-                              fontSize: 16
-                          )
-                      ),
-                      const Text(
-                          "Orcid",
+                          style: const TextStyle(fontSize: 16)),
+                      const Text("Orcid",
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                          )
-                      ),
+                          )),
                       Text(providerData["orcid"],
-                          style: const TextStyle(
-                              fontSize: 16
-                          )
-                      ),
-                      const Text(
-                          "Other",
+                          style: const TextStyle(fontSize: 16)),
+                      const Text("Other",
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                          )
-                      ),
+                          )),
                       Text(providerData["other"],
-                          style: const TextStyle(
-                              fontSize: 16
-                          )
-                      ),
-                      const Text(
-                          "Webpage",
+                          style: const TextStyle(fontSize: 16)),
+                      const Text("Webpage",
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                          )
-                      ),
+                          )),
                       Text(providerData["webpage"],
-                          style: const TextStyle(
-                              fontSize: 16
-                          )
-                      ),
+                          style: const TextStyle(fontSize: 16)),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ChatPage(
-                                    receiverUserEmail: providerData["email"],
-                                    receiverUserId: providerData["id"],
-                                    receiverUserName: providerData["name"],
-                                  ),
-                                )
-                              );
-                            },
-                            child: const Row(
-                              children: [
-                                Text("Contact provider "),
-                                Icon(Icons.send_sharp)
-                              ],
-                            )
-                          )
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ChatPage(
+                                        receiverUserEmail:
+                                            providerData["email"],
+                                        receiverUserId: providerData["id"],
+                                        receiverUserName: providerData["name"],
+                                      ),
+                                    ));
+                              },
+                              child: const Row(
+                                children: [
+                                  Text("Contact provider "),
+                                  Icon(Icons.send_sharp)
+                                ],
+                              ))
                         ],
                       ),
                       Row(
