@@ -12,7 +12,7 @@ class TermsOfUsePage extends StatefulWidget {
 
 class _TermsOfUsePageState extends State<TermsOfUsePage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  bool _termsAccepted = false;
+  bool termsAccepted = false;
   late SignInHandler _signInHandler;
 
   @override
@@ -30,7 +30,7 @@ class _TermsOfUsePageState extends State<TermsOfUsePage> {
           'termsAccepted': true,
         });
         setState(() {
-          _termsAccepted = true;
+          termsAccepted = true;
         });
         print('Termos aceitos com sucesso.');
 
@@ -93,9 +93,9 @@ class _TermsOfUsePageState extends State<TermsOfUsePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       ElevatedButton(
-                        onPressed: _termsAccepted ? null : _acceptTerms,
+                        onPressed: termsAccepted ? null : _acceptTerms,
                         child:
-                            Text(_termsAccepted ? 'Terms Accepted' : 'I Agree'),
+                            Text(termsAccepted ? 'Terms Accepted' : 'I Agree'),
                       ),
                       ElevatedButton(
                           onPressed: _signInHandler.signInWithGoogle,
