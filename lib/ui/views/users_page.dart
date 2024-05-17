@@ -8,6 +8,7 @@ import 'package:sample/ui/views/chat_page.dart';
 import 'package:sample/ui/widgets/custom_drawer.dart';
 
 import 'package:sample/ui/buttons/circular_avatar_button.dart';
+import 'package:super_banners/super_banners.dart';
 
 class UsersPage extends StatefulWidget {
   const UsersPage({super.key});
@@ -22,9 +23,10 @@ class _UsersPageState extends State<UsersPage> {
   List<Map<String, dynamic>> usersToShow = [];
   List<String> foundChatRooms = [];
 
-  Future<void>getProvidersToShow() async {
-    try{
-      await db.collection("users")
+  Future<void> getProvidersToShow() async {
+    try {
+      await db
+          .collection("users")
           .where("id", isEqualTo: auth.currentUser!.uid)
           .get()
           .then((querySnapshot) async {
@@ -38,9 +40,7 @@ class _UsersPageState extends State<UsersPage> {
         debugPrint("Error completing: $e");
       });
 
-      await db.collection("chat_rooms")
-          .get()
-          .then((querySnapshot) async {
+      await db.collection("chat_rooms").get().then((querySnapshot) async {
         final chatRooms = querySnapshot.docs;
         for (var chatRoom in chatRooms) {
           setState(() {
@@ -56,7 +56,8 @@ class _UsersPageState extends State<UsersPage> {
         final users = querySnapshot.docs;
         for (var user in users) {
           for (var chatRoom in foundChatRooms) {
-            if (chatRoom.contains(auth.currentUser!.uid) && chatRoom.contains(user["id"])) {
+            if (chatRoom.contains(auth.currentUser!.uid) &&
+                chatRoom.contains(user["id"])) {
               for (var userToShow in usersToShow) {
                 if (user["id"] == userToShow["id"]) {
                   alreadyFound = true;
@@ -76,7 +77,7 @@ class _UsersPageState extends State<UsersPage> {
       });
 
       debugPrint("Added");
-    } catch(e) {
+    } catch (e) {
       debugPrint('error in getFavoriteProviders(): $e');
     }
   }
@@ -113,54 +114,53 @@ class _UsersPageState extends State<UsersPage> {
 
     if (data.isNotEmpty && auth.currentUser!.email != data["email"]) {
       return ListTile(
-        title: Column(
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CircleAvatar(
-                  minRadius: 25,
-                  child: Text("${initials[0][0]} ${initials[initials.length - 1][0]}"),
-                ),
-                const SizedBox(width: 8),
-                Flexible(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '${data["name"]}',
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      // Text(
-                      //   '(${data["email"]})',
-                      //   overflow: TextOverflow.ellipsis,
-                      // ),
-                      Row(
-                        children: [
-                          const Spacer(),
-                          FavoriteProviderButton(providerData: data)
-                        ],
-                      ),
-                    ],
+          title: Column(
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CircleAvatar(
+                    minRadius: 25,
+                    child: Text(
+                        "${initials[0][0]} ${initials[initials.length - 1][0]}"),
                   ),
-                ),
-              ],
-            ),
-            const Divider(),
-          ],
-        ),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute( builder: (context) =>
-              ChatPage(
-                receiverUserEmail: data["email"],
-                receiverUserId: data["id"],
-                receiverUserName: data["name"],
-              )
-            )
-          );
-        });
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${data["name"]}',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        // Text(
+                        //   '(${data["email"]})',
+                        //   overflow: TextOverflow.ellipsis,
+                        // ),
+                        Row(
+                          children: [
+                            const Spacer(),
+                            FavoriteProviderButton(providerData: data)
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const Divider(),
+            ],
+          ),
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ChatPage(
+                          receiverUserEmail: data["email"],
+                          receiverUserId: data["id"],
+                          receiverUserName: data["name"],
+                        )));
+          });
     } else {
       return Container();
     }
@@ -178,7 +178,18 @@ class _UsersPageState extends State<UsersPage> {
       drawer: const CustomDrawer(highlight: Highlight.messages),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 85, 134, 158),
-        actions: [CircularAvatarButton()],
+        actions: [
+          Stack(children: [
+            CircularAvatarButton(),
+            CornerBanner(
+              bannerPosition: CornerBannerPosition.topRight,
+              bannerColor: Colors.red,
+              child: Text("Beta",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.white)),
+            ),
+          ])
+        ],
         title: const Text("Messages", style: TextStyle(color: Colors.white)),
         iconTheme: const IconThemeData(color: Colors.white),
       ),

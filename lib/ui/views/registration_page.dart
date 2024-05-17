@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:sample/providers/sample_provider.dart';
 import 'package:sample/ui/buttons/circular_avatar_button.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:super_banners/super_banners.dart';
 
 // Itens do popMenuButton
 enum MenuItem { logIn }
@@ -128,7 +129,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
           iconTheme: const IconThemeData(color: Colors.white),
           centerTitle: true,
           actions: const [
-            CircularAvatarButton(),
+            Stack(children: [
+              CircularAvatarButton(),
+              CornerBanner(
+                bannerPosition: CornerBannerPosition.topRight,
+                bannerColor: Colors.red,
+                child: Text("Beta",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white)),
+              ),
+            ])
           ],
         ),
         body: Padding(

@@ -10,6 +10,7 @@ import 'package:sample/ui/buttons/favorite_sample_button.dart';
 import 'package:sample/ui/buttons/publication_button.dart';
 import 'package:sample/ui/buttons/see_sample_button.dart';
 import 'package:sample/ui/widgets/custom_drawer.dart';
+import 'package:super_banners/super_banners.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -90,7 +91,16 @@ class _DashboardPageState extends State<DashboardPage> {
           centerTitle: true,
           iconTheme: const IconThemeData(color: Colors.white),
           actions: const [
-            CircularAvatarButton(),
+            Stack(children: [
+              CircularAvatarButton(),
+              CornerBanner(
+                bannerPosition: CornerBannerPosition.topRight,
+                bannerColor: Colors.red,
+                child: Text("Beta",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white)),
+              ),
+            ]),
           ],
         ),
         drawer: const CustomDrawer(highlight: Highlight.dashboard),

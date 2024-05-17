@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sample/ui/buttons/circular_avatar_button.dart';
 import 'package:sample/ui/widgets/custom_drawer.dart';
+import 'package:super_banners/super_banners.dart';
 
 class NewSamplePage extends StatefulWidget {
   const NewSamplePage({super.key});
@@ -144,7 +145,18 @@ class _NewSamplePageState extends State<NewSamplePage>
             const Text("Provide Sample", style: TextStyle(color: Colors.white)),
         iconTheme: const IconThemeData(color: Colors.white),
         centerTitle: true,
-        actions: const [CircularAvatarButton()],
+        actions: const [
+          Stack(children: [
+            CircularAvatarButton(),
+            CornerBanner(
+              bannerPosition: CornerBannerPosition.topRight,
+              bannerColor: Colors.red,
+              child: Text("Beta",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.white)),
+            ),
+          ])
+        ],
         bottom: TabBar(
           labelColor: Colors.white,
           controller: _tabController,

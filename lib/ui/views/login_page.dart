@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sample/ui/buttons/apple_login_button.dart';
 import 'package:sample/ui/buttons/google_login_button.dart';
+import 'package:super_banners/super_banners.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -48,8 +49,21 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(
                       height: 48,
                     ),
-                    Container(
-                        child: SvgPicture.asset("assets/logo.svg", width: 325)),
+                    Stack(
+                      children: [
+                        CornerBanner(
+                          bannerPosition: CornerBannerPosition.topLeft,
+                          bannerColor: Colors.red,
+                          child: Text("Beta",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white)),
+                        ),
+                        Container(
+                            child:
+                                SvgPicture.asset("assets/logo.svg", width: 325))
+                      ],
+                    ),
                     const SizedBox(
                       height: 48,
                     ),
