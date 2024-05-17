@@ -1,9 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sample/services/signInHandler.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 
 class TermsOfUsePage extends StatefulWidget {
   const TermsOfUsePage({Key? key}) : super(key: key);
@@ -13,7 +11,6 @@ class TermsOfUsePage extends StatefulWidget {
 }
 
 class _TermsOfUsePageState extends State<TermsOfUsePage> {
-  late String packageVersion;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   bool termsAccepted = false;
   late SignInHandler _signInHandler;
@@ -46,20 +43,13 @@ class _TermsOfUsePageState extends State<TermsOfUsePage> {
     }
   }
 
-  Future<void> _init() async {
-    await Firebase.initializeApp();
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    setState(() {
-      packageVersion = packageInfo.version;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
+    return Scaffold(
+      body: Padding(
         padding: const EdgeInsets.all(0),
         child: Container(
+          height: double.infinity,
           decoration: BoxDecoration(
               gradient: LinearGradient(
                   begin: Alignment.topLeft,
@@ -110,7 +100,6 @@ class _TermsOfUsePageState extends State<TermsOfUsePage> {
                       ElevatedButton(
                           onPressed: _signInHandler.signInWithGoogle,
                           child: const Text('Logout'))
-
                     ],
                   ),
                 ],
