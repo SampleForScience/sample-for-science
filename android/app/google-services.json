@@ -46,6 +46,30 @@
           }
         },
         {
+          "client_id": "75523934173-7tlo28obdrgsn5i86lo8vilgaae42dn2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.uff.sample",
+            "certificate_hash": "1c88e20bb85ad81b9a54c55b8dfece43d14bcdd7"
+          }
+        },
+        {
+          "client_id": "75523934173-915nk7928opbuombso5t0ft2k2qaao9e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.uff.sample",
+            "certificate_hash": "c924f212bbdbb36499a8ccff8dc6e5abd0cb0c28"
+          }
+        },
+        {
+          "client_id": "75523934173-e23e0m72q59er5j8cbcqrqcrvabuok31.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.uff.sample",
+            "certificate_hash": "a7925d48c1b944afc457a96919f5339c9686b3c9"
+          }
+        },
+        {
           "client_id": "75523934173-e694l3a92ins4i77m5hqtt9fn5fqbopd.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -59,6 +83,14 @@
           "android_info": {
             "package_name": "br.uff.sample",
             "certificate_hash": "568aa3e5a017793ffa2dd45ceba5a373392a118e"
+          }
+        },
+        {
+          "client_id": "75523934173-sg8kvmsbda72upohdg0me3pifb5stvl8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.uff.sample",
+            "certificate_hash": "9b51cb73c921449576bb82984b1c5a8fd7505d67"
           }
         },
         {
