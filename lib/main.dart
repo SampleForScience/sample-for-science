@@ -18,6 +18,8 @@ import 'package:sample/ui/views/terms_of_use.dart';
 import 'package:sample/ui/views/update_sample_page.dart';
 import 'package:sample/ui/views/users_page.dart';
 
+// Pra testar no chrome: flutter run -d chrome --web-port 8888 --web-browser-flag "--disable-web-security" --release
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
