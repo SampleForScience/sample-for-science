@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sample/providers/sample_provider.dart';
+import 'package:sample/services/analytics_service.dart';
 import 'package:sample/ui/buttons/circular_avatar_button.dart';
 import 'package:sample/ui/buttons/favorite_provider_button.dart';
 import 'package:sample/ui/buttons/favorite_sample_button.dart';
@@ -594,6 +595,7 @@ class _SearchPageState extends State<SearchPage>
   @override
   void initState() {
     super.initState();
+    AnalyticsService.screenView("Search page");
     _tabController = TabController(vsync: this, length: tabs.length);
     _tabController.addListener(_handleTabSelection);
     loadUserDataAndAskForCompletion();

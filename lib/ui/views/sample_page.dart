@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sample/services/analytics_service.dart';
 import 'package:sample/ui/buttons/circular_avatar_button.dart';
 import 'package:sample/ui/buttons/favorite_sample_button.dart';
 import 'package:sample/ui/views/chat_page.dart';
@@ -61,6 +62,7 @@ class _SamplePageState extends State<SamplePage> {
       }, onError: (e) {
         debugPrint("Error completing: $e");
       });
+      AnalyticsService.viewItem(sampleData["formula"], providerData["name"]);
     } catch (e) {
       debugPrint('Error in getUser(): $e');
     }

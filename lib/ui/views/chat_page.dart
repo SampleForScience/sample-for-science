@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sample/services/analytics_service.dart';
 import 'package:sample/services/chat_service.dart';
 
 
@@ -124,6 +125,12 @@ class _ChatPageState extends State<ChatPage> {
         ],
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    AnalyticsService.screenView("Chat page");
   }
 
   @override

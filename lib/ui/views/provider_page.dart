@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:sample/services/analytics_service.dart';
 import 'package:sample/ui/buttons/circular_avatar_button.dart';
 import 'package:sample/ui/buttons/favorite_provider_button.dart';
 import 'package:sample/ui/views/chat_page.dart';
@@ -54,6 +55,12 @@ class _ProviderPageState extends State<ProviderPage> {
     } catch (e) {
       debugPrint('Error in getUser(): $e');
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    AnalyticsService.screenView("Provider page");
   }
 
   @override

@@ -8,6 +8,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:sample/providers/sample_provider.dart';
+import 'package:sample/services/analytics_service.dart';
 import 'package:sample/ui/buttons/circular_avatar_button.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:super_banners/super_banners.dart';
@@ -115,6 +116,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   @override
   void initState() {
     loadUserData();
+    AnalyticsService.screenView("Registration page");
     super.initState();
   }
 

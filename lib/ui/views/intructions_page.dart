@@ -1,10 +1,23 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:sample/services/analytics_service.dart';
 import 'package:sample/ui/buttons/apple_login_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class InstructionsPage extends StatelessWidget {
+class InstructionsPage extends StatefulWidget {
   const InstructionsPage({super.key});
+
+  @override
+  State<InstructionsPage> createState() => _InstructionsPageState();
+}
+
+class _InstructionsPageState extends State<InstructionsPage> {
+
+  @override
+  void initState() {
+    super.initState();
+    AnalyticsService.screenView("Intructions page");
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sample/providers/sample_provider.dart';
+import 'package:sample/services/analytics_service.dart';
 import 'package:sample/ui/buttons/circular_avatar_button.dart';
 import 'package:sample/ui/buttons/favorite_provider_button.dart';
 import 'package:sample/ui/buttons/favorite_sample_button.dart';
@@ -30,6 +31,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   void initState() {
+    AnalyticsService.screenView("Dashboard page");
     Future.delayed(Duration.zero, () {
       Provider.of<SampleProvider>(context, listen: false).getMySamples();
       Provider.of<SampleProvider>(context, listen: false)

@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:sample/services/analytics_service.dart';
 import 'package:sample/ui/buttons/circular_avatar_button.dart';
 import 'package:sample/ui/widgets/custom_drawer.dart';
 import 'package:super_banners/super_banners.dart';
@@ -126,6 +127,7 @@ class _NewSamplePageState extends State<NewSamplePage>
   @override
   void initState() {
     super.initState();
+    AnalyticsService.screenView("New sample page");
     _tabController = TabController(vsync: this, length: tabs.length);
     _tabController.addListener(_handleTabSelection);
   }

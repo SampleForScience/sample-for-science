@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:sample/services/analytics_service.dart';
 import 'package:sample/ui/buttons/apple_login_button.dart';
 import 'package:sample/ui/buttons/google_login_button.dart';
 import 'package:super_banners/super_banners.dart';
@@ -17,6 +18,12 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<bool> checkUserLoggedIn() async {
     return auth.currentUser != null;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    AnalyticsService.screenView("Login page");
   }
 
   @override
