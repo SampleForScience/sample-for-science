@@ -55,6 +55,7 @@ dependencies:
   sign_in_with_apple: 5.0.0
   super_banners: ^0.0.1
   firebase_analytics: ^10.10.7
+  google_sign_in_web: ^0.12.4+2
 
 flutter_launcher_icons:
   image_path: "assets/icon.png"
